@@ -509,13 +509,13 @@ function appendPresetSaveBtn(body, toolKey, getDataFn) {
   const count = (customPresets[toolKey] || []).length;
 
   if (!isPremium) {
-    btn.innerHTML = '★ Als Preset speichern <span style="opacity:0.5;font-size:9px">(Pro)</span>';
+    btn.innerHTML = `★ ${t('saveAsPreset')} <span style="opacity:0.5;font-size:9px">(Pro)</span>`;
     btn.addEventListener('click', showUpgradeModal);
   } else if (count >= maxCustom) {
-    btn.textContent = `Max. ${maxCustom} eigene Presets erreicht`;
+    btn.textContent = t('presetMaxReached').replace('{n}', maxCustom);
     btn.disabled = true;
   } else {
-    btn.textContent = '★ Als Preset speichern';
+    btn.textContent = '★ ' + t('saveAsPreset');
     btn.addEventListener('click', async () => {
       const data = getDataFn();
       if (!data) return;
@@ -523,10 +523,10 @@ function appendPresetSaveBtn(body, toolKey, getDataFn) {
       customPresets[toolKey].push(data);
       await persistCustomPresets();
       rebuildActivePresetPanel();
-      btn.textContent = '✓ Gespeichert!';
+      btn.textContent = '✓ ' + t('presetSaved');
       btn.classList.add('saved');
       if (confettiEnabled) fireConfetti(btn);
-      setTimeout(() => { btn.textContent = '★ Als Preset speichern'; btn.classList.remove('saved'); }, 2000);
+      setTimeout(() => { btn.textContent = '★ ' + t('saveAsPreset'); btn.classList.remove('saved'); }, 2000);
     });
   }
   body.appendChild(btn);

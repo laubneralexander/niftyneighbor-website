@@ -187,5 +187,9 @@
 
   "screenshotNamePlaceholder": { "message": "Name this screenshot..." },
   "historySearchPlaceholder": { "message": "Search screenshots..." },
-  "historyNoResults": { "message": "No screenshots match your search." }
+  "historyNoResults": { "message": "No screenshots match your search." },
+
+  "saveAsPreset": { "message": "Save as Preset" },
+  "presetSaved": { "message": "Saved!" },
+  "presetMaxReached": { "message": "Max. {n} custom presets reached" }
 }

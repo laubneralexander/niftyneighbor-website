@@ -187,5 +187,9 @@
 
   "screenshotNamePlaceholder": { "message": "Screenshot benennen..." },
   "historySearchPlaceholder": { "message": "Screenshots suchen..." },
-  "historyNoResults": { "message": "Keine Screenshots gefunden." }
+  "historyNoResults": { "message": "Keine Screenshots gefunden." },
+
+  "saveAsPreset": { "message": "Als Preset speichern" },
+  "presetSaved": { "message": "Gespeichert!" },
+  "presetMaxReached": { "message": "Max. {n} eigene Presets erreicht" }
 }

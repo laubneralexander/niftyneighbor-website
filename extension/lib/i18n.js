@@ -1,6 +1,6 @@
 let messages = {};
 let currentLang = 'en';
-const SUPPORTED = ['en', 'de', 'es'];
+const SUPPORTED = ['en', 'de', 'es', 'fr', 'pt_BR', 'ru', 'zh_CN', 'ja', 'ko', 'it', 'tr', 'pl', 'nl', 'id'];
 
 async function _load(lang) {
   const target = SUPPORTED.includes(lang) ? lang : 'en';
