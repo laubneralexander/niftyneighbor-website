@@ -1,4 +1,4 @@
-import { initTools, setTool, setBadgePreset, setBadgeMode, setBadgeNextValue, setTextPreset, setRectPreset, setEllipsePreset, setHighlightPreset, setFreehandPreset, setArrowPreset, reapplyBlur, placeEmoji, placeImage, setSourceImage, getSourceImage } from './tools.js';
+import { initTools, setTool, setViewportCenterGetter, setBadgePreset, setBadgeMode, setTextPreset, setRectPreset, setEllipsePreset, setHighlightPreset, setFreehandPreset, setArrowPreset, reapplyBlur, placeEmoji, placeImage, setSourceImage, getSourceImage, renumberBadgesAfterDelete, setBadgePosition } from './tools.js';
 import { TEXT_PRESETS, BADGE_PRESETS, RECT_PRESETS, HIGHLIGHT_PRESETS, FREEHAND_PRESETS, ARROW_PRESETS } from './presets.js';
 import { exportPNG, exportPDF, exportPDFFromDataUrl, getAnnotatedDataUrl, downloadDataUrl, setExportName } from '../lib/exporter.js';
 import { initI18n, applyI18n, t } from '../lib/i18n.js';
@@ -46,11 +46,28 @@ async function init() {
   await loadScreenshot();
   await setupCanvas();
   initTools(fabricCanvas, onAnnotationAdded);
+  setViewportCenterGetter(() => {
+    const vpt = fabricCanvas.viewportTransform;
+    const area = document.querySelector('.canvas-area');
+    const zoom = vpt[0], tx = vpt[4], ty = vpt[5];
+    // Viewport bounds in image coordinates
+    const vLeft  = -tx / zoom,               vTop    = -ty / zoom;
+    const vRight = (area.clientWidth  - tx) / zoom, vBottom = (area.clientHeight - ty) / zoom;
+    // Intersection with image bounds
+    const iLeft  = Math.max(0,     vLeft),   iTop    = Math.max(0,     vTop);
+    const iRight = Math.min(origW, vRight),  iBottom = Math.min(origH, vBottom);
+    // Center of intersection (fall back to image center if fully off-screen)
+    const x = iRight > iLeft  ? (iLeft  + iRight)  / 2 : origW / 2;
+    const y = iBottom > iTop  ? (iTop   + iBottom)  / 2 : origH / 2;
+    return { x, y };
+  });
+  setTool('pan');
   initGearIcon();
   bindUIEvents();
   bindKeyboardShortcuts();
   updateUndoRedoButtons();
   if (!originalImageDataUrl) showLibraryHint();
+  await loadAllTags();
   await loadHistory();
   await initHistorySettingsPanel();
 }
@@ -62,7 +79,7 @@ async function loadLicenseStatus() {
   updateLicenseBadge();
 }
 
-const PRO_TOOLS = ['emoji', 'image', 'crop', 'urlframe'];
+const PRO_TOOLS = ['emoji', 'image', 'crop', 'slice', 'urlframe'];
 
 function updateLicenseBadge() {
   const btn = $('btn-license-badge');
@@ -88,35 +105,53 @@ function updateLicenseBadge() {
 }
 
 async function loadScreenshot() {
-  const data = await chrome.storage.session.get(['pendingScreenshot', 'pageUrl']);
-  if (!data.pendingScreenshot) return;
-  originalImageDataUrl = data.pendingScreenshot;
+  const data = await chrome.storage.session.get(['pendingScreenshotId', 'pageUrl', 'truncated']);
+  if (!data.pendingScreenshotId) return;
   currentPageUrl = data.pageUrl || '';
   currentTimestamp = Date.now();
-  await chrome.storage.session.remove(['pendingScreenshot', 'pageUrl']);
+  await chrome.storage.session.remove(['pendingScreenshotId', 'pageUrl', 'truncated', 'pixelLimit']);
+  const blob = await dbLoad(data.pendingScreenshotId);
+  if (!blob) return;
+  originalImageDataUrl = await new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.onloadend = () => resolve(reader.result);
+    reader.readAsDataURL(blob);
+  });
+  if (data.truncated) {
+    const limitK = ((data.pixelLimit || 50000) / 1000) + 'k';
+    showToast(t('pageTooLarge').replace('{limit}', limitK), 8000);
+  }
 }
 
 function setupCanvas() {
   return new Promise((resolve) => {
+    const area = document.querySelector('.canvas-area');
     fabricCanvas = new fabric.Canvas('main-canvas', {
-      width: 100, height: 100,
+      width: area.clientWidth || 800, height: area.clientHeight || 600,
       selection: true,
       preserveObjectStacking: true,
-      uniformScaling: false
+      uniformScaling: false,
+      enableRetinaScaling: false,
     });
+    // Disable per-object caching so all objects are re-rendered from vector on every frame.
+    // With viewportTransform zoom, cached bitmaps would be upscaled at high zoom = pixelated.
+    // For a screenshot editor with few annotation objects the re-render cost is negligible.
+    fabric.Object.prototype.objectCaching = false;
+    fabric.Textbox.prototype.hiddenTextareaContainer = document.getElementById('canvas-container');
     if (!originalImageDataUrl) { resolve(); return; }
     const img = new Image();
     img.onerror = () => resolve();
     img.onload = () => {
       origW = img.naturalWidth;
       origH = img.naturalHeight;
-      fabricCanvas.setWidth(origW);
-      fabricCanvas.setHeight(origH);
+      fabricCanvas._origW = origW;
+      fabricCanvas._origH = origH;
+      setCanvasClip(origW, origH);
       fabric.Image.fromURL(originalImageDataUrl, (fabricImg) => {
         fabricImg.set({ selectable: false, evented: false });
         fabricCanvas.setBackgroundImage(fabricImg, () => {
-          fabricCanvas.renderAll();
           fitToScreen();
+          fabricCanvas.renderAll();
           saveUndo();
           setSourceImage(originalImageDataUrl);
           resolve();
@@ -125,6 +160,18 @@ function setupCanvas() {
     };
     img.src = originalImageDataUrl;
   });
+}
+
+function showToast(msg, duration = 4000) {
+  const el = document.createElement('div');
+  el.className = 'sf-toast';
+  el.textContent = msg;
+  document.body.appendChild(el);
+  requestAnimationFrame(() => el.classList.add('sf-toast-visible'));
+  setTimeout(() => {
+    el.classList.remove('sf-toast-visible');
+    el.addEventListener('transitionend', () => el.remove(), { once: true });
+  }, duration);
 }
 
 function showLibraryHint() {
@@ -142,26 +189,51 @@ function hideLibraryHint() {
   document.querySelector('.toolbar').classList.remove('no-image');
 }
 
-// ─── Zoom ─────────────────────────────────────────────────────────────────────
+function setCanvasClip(w, h) {
+  fabricCanvas.clipPath = new fabric.Rect({
+    width: w, height: h, left: 0, top: 0,
+    absolutePositioned: true,
+  });
+}
 
-function fitToScreen() {
+// ─── Zoom / Pan via Fabric.js viewportTransform ───────────────────────────────
+// The canvas element always fills the .canvas-area. Zoom and pan are handled
+// by Fabric's viewportTransform so only the visible region is rasterized each frame.
+
+function fitToScreen(bottomExtra = 0) {
+  if (!origW || !fabricCanvas) return;
   const area = document.querySelector('.canvas-area');
-  const scaleX = (area.clientWidth  - PADDING * 2) / origW;
-  const scaleY = (area.clientHeight - PADDING * 2) / origH;
-  applyZoom(Math.min(scaleX, scaleY, 1));
+  const zoom = Math.min(
+    (area.clientWidth  - PADDING * 2) / origW,
+    (area.clientHeight - PADDING * 2 - bottomExtra) / origH,
+    1
+  );
+  const tx = (area.clientWidth  - origW * zoom) / 2;
+  const ty = Math.max(PADDING, (area.clientHeight - origH * zoom - bottomExtra) / 2);
+  fabricCanvas.setViewportTransform([zoom, 0, 0, zoom, tx, ty]);
+  currentZoom = zoom;
+  syncZoomSelect();
 }
 
 function applyZoom(zoom) {
-  currentZoom = Math.max(0.05, Math.min(3, zoom));
-  fabricCanvas.setZoom(currentZoom);
-  fabricCanvas.setWidth(origW * currentZoom);
-  fabricCanvas.setHeight(origH * currentZoom);
+  if (!fabricCanvas) return;
+  zoom = Math.max(0.05, Math.min(5, zoom));
+  const area = document.querySelector('.canvas-area');
+  const vpt = [...fabricCanvas.viewportTransform];
+  const oldZoom = vpt[0] || 1;
+  // Zoom around viewport center
+  const cx = area.clientWidth  / 2;
+  const cy = area.clientHeight / 2;
+  vpt[4] = cx - (cx - vpt[4]) * zoom / oldZoom;
+  vpt[5] = cy - (cy - vpt[5]) * zoom / oldZoom;
+  vpt[0] = zoom; vpt[3] = zoom;
+  fabricCanvas.setViewportTransform(vpt);
+  currentZoom = zoom;
   syncZoomSelect();
-  centerCanvasIfSmall();
 }
 
 function syncZoomSelect() {
-  const pct = Math.round(currentZoom * 100);
+  const pct = Math.round((fabricCanvas?.viewportTransform?.[0] ?? 1) * 100);
   const sel = $('zoom-select');
   let best = null, bestDiff = Infinity;
   for (const opt of sel.options) {
@@ -171,31 +243,11 @@ function syncZoomSelect() {
   if (best) sel.value = best.value;
 }
 
-function centerCanvasIfSmall() {
-  const area  = document.querySelector('.canvas-area');
-  const wrap  = document.querySelector('.canvas-scroll-wrapper');
-  const w = origW * currentZoom;
-  const h = origH * currentZoom;
-  wrap.style.justifyContent = (w < area.clientWidth  - PADDING * 2) ? 'center' : 'flex-start';
-  wrap.style.alignItems     = (h < area.clientHeight - PADDING * 2) ? 'center' : 'flex-start';
-}
-
-// Returns the left/top offset of #canvas-container within the scroll content
-// (analytically, matching what centerCanvasIfSmall sets).
-function containerScrollOffset(zoom) {
-  const area = document.querySelector('.canvas-area');
-  const w = origW * zoom;
-  const h = origH * zoom;
-  const cx = (w < area.clientWidth  - PADDING * 2) ? (area.clientWidth  - w) / 2 : PADDING;
-  const cy = (h < area.clientHeight - PADDING * 2) ? (area.clientHeight - h) / 2 : PADDING;
-  return { cx, cy };
-}
-
-// Compute the new zoom level when using the scroll wheel (max 300%).
+// Compute the new zoom level when using the scroll wheel (max 500%).
 function computeWheelZoom(current, zoomIn) {
   const rawNew = current * (zoomIn ? 1.1 : 0.9);
 
-  if (rawNew >= 3) return 3;
+  if (rawNew >= 5) return 5;
 
   // Snap through 100%
   if ((current < 1 && rawNew > 1) || (current > 1 && rawNew < 1)) return 1;
@@ -223,7 +275,22 @@ function saveUndo() {
 function onAnnotationAdded(obj) {
   saveUndo();
   if (!obj) obj = fabricCanvas.getActiveObject();
-  if (obj?.blurOutside) applyBlurOutside(obj);
+  if (obj?.blurOutside) {
+    applyBlurOutside(obj);
+    $('tool-select').click();
+    // Defer setActiveObject until after Fabric has fully processed the current mouse event,
+    // otherwise _mouseIsDown may still be true and cause the object to follow the cursor.
+    setTimeout(() => {
+      if (fabricCanvas && fabricCanvas.contains(obj)) {
+        fabricCanvas.setActiveObject(obj);
+        fabricCanvas.renderAll();
+      }
+    }, 0);
+    updateExportButton();
+    clearTimeout(annotationSaveTimer);
+    annotationSaveTimer = setTimeout(saveCurrentAnnotations, 1500);
+    return;
+  }
   updateExportButton();
   if (['blur', 'image', 'emoji', 'text'].includes(currentTool)) {
     $('tool-select').click();
@@ -1432,7 +1499,7 @@ function initGearIcon() {
   fabricCanvas.on('selection:cleared', () => hideGear());
   fabricCanvas.on('object:moving',   (e) => { repositionGear(e.target); scheduleBlurUpdate(e.target); scheduleBlurRegionSync(e.target); });
   fabricCanvas.on('object:modified', (e) => { if (e.target?.blurOutside) rebuildGlobalBlurOverlay(); if (e.target?._isBlurRegion) syncBlurRegion(e.target); });
-  fabricCanvas.on('object:removed',  (e) => { if (e.target?.blurOutside) rebuildGlobalBlurOverlay(); updateExportButton(); });
+  fabricCanvas.on('object:removed',  (e) => { if (e.target?.blurOutside) rebuildGlobalBlurOverlay(); if (!isRestoringUndo && e.target?._isBadge) renumberBadgesAfterDelete(e.target._badgeValue, e.target._badgeType); updateExportButton(); });
   fabricCanvas.on('object:scaling',  (e) => {
     const obj = e.target;
     if (obj._isBadge || obj._isCustomImage || obj._isEmoji) {
@@ -1898,16 +1965,25 @@ function buildBadgeFormatControls(body, obj) {
     obj._textRef  = children.find(c => c.type === 'text' || c.type === 'i-text');
   }
 
-  // Continue from here
+  // Position setter
   const contRow = makeRow(t('ofpSequence'));
-  const contBtn = document.createElement('button');
-  contBtn.style.cssText = 'width:100%;margin-top:4px;padding:4px 8px;font-size:11px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:rgba(255,255,255,0.7);cursor:pointer';
-  const isAlpha = obj._badgeType === 'alpha';
-  contBtn.disabled = isAlpha;
-  contBtn.textContent = isAlpha ? t('ofpContinueNumeric') : t('ofpContinueFrom').replace('{from}', obj._badgeValue ?? 1).replace('{next}', (obj._badgeValue ?? 0) + 1);
-  contBtn.style.opacity = isAlpha ? '0.35' : '1';
-  contBtn.addEventListener('click', () => setBadgeNextValue((obj._badgeValue ?? 0) + 1));
-  contRow.appendChild(contBtn);
+  const posInput = document.createElement('input');
+  posInput.type = 'number';
+  posInput.min = '1';
+  posInput.value = String(obj._badgeValue ?? 1);
+  posInput.style.cssText = 'width:100%;margin-top:4px;padding:4px 8px;font-size:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:rgba(255,255,255,0.85);font-family:inherit;outline:none;appearance:textfield;-moz-appearance:textfield';
+  posInput.addEventListener('change', () => {
+    const newVal = parseInt(posInput.value);
+    if (!isNaN(newVal) && newVal >= 1) {
+      const applied = setBadgePosition(obj, newVal);
+      posInput.value = String(applied);
+      saveUndo();
+      scheduleAnnotationSave();
+    } else {
+      posInput.value = String(obj._badgeValue ?? 1);
+    }
+  });
+  contRow.appendChild(posInput);
   body.appendChild(contRow);
 
   // Fill color
@@ -2283,10 +2359,12 @@ function rebuildGlobalBlurOverlay() {
   if (!fabricCanvas) return;
   const srcImg = (fabricCanvas.backgroundImage?._element) || getSourceImage();
 
+  // Preserve the currently active object — add/sendToBack can fire selection events
+  const prevActive = fabricCanvas.getActiveObject();
+
   const blurObjs = fabricCanvas.getObjects().filter(o => o.blurOutside && !o._isBlurOverlay);
 
   fabricCanvas.getObjects().filter(o => o._isBlurOverlay).forEach(o => fabricCanvas.remove(o));
-  globalBlurOverlay = null;
   if (!blurObjs.length || !srcImg) { fabricCanvas.renderAll(); return; }
 
   const cw = origW || Math.round(fabricCanvas.width  / fabricCanvas.getZoom());
@@ -2357,11 +2435,21 @@ function rebuildGlobalBlurOverlay() {
     }
   }
 
-  // Synchronous — wrap the canvas element directly, no async fromURL
+  // Synchronous — wrap the canvas element directly, no async fromURL.
+  // Explicit width/height required: Fabric.js can't reliably read dimensions from HTMLCanvasElement.
   const compositeImg = new fabric.Image(composite, {
-    left: 0, top: 0, selectable: false, evented: false, _isBlurOverlay: true,
+    left: 0, top: 0, width: cw, height: ch,
+    selectable: false, evented: false, hasBorders: false, hasControls: false,
+    objectCaching: false, _isBlurOverlay: true,
   });
-  fabricCanvas.insertAt(compositeImg, 0);
+  fabricCanvas.add(compositeImg);
+  fabricCanvas.sendToBack(compositeImg);
+
+  // Restore the previously active object if it was displaced by add/sendToBack events
+  if (prevActive && fabricCanvas.contains(prevActive)) {
+    fabricCanvas.setActiveObject(prevActive);
+  }
+
   fabricCanvas.renderAll();
 }
 
@@ -2464,6 +2552,177 @@ function launchConfetti() {
   animate();
 }
 
+// ─── Tags ─────────────────────────────────────────────────────────────────────
+
+let allTags = [];
+let activeTagDropdown = null;
+let selectedHistoryIds = new Set();
+
+function updateSelectionUI() {
+  const n = selectedHistoryIds.size;
+  $('history-list')?.classList.toggle('selection-mode', n > 0);
+  const pngBtn = $('btn-save-png');
+  const pdfBtn = $('btn-save-pdf');
+  const cancelBtn = $('btn-cancel-selection');
+  if (!pngBtn || !pdfBtn) return;
+  if (n > 0) {
+    pngBtn.style.display = 'none';
+    pdfBtn.textContent = `${t('editorDeleteLabel')} (${n})`;
+    pdfBtn.classList.replace('btn-ghost', 'btn-accent');
+    if (cancelBtn) cancelBtn.style.display = '';
+    document.body.classList.add('selection-active');
+  } else {
+    pngBtn.style.display = '';
+    pdfBtn.classList.replace('btn-accent', 'btn-ghost');
+    if (cancelBtn) cancelBtn.style.display = 'none';
+    document.body.classList.remove('selection-active');
+    updateExportButton();
+  }
+}
+
+function toggleHistorySelection(id, wrapper) {
+  if (selectedHistoryIds.has(id)) { selectedHistoryIds.delete(id); wrapper?.classList.remove('selected'); }
+  else { selectedHistoryIds.add(id); wrapper?.classList.add('selected'); }
+  updateSelectionUI();
+}
+
+async function bulkDownloadPng() {
+  const ids = [...selectedHistoryIds];
+  if (!ids.length) return;
+  const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+  const histMap = Object.fromEntries(screenshot_history.map(h => [h.id, h]));
+  for (const id of ids) {
+    const dataUrl = await dbLoad(id);
+    if (!dataUrl) continue;
+    const item = histMap[id];
+    const safeName = (item?.name || '').replace(/[^\w\s\-]/g, '').trim().replace(/\s+/g, '-').slice(0, 50);
+    const now = new Date(); const pad = n => String(n).padStart(2, '0');
+    const date = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}`;
+    const filename = safeName ? `${safeName}_${date}.png` : `ScreenFellow_${date}_${id.slice(-6)}.png`;
+    const blob = await fetch(dataUrl).then(r => r.blob());
+    const url = URL.createObjectURL(blob);
+    await new Promise(resolve => chrome.downloads.download({ url, filename, saveAs: false }, () => setTimeout(() => { URL.revokeObjectURL(url); resolve(); }, 500)));
+  }
+  selectedHistoryIds.clear();
+  document.querySelectorAll('#history-list .history-item.selected').forEach(el => el.classList.remove('selected'));
+  updateSelectionUI();
+}
+
+function showBulkDeleteModal() {
+  const n = selectedHistoryIds.size;
+  const title = $('bulk-delete-modal-title');
+  const body = $('bulk-delete-modal-body');
+  if (title) title.textContent = t('bulkDeleteConfirmTitle').replace('{n}', n);
+  if (body) body.textContent = t('bulkDeleteConfirmBody');
+  $('bulk-delete-modal').classList.remove('hidden');
+}
+
+async function setScreenshotTag(historyId, tagName) {
+  const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+  const item = screenshot_history.find(i => i.id === historyId);
+  if (!item) return;
+  item.tags = tagName ? [tagName] : [];
+  await chrome.storage.local.set({ screenshot_history });
+  await renderHistory(screenshot_history);
+}
+
+async function loadAllTags() {
+  const { screenshot_tags = [] } = await chrome.storage.local.get(['screenshot_tags']);
+  allTags = screenshot_tags;
+}
+
+async function saveAllTags() {
+  await chrome.storage.local.set({ screenshot_tags: allTags });
+}
+
+async function addGlobalTag(name) {
+  name = name.trim();
+  if (!name || allTags.includes(name)) return;
+  allTags.push(name);
+  await saveAllTags();
+}
+
+async function deleteGlobalTag(tagName) {
+  allTags = allTags.filter(t => t !== tagName);
+  await saveAllTags();
+  const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+  screenshot_history.forEach(i => { if ((i.tags || [])[0] === tagName) i.tags = []; });
+  await chrome.storage.local.set({ screenshot_history });
+  await renderHistory(screenshot_history);
+}
+
+function showTagDropdown(anchorEl, historyId, currentTag) {
+  if (activeTagDropdown) { activeTagDropdown.remove(); activeTagDropdown = null; }
+  const dropdown = document.createElement('div');
+  dropdown.className = 'tag-dropdown';
+  const rect = anchorEl.getBoundingClientRect();
+  const spaceBelow = window.innerHeight - rect.bottom;
+  if (spaceBelow < 180) {
+    dropdown.style.bottom = (window.innerHeight - rect.top + 4) + 'px';
+    dropdown.style.top = 'auto';
+  } else {
+    dropdown.style.top = (rect.bottom + 4) + 'px';
+  }
+  dropdown.style.left = Math.min(rect.left, window.innerWidth - 234) + 'px';
+
+  const rebuildList = () => {
+    dropdown.innerHTML = '';
+    if (allTags.length) {
+      allTags.forEach(tag => {
+        const row = document.createElement('div');
+        row.className = 'tag-dropdown-item' + (tag === currentTag ? ' selected' : '');
+        const check = document.createElement('span'); check.className = 'tag-dropdown-check';
+        check.textContent = tag === currentTag ? '✓' : '';
+        const name = document.createElement('span'); name.className = 'tag-dropdown-name';
+        name.textContent = tag;
+        const del = document.createElement('span'); del.className = 'tag-dropdown-del';
+        del.textContent = '×'; del.title = 'Tag löschen';
+        del.addEventListener('click', async (e) => {
+          e.stopPropagation();
+          await deleteGlobalTag(tag);
+          dropdown.remove(); activeTagDropdown = null;
+        });
+        row.append(check, name, del);
+        row.addEventListener('click', async () => {
+          const newTag = tag === currentTag ? null : tag;
+          await setScreenshotTag(historyId, newTag);
+          dropdown.remove(); activeTagDropdown = null;
+        });
+        dropdown.appendChild(row);
+      });
+      const divider = document.createElement('div'); divider.className = 'tag-dropdown-divider';
+      dropdown.appendChild(divider);
+    }
+    const input = document.createElement('input');
+    input.type = 'text'; input.className = 'tag-dropdown-input';
+    input.placeholder = t('tagNewPlaceholder'); input.maxLength = 22;
+    input.addEventListener('keydown', async (e) => {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        const val = input.value.trim();
+        if (!val) return;
+        await addGlobalTag(val);
+        await setScreenshotTag(historyId, val);
+        dropdown.remove(); activeTagDropdown = null;
+      }
+      if (e.key === 'Escape') { dropdown.remove(); activeTagDropdown = null; }
+    });
+    dropdown.appendChild(input);
+    setTimeout(() => input.focus(), 10);
+  };
+
+  rebuildList();
+  document.body.appendChild(dropdown);
+  activeTagDropdown = dropdown;
+  const closeOnClick = (e) => {
+    if (!dropdown.contains(e.target) && e.target !== anchorEl) {
+      dropdown.remove(); activeTagDropdown = null;
+      document.removeEventListener('mousedown', closeOnClick);
+    }
+  };
+  setTimeout(() => document.addEventListener('mousedown', closeOnClick), 0);
+}
+
 // ─── Screenshot History ───────────────────────────────────────────────────────
 
 async function loadHistory() {
@@ -2521,7 +2780,7 @@ async function renderHistory(items) {
   // Apply search filter
   const searchVal = ($('history-search')?.value || '').toLowerCase().trim();
   const visible = searchVal
-    ? items.filter(i => (i.name || '').toLowerCase().includes(searchVal) || (i.url || '').toLowerCase().includes(searchVal) || formatTime(i.timestamp).toLowerCase().includes(searchVal))
+    ? items.filter(i => (i.name || '').toLowerCase().includes(searchVal) || (i.url || '').toLowerCase().includes(searchVal) || formatTime(i.timestamp).toLowerCase().includes(searchVal) || (i.tags || []).some(tag => tag.toLowerCase().includes(searchVal)))
     : items;
 
   if (!visible.length) {
@@ -2544,6 +2803,16 @@ async function renderHistory(items) {
     img.draggable = false;
     thumbObserver.observe(img);
 
+    // Dark hover overlay (makes text readable on bright screenshots)
+    const hoverOverlay = document.createElement('div');
+    hoverOverlay.className = 'history-hover-overlay';
+
+    // Always-visible timestamp badge (bottom-left, normal state)
+    const tsBadge = document.createElement('div');
+    tsBadge.className = 'history-ts-badge';
+    tsBadge.textContent = formatTime(item.timestamp);
+
+    // Meta area — visible on hover
     const meta = document.createElement('div');
     meta.className = 'history-meta';
 
@@ -2559,22 +2828,83 @@ async function renderHistory(items) {
     ts.textContent = formatTime(item.timestamp);
     meta.appendChild(ts);
 
-    const del = document.createElement('button');
-    del.className = 'history-delete-btn';
-    del.innerHTML = '🗑 ' + t('editorDeleteLabel');
-    del.title = t('editorDeleteScreenshot');
-    del.addEventListener('click', (e) => {
+    {
+      const tagsArea = document.createElement('div');
+      tagsArea.className = 'history-tags';
+      const currentTag = (item.tags || [])[0] || null;
+
+      if (currentTag) {
+        const chip = document.createElement('span');
+        chip.className = 'history-tag-chip';
+        chip.title = 'Tag ändern';
+        const label = document.createElement('span');
+        label.textContent = currentTag;
+        const x = document.createElement('button');
+        x.className = 'tag-chip-x';
+        x.textContent = '✕';
+        x.addEventListener('click', async (e) => { e.stopPropagation(); await setScreenshotTag(item.id, null); });
+        chip.addEventListener('click', (e) => {
+          if (e.target === x) return;
+          e.stopPropagation();
+          if (!isPremium) { showUpgradeModal(); return; }
+          showTagDropdown(chip, item.id, currentTag);
+        });
+        chip.append(label, x);
+        tagsArea.appendChild(chip);
+      } else {
+        const addTagBtn = document.createElement('button');
+        addTagBtn.className = 'history-tag-add-btn';
+        addTagBtn.textContent = '＋ Tag hinzufügen';
+        addTagBtn.addEventListener('click', (e) => {
+          e.stopPropagation();
+          if (!isPremium) { showUpgradeModal(); return; }
+          showTagDropdown(addTagBtn, item.id, null);
+        });
+        tagsArea.appendChild(addTagBtn);
+      }
+      meta.appendChild(tagsArea);
+    }
+
+    // Round delete X (top-right, on hover)
+    const deleteX = document.createElement('button');
+    deleteX.className = 'history-delete-x';
+    deleteX.innerHTML = '✕';
+    deleteX.title = t('editorDeleteScreenshot');
+    deleteX.addEventListener('click', (e) => {
       e.stopPropagation();
       pendingDeleteId = item.id;
       $('delete-modal').classList.remove('hidden');
     });
 
+    // Fullpage badge (bottom-right, always visible)
+    if (item.isFullPage) {
+      const badge = document.createElement('div');
+      badge.className = 'history-fullpage-badge';
+      badge.title = 'Full-page screenshot';
+      badge.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="1" width="9" height="14" rx="1.5"/><line x1="6" y1="4.5" x2="10" y2="4.5"/><line x1="6" y1="7" x2="10" y2="7"/><line x1="6" y1="9.5" x2="10" y2="9.5"/><line x1="6" y1="12" x2="8.5" y2="12"/></svg>`;
+      wrapper.appendChild(badge);
+    }
+
+    const checkbox = document.createElement('div');
+    checkbox.className = 'history-checkbox';
+    checkbox.addEventListener('click', (e) => { e.stopPropagation(); toggleHistorySelection(item.id, wrapper); });
+
+    if (selectedHistoryIds.has(item.id)) wrapper.classList.add('selected');
+
     wrapper.appendChild(img);
+    wrapper.appendChild(hoverOverlay);
+    wrapper.appendChild(tsBadge);
     wrapper.appendChild(meta);
-    wrapper.appendChild(del);
-    wrapper.addEventListener('click', () => switchToHistoryItem(item, wrapper));
+    wrapper.appendChild(deleteX);
+    wrapper.appendChild(checkbox);
+    wrapper.addEventListener('click', () => {
+      if (selectedHistoryIds.size > 0) { toggleHistorySelection(item.id, wrapper); return; }
+      switchToHistoryItem(item, wrapper);
+    });
     list.appendChild(wrapper);
   });
+
+  updateSelectionUI();
 }
 
 function formatTime(ts) {
@@ -2615,8 +2945,9 @@ async function switchToHistoryItem(item, wrapperEl) {
   clearTimeout(annotationSaveTimer);
   await saveCurrentAnnotations();
 
-  // Exit crop mode if active
+  // Exit crop/slice mode if active
   if (cropState) exitCropMode();
+  if (sliceState) exitSliceMode();
 
   // Mark active
   document.querySelectorAll('.history-item').forEach(el => el.classList.remove('active'));
@@ -2648,10 +2979,11 @@ async function switchToHistoryItem(item, wrapperEl) {
     fabric.Image.fromURL(screenshotDataUrl, (fabricImg) => {
       origW = fabricImg.width;
       origH = fabricImg.height;
+      fabricCanvas._origW = origW;
+      fabricCanvas._origH = origH;
+      setCanvasClip(origW, origH);
       fabricImg.set({ selectable: false, evented: false });
       fabricCanvas.clear();
-      fabricCanvas.setWidth(origW * currentZoom);
-      fabricCanvas.setHeight(origH * currentZoom);
       fabricCanvas.setBackgroundImage(fabricImg, () => {
         fitToScreen();
 
@@ -2705,6 +3037,8 @@ async function deleteHistoryItem(id) {
   const filtered = screenshot_history.filter(item => item.id !== id);
   await Promise.all([dbDelete(id), dbDeleteAnnotations(id), dbDeleteThumbnail(id)]);
   await chrome.storage.local.set({ screenshot_history: filtered });
+  selectedHistoryIds.delete(id);
+  updateSelectionUI();
 
   const wasActive = id === currentHistoryId;
   currentHistoryId = null;
@@ -2758,9 +3092,8 @@ function numToAlphaExport(n) {
 async function exportGuide() {
   fabricCanvas.discardActiveObject();
   fabricCanvas.renderAll();
-  const zoom = fabricCanvas.getZoom();
 
-  // Collect badge data before hiding them
+  // Collect badge data (positions are in image coordinates, convert to percentages)
   const badgeObjs = fabricCanvas.getObjects().filter(o => o._isBadge);
   const badges = [...badgeObjs]
     .sort((a, b) => (a._badgeValue ?? 0) - (b._badgeValue ?? 0))
@@ -2778,7 +3111,18 @@ async function exportGuide() {
       };
     });
 
-  const pngDataUrl = fabricCanvas.toDataURL({ format: 'png', multiplier: 1 / zoom });
+  // Export at full resolution using same VPT save/restore pattern as canvasToBlob
+  const savedVpt = [...fabricCanvas.viewportTransform];
+  const savedW = fabricCanvas.getWidth(), savedH = fabricCanvas.getHeight();
+  fabricCanvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+  fabricCanvas.setWidth(origW);
+  fabricCanvas.setHeight(origH);
+  fabricCanvas.renderAll();
+  const pngDataUrl = fabricCanvas.toDataURL({ format: 'png', multiplier: 1 });
+  fabricCanvas.setViewportTransform(savedVpt);
+  fabricCanvas.setWidth(savedW);
+  fabricCanvas.setHeight(savedH);
+  fabricCanvas.renderAll();
 
   const html = generateGuideHTML(pngDataUrl, badges, t('guideBeaconHint'), t('guideStep'), currentUrlFrameSettings, currentPageUrl, currentTimestamp);
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
@@ -2864,12 +3208,13 @@ function generateGuideHTML(pngDataUrl, badges, beaconHint, stepWord, frameSettin
       <button class="step-goto" data-badge="${b.type}_${escHtml(b.label)}" title="Show in image">↑</button>
     </div>`).join('');
 
+  const singleTitle = numericSteps.length > 0 ? '1 · 2 · 3' : 'A · B · C';
   const stepsHTML = described.length === 0 ? '' : hasBoth
     ? `<div class="steps-row">
         <div class="steps-col"><div class="steps-col-title">1 · 2 · 3</div>${renderCol(numericSteps)}</div>
         <div class="steps-col"><div class="steps-col-title">A · B · C</div>${renderCol(alphaSteps)}</div>
       </div>`
-    : `<div class="steps-col single">${renderCol(described)}</div>`;
+    : `<div class="steps-col single"><div class="steps-col-title">${singleTitle}</div>${renderCol(described)}</div>`;
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
@@ -2879,7 +3224,6 @@ function generateGuideHTML(pngDataUrl, badges, beaconHint, stepWord, frameSettin
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{background:#0f0f1a;color:#e2e2f0;font-family:system-ui,-apple-system,sans-serif;padding:32px 24px;min-height:100vh}
-h1{font-size:20px;font-weight:700;margin-bottom:24px;color:#fff;letter-spacing:-0.02em}
 .sw{position:relative;display:inline-block;max-width:100%;border-radius:8px;overflow:hidden;box-shadow:0 8px 32px rgba(0,0,0,.5)}
 .sw img{display:block;max-width:100%;height:auto}
 /* Hotspot: transparent overlay sized to the canvas badge, positioned by percentage */
@@ -2896,10 +3240,14 @@ h1{font-size:20px;font-weight:700;margin-bottom:24px;color:#fff;letter-spacing:-
 .badge-popup::after{content:'';position:absolute;top:100%;left:var(--arrow-x,50%);transform:translateX(-50%);border:6px solid transparent;border-top-color:rgba(255,255,255,.15)}
 .badge-popup.flip{bottom:auto;top:calc(100% + 10px)}
 .badge-popup.flip::after{top:auto;bottom:100%;border-top-color:transparent;border-bottom-color:rgba(255,255,255,.15)}
+.badge-popup.side-left{bottom:auto;top:50%;left:auto;right:calc(100% + 10px);transform:translateY(-50%)}
+.badge-popup.side-left::after{top:50%;bottom:auto;left:auto;right:-12px;transform:translateY(-50%);border-top-color:transparent;border-left-color:rgba(255,255,255,.15)}
+.badge-popup.side-right{bottom:auto;top:50%;left:calc(100% + 10px);transform:translateY(-50%)}
+.badge-popup.side-right::after{top:50%;bottom:auto;left:-12px;right:auto;transform:translateY(-50%);border-top-color:transparent;border-right-color:rgba(255,255,255,.15)}
 .badge-hotspot.open .badge-popup{display:block}
 .steps-row{margin-top:32px;display:flex;gap:20px;align-items:flex-start}
 .steps-col{display:flex;flex-direction:column;gap:8px;flex:1}
-.steps-col.single{max-width:680px}
+.steps-col.single{max-width:680px;margin-top:32px}
 .steps-col-title{font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.3);padding:0 4px;margin-bottom:2px}
 .step-item{display:flex;align-items:flex-start;gap:14px;padding:12px 16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:8px;position:relative}
 .step-badge{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0;border:2px solid rgba(255,255,255,.6)}
@@ -2941,7 +3289,6 @@ h1{font-size:20px;font-weight:700;margin-bottom:24px;color:#fff;letter-spacing:-
 </style>
 </head>
 <body>
-<h1>Step-by-Step Guide</h1>
 ${buildGuideFrameHTML(frameSettings?.style || 'none', pageUrl, formatDateTimeStr(frameSettings?.dateTime, timestamp))}
 <div class="sw">
   <img src="${pngDataUrl}" alt="Guide Screenshot">
@@ -2970,27 +3317,41 @@ ${stepsHTML}
   function positionPopup(h){
     var popup=h.querySelector('.badge-popup');
     if(!popup)return;
-    popup.classList.remove('flip');
-    popup.style.left='50%';
-    popup.style.transform='translateX(-50%)';
+    popup.classList.remove('flip','side-left','side-right');
+    popup.style.left='50%';popup.style.right='';popup.style.top='';popup.style.bottom='';
+    popup.style.transform='translateX(-50%)';popup.style.marginTop='';
     popup.style.setProperty('--arrow-x','50%');
-    var pr=popup.getBoundingClientRect();
     var sw=h.closest('.sw');
     var sr=sw?sw.getBoundingClientRect():{left:0,top:0,right:window.innerWidth,bottom:window.innerHeight};
-    // Flip vertically if popup goes above viewport or above image top
+    var hr=h.getBoundingClientRect();
+    // Step 1: vertical flip (same as before)
+    var pr=popup.getBoundingClientRect();
     if(pr.top<sr.top+4){popup.classList.add('flip');pr=popup.getBoundingClientRect();}
-    // Clamp horizontally within image bounds
+    // Step 2: horizontal check
     var dx=0;
     if(pr.left<sr.left+4){dx=sr.left+4-pr.left;}
     else if(pr.right>sr.right-4){dx=sr.right-4-pr.right;}
     if(dx!==0){
-      var cur=parseFloat(popup.style.left)||0;
-      popup.style.left=(cur+dx)+'px';
-      popup.style.transform='none';
-      // Move arrow back to center
-      var hr=h.getBoundingClientRect();
-      var arrowX=Math.round(hr.left+hr.width/2-(pr.left+dx));
-      popup.style.setProperty('--arrow-x',arrowX+'px');
+      var popW=popup.offsetWidth;
+      var popH=popup.offsetHeight;
+      if(Math.abs(dx)>popW*0.4){
+        // Large overflow → side positioning (overrides flip)
+        var sideClass=dx<0?'side-left':'side-right';
+        popup.classList.add(sideClass);
+        // Vertical clamp for side mode (popup centered at badge vertically)
+        var estTop=hr.top+hr.height/2-popH/2;
+        var mt=0;
+        if(estTop<sr.top+4)mt=sr.top+4-estTop;
+        else if(estTop+popH>sr.bottom-4)mt=sr.bottom-4-(estTop+popH);
+        if(mt!==0)popup.style.marginTop=mt+'px';
+      }else{
+        // Small overflow → existing clamp with arrow adjustment
+        var cur=parseFloat(popup.style.left)||0;
+        popup.style.left=(cur+dx)+'px';
+        popup.style.transform='none';
+        var arrowX=Math.round(hr.left+hr.width/2-(pr.left+dx));
+        popup.style.setProperty('--arrow-x',arrowX+'px');
+      }
     }
   }
   document.addEventListener('click',function(){document.querySelectorAll('.badge-hotspot.open').forEach(function(o){o.classList.remove('open')})});
@@ -3014,6 +3375,8 @@ ${stepsHTML}
 
 // ─── Crop Tool ────────────────────────────────────────────────────────────────
 
+let _cropOverlaySyncHandler = null;
+
 function enterCropMode() {
   // Switch to original view without disabling the full toolbar
   if (!showingOriginal) {
@@ -3022,16 +3385,19 @@ function enterCropMode() {
     $('view-toggle').dataset.state = 'original';
     fabricCanvas.renderAll();
   }
-  const elW = origW * currentZoom;
-  const elH = origH * currentZoom;
-  cropState = { x: 0, y: 0, w: elW, h: elH };
+  // Zoom to fit entire document — eliminates the "overlay out of sync" issue on enter
+  fitToScreen(56);
+  cropState = { x: 0, y: 0, w: origW, h: origH };
   renderCropOverlay();
 }
 
 function exitCropMode() {
   cropState = null;
+  if (_cropOverlaySyncHandler) { fabricCanvas.off('after:render', _cropOverlaySyncHandler); _cropOverlaySyncHandler = null; }
   const overlay = document.getElementById('crop-overlay');
   if (overlay) overlay.remove();
+  const bar = document.getElementById('crop-action-bar');
+  if (bar) bar.remove();
   // Restore annotated view
   if (showingOriginal) {
     showingOriginal = false;
@@ -3055,15 +3421,29 @@ function renderCropOverlay() {
       <div class="crop-handle nw"></div><div class="crop-handle n"></div><div class="crop-handle ne"></div>
       <div class="crop-handle w"></div><div class="crop-handle e"></div>
       <div class="crop-handle sw"></div><div class="crop-handle s"></div><div class="crop-handle se"></div>
-    </div>
-    <div id="crop-action-bar">
-      <button id="crop-cancel-btn">✕ ${t('cancel')}</button>
-      <button id="crop-apply-btn">✓ ${t('toolCropApply')}</button>
     </div>`;
   document.getElementById('canvas-container').appendChild(el);
+
+  // Action bar lives outside the scaled container so it's zoom-independent
+  const existingBar = document.getElementById('crop-action-bar');
+  if (existingBar) existingBar.remove();
+  const bar = document.createElement('div');
+  bar.id = 'crop-action-bar';
+  bar.innerHTML = `<button id="crop-cancel-btn">✕ ${t('cancel')}</button><button id="crop-reset-btn">↺ ${t('toolCropReset')}</button><button id="crop-apply-btn">✓ ${t('toolCropApply')}</button>`;
+  document.querySelector('.canvas-area').appendChild(bar);
+
+  // Keep overlay in sync with zoom/pan
+  _cropOverlaySyncHandler = () => { if (cropState) updateCropShades(); };
+  fabricCanvas.on('after:render', _cropOverlaySyncHandler);
+
   updateCropShades();
   initCropDrag();
   document.getElementById('crop-apply-btn').addEventListener('click', applyCrop);
+  document.getElementById('crop-reset-btn').addEventListener('click', () => {
+    fitToScreen(56);
+    cropState = { x: 0, y: 0, w: origW, h: origH };
+    updateCropShades();
+  });
   document.getElementById('crop-cancel-btn').addEventListener('click', () => {
     exitCropMode();
     document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
@@ -3074,21 +3454,41 @@ function renderCropOverlay() {
 }
 
 function updateCropShades() {
-  if (!cropState) return;
+  if (!cropState || !fabricCanvas) return;
   const { x, y, w, h } = cropState;
+  const vpt = fabricCanvas.viewportTransform;
+  const zoom = vpt[0], tx = vpt[4], ty = vpt[5];
+  // Convert image coordinates to screen coordinates within #canvas-container
+  const sx = Math.round(tx + x * zoom);
+  const sy = Math.round(ty + y * zoom);
+  const sw = Math.round(w * zoom);
+  const sh = Math.round(h * zoom);
   const set = (id, css) => { const el = document.getElementById(id); if (el) el.style.cssText = css; };
-  set('cs-t', `position:absolute;top:0;left:0;right:0;height:${y}px`);
-  set('cs-b', `position:absolute;left:0;right:0;top:${y + h}px;bottom:0`);
-  set('cs-l', `position:absolute;top:${y}px;left:0;width:${x}px;height:${h}px`);
-  set('cs-r', `position:absolute;top:${y}px;left:${x + w}px;right:0;height:${h}px`);
+  set('cs-t', `position:absolute;top:0;left:0;right:0;height:${sy}px`);
+  set('cs-b', `position:absolute;left:0;right:0;top:${sy + sh}px;bottom:0`);
+  set('cs-l', `position:absolute;top:${sy}px;left:0;width:${sx}px;height:${sh}px`);
+  set('cs-r', `position:absolute;top:${sy}px;left:${sx + sw}px;right:0;height:${sh}px`);
   const cr = document.getElementById('crop-rect');
-  if (cr) { cr.style.left = x + 'px'; cr.style.top = y + 'px'; cr.style.width = w + 'px'; cr.style.height = h + 'px'; }
+  if (cr) { cr.style.left = sx + 'px'; cr.style.top = sy + 'px'; cr.style.width = sw + 'px'; cr.style.height = sh + 'px'; }
 }
 
 function initCropDrag() {
   const cropRect = document.getElementById('crop-rect');
   const MIN = 20;
   let dragging = false, dragType = null, startX, startY, startCrop;
+  let panning = false, panStartX, panStartY, panStartVpt;
+
+  // Pan canvas by dragging in the dark shade areas
+  document.querySelectorAll('#crop-overlay .crop-shade').forEach(shade => {
+    shade.style.cursor = 'grab';
+    shade.addEventListener('mousedown', (e) => {
+      panning = true;
+      panStartX = e.clientX; panStartY = e.clientY;
+      panStartVpt = [...fabricCanvas.viewportTransform];
+      shade.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+  });
 
   cropRect.addEventListener('mousedown', (e) => {
     if (e.target.classList.contains('crop-handle')) return;
@@ -3105,10 +3505,20 @@ function initCropDrag() {
     });
   });
   document.addEventListener('mousemove', (e) => {
+    if (panning) {
+      const vpt = [...panStartVpt];
+      vpt[4] = panStartVpt[4] + (e.clientX - panStartX);
+      vpt[5] = panStartVpt[5] + (e.clientY - panStartY);
+      fabricCanvas.setViewportTransform(vpt);
+      currentZoom = vpt[0];
+      updateCropShades();
+      return;
+    }
     if (!dragging || !cropState) return;
-    const dx = e.clientX - startX, dy = e.clientY - startY;
+    const cropZoom = fabricCanvas?.viewportTransform?.[0] ?? currentZoom;
+    const dx = (e.clientX - startX) / cropZoom, dy = (e.clientY - startY) / cropZoom;
     const s = startCrop;
-    const elW = origW * currentZoom, elH = origH * currentZoom;
+    const elW = origW, elH = origH;
     const cl = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
     let { x, y, w, h } = s;
     if (dragType === 'move') {
@@ -3122,15 +3532,21 @@ function initCropDrag() {
     cropState = { x, y, w, h };
     updateCropShades();
   });
-  document.addEventListener('mouseup', () => { dragging = false; });
+  document.addEventListener('mouseup', () => {
+    if (panning) {
+      document.querySelectorAll('#crop-overlay .crop-shade').forEach(s => s.style.cursor = 'grab');
+      panning = false;
+    }
+    dragging = false;
+  });
 }
 
 async function applyCrop() {
   if (!cropState || !originalImageDataUrl) return;
-  const ix = Math.round(cropState.x / currentZoom);
-  const iy = Math.round(cropState.y / currentZoom);
-  const iw = Math.round(cropState.w / currentZoom);
-  const ih = Math.round(cropState.h / currentZoom);
+  const ix = Math.round(cropState.x);
+  const iy = Math.round(cropState.y);
+  const iw = Math.round(cropState.w);
+  const ih = Math.round(cropState.h);
   if (iw < 1 || ih < 1) return;
 
   const img = await loadImage(originalImageDataUrl);
@@ -3186,6 +3602,214 @@ function buildCropPanel() {
   btn.textContent = t('toolCropApply');
   btn.addEventListener('click', applyCrop);
   body.appendChild(btn);
+}
+
+// ─── Slice Tool (Bereich entfernen) ──────────────────────────────────────────
+
+let sliceState = null;
+let _sliceOverlaySyncHandler = null;
+
+function enterSliceMode() {
+  if (!showingOriginal) {
+    showingOriginal = true;
+    fabricCanvas.getObjects().forEach(obj => { obj.visible = false; });
+    $('view-toggle').dataset.state = 'original';
+    fabricCanvas.renderAll();
+  }
+  fitToScreen(56);
+  sliceState = { y: Math.round(origH / 3), h: Math.round(origH / 3) };
+  renderSliceOverlay();
+}
+
+function exitSliceMode() {
+  sliceState = null;
+  if (_sliceOverlaySyncHandler) { fabricCanvas.off('after:render', _sliceOverlaySyncHandler); _sliceOverlaySyncHandler = null; }
+  const overlay = document.getElementById('slice-overlay');
+  if (overlay) overlay.remove();
+  const bar = document.getElementById('slice-action-bar');
+  if (bar) bar.remove();
+  if (showingOriginal) {
+    showingOriginal = false;
+    fabricCanvas.getObjects().forEach(obj => { obj.visible = true; });
+    $('view-toggle').dataset.state = 'annotated';
+    fabricCanvas.renderAll();
+  }
+}
+
+function renderSliceOverlay() {
+  const existing = document.getElementById('slice-overlay');
+  if (existing) existing.remove();
+  const el = document.createElement('div');
+  el.id = 'slice-overlay';
+  el.innerHTML = `
+    <div class="slice-shade" id="ss-t"></div>
+    <div class="slice-shade" id="ss-b"></div>
+    <div id="slice-band">
+      <div class="slice-handle n"></div>
+      <div class="slice-handle s"></div>
+    </div>`;
+  document.getElementById('canvas-container').appendChild(el);
+
+  const existingBar = document.getElementById('slice-action-bar');
+  if (existingBar) existingBar.remove();
+  const bar = document.createElement('div');
+  bar.id = 'slice-action-bar';
+  bar.innerHTML = `<button id="slice-cancel-btn">✕ ${t('cancel')}</button><button id="slice-reset-btn">↺ ${t('toolCropReset')}</button><button id="slice-apply-btn">✓ ${t('toolSliceApply')}</button>`;
+  document.querySelector('.canvas-area').appendChild(bar);
+
+  _sliceOverlaySyncHandler = () => { if (sliceState) updateSliceShades(); };
+  fabricCanvas.on('after:render', _sliceOverlaySyncHandler);
+
+  updateSliceShades();
+  initSliceDrag();
+
+  document.getElementById('slice-apply-btn').addEventListener('click', applySlice);
+  document.getElementById('slice-reset-btn').addEventListener('click', () => {
+    fitToScreen(56);
+    sliceState = { y: Math.round(origH / 3), h: Math.round(origH / 3) };
+    updateSliceShades();
+  });
+  document.getElementById('slice-cancel-btn').addEventListener('click', () => {
+    exitSliceMode();
+    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+    $('tool-pan').classList.add('active');
+    currentTool = 'pan';
+    setTool('pan');
+  });
+}
+
+function updateSliceShades() {
+  if (!sliceState || !fabricCanvas) return;
+  const { y, h } = sliceState;
+  const vpt = fabricCanvas.viewportTransform;
+  const zoom = vpt[0], ty = vpt[5];
+  const sy = Math.round(ty + y * zoom);
+  const sh = Math.round(h * zoom);
+  const set = (id, css) => { const el = document.getElementById(id); if (el) el.style.cssText = css; };
+  set('ss-t', `position:absolute;top:0;left:0;right:0;height:${sy}px`);
+  set('ss-b', `position:absolute;left:0;right:0;top:${sy + sh}px;bottom:0`);
+  const sb = document.getElementById('slice-band');
+  if (sb) { sb.style.top = sy + 'px'; sb.style.height = sh + 'px'; }
+}
+
+function initSliceDrag() {
+  const band = document.getElementById('slice-band');
+  const MIN = 10;
+  let dragging = false, dragType = null, startY, startSlice;
+  let panning = false, panStartX, panStartY, panStartVpt;
+
+  document.querySelectorAll('#slice-overlay .slice-shade').forEach(shade => {
+    shade.style.cursor = 'grab';
+    shade.addEventListener('mousedown', (e) => {
+      panning = true;
+      panStartX = e.clientX; panStartY = e.clientY;
+      panStartVpt = [...fabricCanvas.viewportTransform];
+      shade.style.cursor = 'grabbing';
+      e.preventDefault();
+    });
+  });
+
+  band.addEventListener('mousedown', (e) => {
+    if (e.target.classList.contains('slice-handle')) return;
+    dragging = true; dragType = 'move';
+    startY = e.clientY; startSlice = { ...sliceState };
+    e.preventDefault();
+  });
+  band.querySelectorAll('.slice-handle').forEach(handle => {
+    handle.addEventListener('mousedown', (e) => {
+      dragging = true;
+      dragType = handle.classList.contains('n') ? 'n' : 's';
+      startY = e.clientY; startSlice = { ...sliceState };
+      e.preventDefault(); e.stopPropagation();
+    });
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (panning) {
+      const vpt = [...panStartVpt];
+      vpt[4] = panStartVpt[4] + (e.clientX - panStartX);
+      vpt[5] = panStartVpt[5] + (e.clientY - panStartY);
+      fabricCanvas.setViewportTransform(vpt);
+      currentZoom = vpt[0];
+      updateSliceShades();
+      return;
+    }
+    if (!dragging || !sliceState) return;
+    const zoom = fabricCanvas?.viewportTransform?.[0] ?? currentZoom;
+    const dy = (e.clientY - startY) / zoom;
+    const s = startSlice;
+    const cl = (v, lo, hi) => Math.max(lo, Math.min(hi, v));
+    let { y, h } = s;
+    if (dragType === 'move') {
+      y = cl(s.y + dy, 0, origH - h);
+    } else if (dragType === 'n') {
+      const ny = cl(s.y + dy, 0, s.y + s.h - MIN);
+      h = s.y + s.h - ny; y = ny;
+    } else if (dragType === 's') {
+      h = cl(s.h + dy, MIN, origH - s.y);
+    }
+    sliceState = { y, h };
+    updateSliceShades();
+  });
+  document.addEventListener('mouseup', () => {
+    if (panning) {
+      document.querySelectorAll('#slice-overlay .slice-shade').forEach(s => s.style.cursor = 'grab');
+      panning = false;
+    }
+    dragging = false;
+  });
+}
+
+async function applySlice() {
+  if (!sliceState || !originalImageDataUrl) return;
+  const iy = Math.round(sliceState.y);
+  const ih = Math.round(sliceState.h);
+  if (ih < 1 || iy < 0 || iy + ih > origH) return;
+
+  const topH = iy;
+  const botY = iy + ih;
+  const botH = origH - botY;
+  const newH = topH + botH;
+  if (newH < 1) return;
+
+  const img = await loadImage(originalImageDataUrl);
+  const c = document.createElement('canvas');
+  c.width = origW; c.height = newH;
+  const ctx = c.getContext('2d');
+  if (topH > 0) ctx.drawImage(img, 0, 0, origW, topH, 0, 0, origW, topH);
+  if (botH > 0) ctx.drawImage(img, 0, botY, origW, botH, 0, topH, origW, botH);
+  const resultUrl = c.toDataURL('image/png');
+
+  const thumbW = 172, thumbH = Math.round(newH * thumbW / origW);
+  const tc = document.createElement('canvas');
+  tc.width = thumbW; tc.height = thumbH;
+  tc.getContext('2d').drawImage(c, 0, 0, origW, newH, 0, 0, thumbW, thumbH);
+  const thumbDataUrl = tc.toDataURL('image/jpeg', 0.65);
+
+  const blob = await fetch(resultUrl).then(r => r.blob());
+  const newId = crypto.randomUUID();
+  const newEntry = { id: newId, timestamp: Date.now(), url: currentPageUrl, name: currentScreenshotName };
+
+  await Promise.all([dbSave(newId, blob), dbSaveThumbnail(newId, thumbDataUrl)]);
+
+  const { screenshot_history = [], license_status, history_limit_user } = await chrome.storage.local.get(['screenshot_history', 'license_status', 'history_limit_user']);
+  const histMax = license_status === 'active' ? (history_limit_user || 500) : 10;
+  screenshot_history.unshift(newEntry);
+  if (screenshot_history.length > histMax) {
+    const evicted = screenshot_history.splice(histMax);
+    const ids = evicted.map(e => e.id);
+    await Promise.all([dbDeleteMany(ids), dbDeleteManyAnnotations(ids), dbDeleteManyThumbnails(ids)]);
+  }
+  await chrome.storage.local.set({ screenshot_history });
+
+  exitSliceMode();
+  originalImageDataUrl = null;
+  currentHistoryId = null;
+  document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
+  $('tool-pan').classList.add('active');
+  currentTool = 'pan';
+  setTool('pan');
+  await loadHistory();
 }
 
 // ─── URL Frame Tool ───────────────────────────────────────────────────────────
@@ -3500,23 +4124,24 @@ function bindUIEvents() {
         return;
       }
 
-      // Exit crop mode when switching away
+      // Exit crop/slice mode when switching away
       if (currentTool === 'crop' && tool !== 'crop') exitCropMode();
+      if (currentTool === 'slice' && tool !== 'slice') exitSliceMode();
 
       const wasActive = btn.classList.contains('active');
       document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
       btn.classList.add('active');
       currentTool = tool;
 
-      // crop and urlframe don't map to canvas drawing tools — switch canvas to pan
-      if (tool === 'crop' || tool === 'urlframe') setTool('pan');
+      // crop, slice and urlframe don't map to canvas drawing tools — switch canvas to pan
+      if (tool === 'crop' || tool === 'slice' || tool === 'urlframe') setTool('pan');
       else setTool(tool);
 
       const emojiPicker = $('emoji-picker');
       const textPanel   = $('preset-panel');
       const toolPanel   = $('tool-options-panel');
 
-      const PANEL_TOOLS = ['text', 'rect', 'ellipse', 'badge', 'highlight', 'freehand', 'arrow', 'image', 'crop', 'urlframe'];
+      const PANEL_TOOLS = ['text', 'rect', 'ellipse', 'badge', 'highlight', 'freehand', 'arrow', 'image', 'crop', 'slice', 'urlframe'];
 
       if (tool === 'emoji') {
         const wasHidden = emojiPicker.classList.contains('hidden');
@@ -3539,8 +4164,9 @@ function bindUIEvents() {
         else if (tool === 'arrow')     buildArrowPresetPanel();
         else if (tool === 'image')     buildImagePresetPanel();
         else if (tool === 'crop')     { enterCropMode(); toolPanel.classList.add('hidden'); }
+        else if (tool === 'slice')    { enterSliceMode(); toolPanel.classList.add('hidden'); }
         else if (tool === 'urlframe') buildUrlFramePanel();
-        if (tool !== 'crop') {
+        if (tool !== 'crop' && tool !== 'slice') {
           const br = btn.getBoundingClientRect();
           const rawTop = br.top;
           const panelMaxTop = window.innerHeight - 280;
@@ -3569,31 +4195,33 @@ function bindUIEvents() {
   $('btn-zoom-100').addEventListener('click', () => applyZoom(1));
   $('btn-zoom-fit').addEventListener('click', fitToScreen);
 
-  // Wheel zoom: zoom-to-cursor + discrete steps above 300%
+  // Wheel zoom: zoom-to-cursor using Fabric's zoomToPoint
   const area = document.querySelector('.canvas-area');
   area.addEventListener('wheel', (e) => {
     e.preventDefault();
     const zoomIn = e.deltaY < 0;
-    const newZoom = computeWheelZoom(currentZoom, zoomIn);
-
-    // Capture cursor position in canvas-space BEFORE applying zoom
+    const newZoom = computeWheelZoom(fabricCanvas.viewportTransform[0], zoomIn);
     const areaRect = area.getBoundingClientRect();
-    const { cx: oldCX, cy: oldCY } = containerScrollOffset(currentZoom);
-    const mouseContentX = e.clientX - areaRect.left + area.scrollLeft;
-    const mouseContentY = e.clientY - areaRect.top  + area.scrollTop;
-    const canvasX = (mouseContentX - oldCX) / currentZoom;
-    const canvasY = (mouseContentY - oldCY) / currentZoom;
-
-    applyZoom(newZoom);
-
-    // Scroll so the same canvas point stays under the cursor
-    const { cx: newCX, cy: newCY } = containerScrollOffset(newZoom);
-    area.scrollLeft = newCX + canvasX * currentZoom - (e.clientX - areaRect.left);
-    area.scrollTop  = newCY + canvasY * currentZoom - (e.clientY - areaRect.top);
+    const mouseX = e.clientX - areaRect.left;
+    const mouseY = e.clientY - areaRect.top;
+    fabricCanvas.zoomToPoint(new fabric.Point(mouseX, mouseY), newZoom);
+    currentZoom = newZoom;
+    syncZoomSelect();
   }, { passive: false });
+
+  // Resize canvas when canvas-area changes size (window resize, panel toggle, etc.)
+  new ResizeObserver(() => {
+    if (!fabricCanvas) return;
+    const w = area.clientWidth;
+    const h = area.clientHeight;
+    fabricCanvas.setWidth(w);
+    fabricCanvas.setHeight(h);
+    fabricCanvas.renderAll();
+  }).observe(area);
 
   // Export
   $('btn-save-png').addEventListener('click', async () => {
+    if (selectedHistoryIds.size > 0) { await bulkDownloadPng(); return; }
     fabricCanvas.discardActiveObject();
     fabricCanvas.renderAll();
     setExportName(currentScreenshotName);
@@ -3607,6 +4235,7 @@ function bindUIEvents() {
     if (confettiEnabled) launchConfetti();
   });
   $('btn-save-pdf').addEventListener('click', async () => {
+    if (selectedHistoryIds.size > 0) { showBulkDeleteModal(); return; }
     if (!isPremium) { showUpgradeModal(); return; }
     fabricCanvas.discardActiveObject();
     fabricCanvas.renderAll();
@@ -3667,6 +4296,36 @@ function bindUIEvents() {
     $('delete-modal').classList.add('hidden');
   });
 
+  // Bulk delete modal
+  $('btn-bulk-delete-confirm').addEventListener('click', async () => {
+    $('bulk-delete-modal').classList.add('hidden');
+    const ids = [...selectedHistoryIds];
+    if (!ids.length) return;
+    const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+    const filtered = screenshot_history.filter(i => !ids.includes(i.id));
+    await Promise.all([dbDeleteMany(ids), dbDeleteManyAnnotations(ids), dbDeleteManyThumbnails(ids)]);
+    await chrome.storage.local.set({ screenshot_history: filtered });
+    if (ids.includes(currentHistoryId)) {
+      currentHistoryId = null;
+      fabricCanvas.clear(); fabricCanvas.renderAll();
+      originalImageDataUrl = null; origW = 0; origH = 0;
+      undoStack = []; undoIndex = -1; updateUndoRedoButtons();
+    }
+    selectedHistoryIds.clear();
+    await renderHistory(filtered);
+    if (!filtered.length) showLibraryHint();
+  });
+  $('btn-bulk-delete-cancel').addEventListener('click', () => {
+    $('bulk-delete-modal').classList.add('hidden');
+  });
+
+  // Cancel selection
+  $('btn-cancel-selection').addEventListener('click', () => {
+    selectedHistoryIds.clear();
+    document.querySelectorAll('#history-list .history-item.selected').forEach(el => el.classList.remove('selected'));
+    updateSelectionUI();
+  });
+
   // History settings gear
   $('btn-history-settings').addEventListener('click', () => {
     if (!isPremium) { showUpgradeModal(); return; }
@@ -3707,9 +4366,43 @@ function bindUIEvents() {
     $('history-limit-value').textContent = saved;
   });
 
+  // Clear all history
+  $('btn-clear-all-history').addEventListener('click', () => {
+    $('clear-history-modal').classList.remove('hidden');
+  });
+  $('btn-clear-history-cancel').addEventListener('click', () => {
+    $('clear-history-modal').classList.add('hidden');
+  });
+  $('btn-clear-history-confirm').addEventListener('click', async () => {
+    $('clear-history-modal').classList.add('hidden');
+    const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+    const ids = screenshot_history.map(e => e.id);
+    if (ids.length) {
+      await Promise.all([dbDeleteMany(ids), dbDeleteManyAnnotations(ids), dbDeleteManyThumbnails(ids)]);
+      await chrome.storage.local.set({ screenshot_history: [] });
+    }
+    originalImageDataUrl = null;
+    currentHistoryId = null;
+    currentScreenshotName = '';
+    selectedHistoryIds.clear();
+    await renderHistory([]);
+    fabricCanvas.clear();
+    fabricCanvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
+    fabricCanvas.renderAll();
+    origW = 0; origH = 0;
+    currentZoom = 1;
+    $('canvas-container').style.visibility = 'hidden';
+    $('library-hint').classList.remove('hidden');
+    updateExportButton();
+  });
+
   // Delete key removes selected object
   document.addEventListener('keydown', (e) => {
-    if ((e.key === 'Delete' || e.key === 'Backspace') && fabricCanvas && document.activeElement.tagName !== 'INPUT' && document.activeElement.tagName !== 'TEXTAREA') {
+    const ae = document.activeElement;
+    // Allow Delete from range/checkbox/color inputs (format panel controls) but block text inputs
+    const isTextInput = ae.tagName === 'TEXTAREA' ||
+      (ae.tagName === 'INPUT' && !['range','checkbox','radio','color','button','submit','reset'].includes(ae.type));
+    if ((e.key === 'Delete' || e.key === 'Backspace') && fabricCanvas && !isTextInput) {
       const active = fabricCanvas.getActiveObject();
       if (active) {
         if (active.type === 'activeSelection') {

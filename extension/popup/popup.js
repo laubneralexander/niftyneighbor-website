@@ -50,11 +50,16 @@ async function refreshLicenseUI() {
 
 function showCaptureProgress() {
   $('capture-progress').classList.remove('hidden');
-  $('progress-fill').style.width = '60%';
+  updateProgress('analyzing', 5);
 }
 function hideCaptureProgress() {
   $('capture-progress').classList.add('hidden');
   $('progress-fill').style.width = '0%';
+}
+function updateProgress(stage, pct) {
+  $('progress-fill').style.width = pct + '%';
+  const labels = { analyzing: 'captureAnalyzing', capturing: 'capturing', stitching: 'captureStitching', done: 'captureDone' };
+  $('progress-text').textContent = t(labels[stage] || 'capturing');
 }
 
 function bindEvents() {
@@ -73,6 +78,8 @@ function bindEvents() {
       const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
       const response = await chrome.runtime.sendMessage({ action: 'captureFullPage', tabId: tab.id });
       if (response?.limitReached) { hideCaptureProgress(); $('upgrade-modal').classList.remove('hidden'); return; }
+      updateProgress('done', 100);
+      await new Promise(r => setTimeout(r, 600));
       window.close();
     } catch (e) { hideCaptureProgress(); showError(t('captureError')); }
   });
@@ -87,7 +94,7 @@ function bindEvents() {
   });
 
   $('btn-library').addEventListener('click', async () => {
-    await chrome.storage.session.remove(['pendingScreenshot']);
+    await chrome.storage.session.remove(['pendingScreenshotId']);
     chrome.tabs.create({ url: chrome.runtime.getURL('editor/editor.html') });
     window.close();
   });
@@ -110,6 +117,13 @@ function bindEvents() {
   });
   $('toggle-confetti').addEventListener('change', async (e) => {
     await chrome.storage.local.set({ confetti_enabled: e.target.checked });
+  });
+  document.querySelectorAll('.pixel-limit-opt').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      document.querySelectorAll('.pixel-limit-opt').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      await chrome.storage.local.set({ fullpage_pixel_limit: parseInt(btn.dataset.value) });
+    });
   });
 
   // Inline license activation (Free section in settings)
@@ -140,6 +154,13 @@ function bindEvents() {
   $('btn-buy').addEventListener('click', () => { chrome.tabs.create({ url: CHECKOUT_URL }); window.close(); });
   $('btn-enter-license').addEventListener('click', () => { closeUpgradeModal(); openSettingsView(); });
   $('btn-close-upgrade').addEventListener('click', closeUpgradeModal);
+
+  // Live progress updates from capture.js via session storage
+  chrome.storage.onChanged.addListener((changes, area) => {
+    if (area !== 'local' || !changes._sfProgress?.newValue) return;
+    const { stage, pct } = changes._sfProgress.newValue;
+    updateProgress(stage, pct);
+  });
 }
 
 // ─── Settings View ────────────────────────────────────────────────────────────
@@ -153,8 +174,11 @@ async function openSettingsView() {
   msg.classList.add('hidden');
   msg.className = 'license-msg hidden';
   // Load confetti toggle state
-  const { confetti_enabled = true } = await chrome.storage.local.get(['confetti_enabled']);
+  const { confetti_enabled = true, fullpage_pixel_limit = 50000 } = await chrome.storage.local.get(['confetti_enabled', 'fullpage_pixel_limit']);
   $('toggle-confetti').checked = confetti_enabled;
+  document.querySelectorAll('.pixel-limit-opt').forEach(btn => {
+    btn.classList.toggle('active', parseInt(btn.dataset.value) === fullpage_pixel_limit);
+  });
 
   // Show the right license section
   const data = await chrome.storage.local.get(['license_status']);

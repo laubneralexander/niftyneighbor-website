@@ -1,185 +1,581 @@
 {
-  "appName": { "message": "ScreenFellow: Pełnostronicowe zrzuty ekranu i feedback projektowy" },
-  "appDescription": { "message": "Przechwytuj całe strony z automatycznym przewijaniem, dodawaj adnotacje profesjonalnymi narzędziami i eksportuj jako PNG lub PDF." },
-  "captureVisible": { "message": "Przechwyć widoczny obszar" },
-  "captureVisibleDesc": { "message": "Zrzut ekranu tego, co widzisz teraz" },
-  "captureFullPage": { "message": "Przechwyć całą stronę" },
-  "captureFullPageDesc": { "message": "Automatyczne przewijanie i łączenie całej strony" },
-  "captureSelection": { "message": "Przechwyć zaznaczenie" },
-  "captureSelectionDesc": { "message": "Narysuj obszar do przechwycenia" },
-  "openLibrary": { "message": "Otwórz bibliotekę zrzutów" },
-  "offlineMessage": { "message": "Jesteś offline. ScreenFellow wymaga połączenia z internetem." },
-  "capturing": { "message": "Przechwytywanie..." },
-  "captureError": { "message": "Nie można przechwycić tej strony. Wewnętrzne strony Chrome nie mogą być przechwytywane." },
-  "saveAsImage": { "message": "Zapisz jako obraz (PNG)" },
-  "saveAsPDF": { "message": "Zapisz jako PDF" },
-  "edit": { "message": "Edytuj i dodaj adnotacje" },
-  "editProOnly": { "message": "Edytuj i dodaj adnotacje (Pro)" },
-  "original": { "message": "Oryginał" },
-  "annotated": { "message": "Z adnotacjami" },
-  "undo": { "message": "Cofnij" },
-  "redo": { "message": "Ponów" },
-  "download": { "message": "Pobierz" },
-  "toolSelect": { "message": "Zaznacz" },
-  "toolRect": { "message": "Prostokąt" },
-  "toolCircle": { "message": "Ponumerowane kółko" },
-  "toolArrow": { "message": "Strzałka" },
-  "toolText": { "message": "Tekst" },
-  "toolHighlight": { "message": "Zaznacz" },
-  "toolFreehand": { "message": "Rysowanie odręczne" },
-  "toolEmoji": { "message": "Emoji / Naklejka" },
-  "activateLicense": { "message": "Aktywuj licencję" },
-  "licenseKey": { "message": "Klucz licencyjny" },
-  "licenseKeyPlaceholder": { "message": "Wpisz klucz licencyjny..." },
-  "activate": { "message": "Aktywuj" },
-  "deactivate": { "message": "Dezaktywuj licencję" },
-  "licenseActive": { "message": "Pro" },
-  "licenseFree": { "message": "Wersja darmowa" },
-  "licenseActivating": { "message": "Aktywacja..." },
-  "licenseSuccess": { "message": "Licencja aktywowana! Funkcje Pro zostały odblokowane." },
-  "licenseError": { "message": "Nieprawidłowy klucz licencyjny. Sprawdź i spróbuj ponownie." },
-  "licenseAlreadyActive": { "message": "Ta licencja jest aktywna na innym urządzeniu. Aktywacja tutaj ją tam dezaktywuje." },
-  "upgradeTitle": { "message": "Odblokuj ScreenFellow Pro" },
-  "upgradeBody": { "message": "Nieograniczone zrzuty pełnych stron. Dodawaj własne obrazy, znaki wodne i emoji. Eksport PDF, do 500 zrzutów z adnotacjami i własne presety. Jednorazowa opłata, bez subskrypcji!" },
-  "upgradePrice": { "message": "€15 — jednorazowo" },
-  "upgradeBuy": { "message": "Kup teraz (Bez subskrypcji!)" },
-  "upgradeActivate": { "message": "Mam już licencję" },
-  "upgradeClose": { "message": "Może później" },
-  "watermarkText": { "message": "ScreenFellow Free" },
-  "exportingPNG": { "message": "Zapisywanie PNG..." },
-  "exportingPDF": { "message": "Zapisywanie PDF..." },
-  "pageTooLarge": { "message": "Strona przekracza 20 000px — przechwytywane są tylko pierwsze 20 000px." },
-  "settingsTitle": { "message": "Ustawienia" },
-  "languageLabel": { "message": "Język" },
-  "shortcutsTitle": { "message": "Ustaw skróty klawiaturowe" },
-  "shortcutsOpen": { "message": "Otwórz skróty Chrome ↗" },
-  "confettiSectionTitle": { "message": "Animacje" },
-  "confettiLabel": { "message": "Konfetti" },
-  "settings": { "message": "Ustawienia" },
-  "close": { "message": "Zamknij" },
-  "cancel": { "message": "Anuluj" },
-  "color": { "message": "Kolor" },
-  "size": { "message": "Rozmiar" },
-  "opacity": { "message": "Przezroczystość" },
-  "strokeWidth": { "message": "Grubość obramowania" },
-  "presetStyles": { "message": "Style presetów" },
-  "licenseSettingsTitle": { "message": "Licencja" },
-  "licenseActivateHint": { "message": "Wpisz klucz licencyjny, aby odblokować funkcje Pro na tym urządzeniu." },
-  "licenseSettingsHint": { "message": "Wszystkie funkcje Pro zostaną dezaktywowane. Licencję można ponownie aktywować w dowolnym momencie." },
-  "licenseRelease": { "message": "Zwolnij licencję i wróć do Free" },
-  "releaseConfirmTitle": { "message": "Zwolnić licencję Pro?" },
-  "releaseConfirmBody": { "message": "To urządzenie straci wszystkie funkcje Pro. Historia zostanie skrócona do ostatnich 10 zrzutów — starsze zostaną usunięte. Licencja pozostaje ważna i może być reaktywowana w każdej chwili." },
-  "releaseConfirmOk": { "message": "Tak, zwolnij" },
-  "releaseConfirmCancel": { "message": "Anuluj" },
-  "historyLimitLabel": { "message": "Limit historii zrzutów" },
-  "historyLimitHint": { "message": "Maksymalna liczba zrzutów przechowywanych w historii." },
-  "back": { "message": "Wstecz" },
-  "zoomLevel": { "message": "Poziom powiększenia" },
-  "zoomActual": { "message": "Rzeczywisty rozmiar (100%)" },
-  "zoomFit": { "message": "Dopasuj do ekranu" },
-  "historySettings": { "message": "Ustawienia historii" },
-  "undoTitle": { "message": "Cofnij (Ctrl+Z)" },
-  "redoTitle": { "message": "Ponów (Ctrl+Y)" },
-  "editorHistory": { "message": "Historia" },
-  "editorHistoryMaxHint": { "message": "Maks. przechowywane zrzuty. Najstarsze są usuwane pierwsze." },
-  "editorNoScreenshots": { "message": "Brak zrzutów ekranu." },
-  "editorDeleteScreenshot": { "message": "Usuń zrzut ekranu" },
-  "editorLibraryHint": { "message": "Wybierz zrzut ekranu z historii, aby go wyświetlić lub dodać adnotacje." },
-  "editorLibraryArrow": { "message": "Historia ↗" },
-  "editorCanvasErrorTitle": { "message": "Brak załadowanego zrzutu" },
-  "editorCanvasErrorBody": { "message": "Najpierw użyj okienka ScreenFellow, aby przechwycić stronę." },
-  "editorFormatTitle": { "message": "Format" },
-  "licenseProActive": { "message": "Licencja Pro aktywna" },
-  "licenseFreeUpgrade": { "message": "Darmowy — kliknij, aby przejść na Pro" },
-  "licenseActivatedReload": { "message": "Licencja aktywowana! Przeładowywanie…" },
-  "editorPresetDeleteTitle": { "message": "Usunąć ten preset?" },
-  "editorPresetDeleteBody": { "message": "Ten preset zostanie trwale usunięty." },
-  "editorDeleteLabel": { "message": "Usuń" },
-  "historyLimitReduceTitle": { "message": "Zmniejszyć limit historii?" },
-  "historyLimitApply": { "message": "Tak, zastosuj" },
-  "editorDeleteScreenshotTitle": { "message": "Usunąć ten zrzut ekranu?" },
-  "editorBuyLicense": { "message": "Kup licencję Pro" },
-  "historyLimitDeleteWarning": { "message": "Zostanie usuniętych {n} zrzut(ów) (najstarsze pierwsze). Tej akcji nie można cofnąć." },
-  "toolPanTitle": { "message": "Panorama (V)" },
-  "toolSelectTitle": { "message": "Zaznacz (S · Prawy przycisk)" },
-  "toolRectTitle": { "message": "Prostokąt (R)" },
-  "toolEllipseTitle": { "message": "Elipsa (E)" },
-  "toolBadgeTitle": { "message": "Odznaka (C)" },
-  "toolArrowTitle": { "message": "Strzałka (A)" },
-  "toolTextTitle": { "message": "Tekst (T)" },
-  "toolHighlightTitle": { "message": "Zaznacz (H)" },
-  "toolFreehandTitle": { "message": "Rysowanie odręczne (F)" },
-  "toolBlurTitle": { "message": "Rozmycie (B)" },
-  "toolImageTitle": { "message": "Obraz / Znak wodny (I)" },
-  "toolEmojiTitle": { "message": "Emoji (X)" },
-  "toolLockedPro": { "message": "Funkcja Pro — kliknij, aby aktywować" },
-  "ofpTextStyle": { "message": "Styl tekstu" },
-  "ofpRectStyle": { "message": "Styl prostokąta" },
-  "ofpEllipseStyle": { "message": "Styl elipsy" },
-  "ofpBadgeStyle": { "message": "Styl odznaki" },
-  "ofpNumbering": { "message": "Numerowanie" },
-  "ofpHighlightColor": { "message": "Kolor zaznaczenia" },
-  "ofpPenStyle": { "message": "Styl pióra" },
-  "ofpArrowStyle": { "message": "Styl strzałki" },
-  "ofpImageStyle": { "message": "Obraz / Znak wodny" },
-  "ofpFormatFuture": { "message": "Opcje formatowania dostępne w przyszłej aktualizacji." },
-  "ofpCornerRadius": { "message": "Promień narożnika" },
-  "ofpPenWidth": { "message": "Grubość pióra" },
-  "ofpBorderColor": { "message": "Kolor obramowania" },
-  "ofpShadow": { "message": "Cień" },
-  "ofpBlurOutside": { "message": "Rozmycie zewnętrzne" },
-  "ofpBlurAmount": { "message": "Intensywność rozmycia" },
-  "ofpArrowWidth": { "message": "Szerokość" },
-  "ofpArrowType": { "message": "Typ" },
-  "ofpBlurStrength": { "message": "Siła rozmycia" },
-  "ofpStyle": { "message": "Styl" },
-  "ofpAlignment": { "message": "Wyrównanie" },
-  "ofpFont": { "message": "Czcionka" },
-  "ofpTextColor": { "message": "Kolor tekstu" },
-  "ofpFontSize": { "message": "Rozmiar czcionki" },
-  "ofpFillColor": { "message": "Kolor wypełnienia" },
-  "ofpSequence": { "message": "Sekwencja" },
-  "ofpBorderType": { "message": "Typ obramowania" },
-  "ofpFilled": { "message": "● Wypełniony" },
-  "ofpOutline": { "message": "○ Kontur" },
-  "ofpContinueNumeric": { "message": "Kontynuuj stąd (tylko liczby)" },
-  "ofpContinueFrom": { "message": "Kontynuuj od {from} → następny: {next}" },
-  "ofpImageUpload": { "message": "↑ Prześlij obraz" },
-  "arrowTypeDesign": { "message": "Strzałka projektowa" },
-  "arrowTypeDesignGradient": { "message": "Projekt + Gradient" },
-  "arrowTypeSimple": { "message": "Prosta strzałka" },
-  "arrowTypeDouble": { "message": "Podwójna strzałka" },
-  "arrowTypeLine": { "message": "Linia" },
-  "arrowTypeLineDot": { "message": "Linia + Punkt" },
-  "arrowTypeLineTwoDots": { "message": "Linia + Dwa punkty" },
-  "presetDeleteMinOne": { "message": "Wymagany co najmniej 1 preset" },
-  "presetDeleteBtn": { "message": "Usuń preset" },
-  "exportGuide": { "message": "Eksportuj jako przewodnik (HTML)" },
-  "badgeStepDescription": { "message": "Opis kroku" },
-  "badgeStepDescriptionPlaceholder": { "message": "Co użytkownik powinien tu zrobić..." },
-  "guideBeaconHint": { "message": "Kliknij odznakę ↑" },
-  "guideStep": { "message": "Krok" },
-  "toolCropTitle": { "message": "Przytnij (K)" },
-  "toolUrlFrameTitle": { "message": "URL i znacznik czasu (U)" },
-  "toolCropApply": { "message": "Zastosuj przycinanie" },
-  "toolCropHint": { "message": "Przycina oryginalny zrzut ekranu — zapisywany jako nowy wpis w historii." },
-  "ofpUrlFrameStyle": { "message": "Styl ramki" },
-  "urlFrameNone": { "message": "Brak" },
-  "urlFrameMac": { "message": "Mac OS X" },
-  "urlFrameWin": { "message": "Windows" },
-  "urlFrameBarTop": { "message": "Pasek URL — góra" },
-  "urlFrameBarBottom": { "message": "Pasek URL — dół" },
-  "ofpDateTime": { "message": "Data i godzina" },
-  "dateTimeNone": { "message": "Brak" },
-  "dateTimeDate": { "message": "Data" },
-  "dateTimeDateTime": { "message": "Data i godzina" },
-  "dateTimeISO": { "message": "ISO" },
-  "noUrlCaptured": { "message": "Brak zapisanego URL dla tego zrzutu" },
-  "urlFrameExportHint": { "message": "URL i znacznik czasu są stosowane przy eksporcie i niewidoczne w podglądzie." },
-  "screenshotNamePlaceholder": { "message": "Nazwij ten zrzut ekranu..." },
-  "historySearchPlaceholder": { "message": "Szukaj zrzutów ekranu..." },
-  "historyNoResults": { "message": "Brak zrzutów spełniających kryteria wyszukiwania." },
-  "saveAsPreset": { "message": "Zapisz jako preset" },
-  "presetSaved": { "message": "Zapisano!" },
-  "presetMaxReached": { "message": "Osiągnięto limit {n} własnych presetów" }
+  "appName": {
+    "message": "ScreenFellow: Pełnostronicowe zrzuty ekranu i feedback projektowy"
+  },
+  "appDescription": {
+    "message": "Przechwytuj całe strony z automatycznym przewijaniem, dodawaj adnotacje profesjonalnymi narzędziami i eksportuj jako PNG lub PDF."
+  },
+  "captureVisible": {
+    "message": "Przechwyć widoczny obszar"
+  },
+  "captureVisibleDesc": {
+    "message": "Zrzut ekranu tego, co widzisz teraz"
+  },
+  "captureFullPage": {
+    "message": "Przechwyć całą stronę"
+  },
+  "captureFullPageDesc": {
+    "message": "Automatyczne przewijanie i łączenie całej strony"
+  },
+  "captureSelection": {
+    "message": "Przechwyć zaznaczenie"
+  },
+  "captureSelectionDesc": {
+    "message": "Narysuj obszar do przechwycenia"
+  },
+  "openLibrary": {
+    "message": "Otwórz bibliotekę zrzutów"
+  },
+  "offlineMessage": {
+    "message": "Jesteś offline. ScreenFellow wymaga połączenia z internetem."
+  },
+  "capturing": {
+    "message": "Przechwytywanie..."
+  },
+  "captureError": {
+    "message": "Nie można przechwycić tej strony. Wewnętrzne strony Chrome nie mogą być przechwytywane."
+  },
+  "saveAsImage": {
+    "message": "Zapisz jako obraz (PNG)"
+  },
+  "saveAsPDF": {
+    "message": "Zapisz jako PDF"
+  },
+  "edit": {
+    "message": "Edytuj i dodaj adnotacje"
+  },
+  "editProOnly": {
+    "message": "Edytuj i dodaj adnotacje (Pro)"
+  },
+  "original": {
+    "message": "Oryginał"
+  },
+  "annotated": {
+    "message": "Z adnotacjami"
+  },
+  "undo": {
+    "message": "Cofnij"
+  },
+  "redo": {
+    "message": "Ponów"
+  },
+  "download": {
+    "message": "Pobierz"
+  },
+  "toolSelect": {
+    "message": "Zaznacz"
+  },
+  "toolRect": {
+    "message": "Prostokąt"
+  },
+  "toolCircle": {
+    "message": "Ponumerowane kółko"
+  },
+  "toolArrow": {
+    "message": "Strzałka"
+  },
+  "toolText": {
+    "message": "Tekst"
+  },
+  "toolHighlight": {
+    "message": "Zaznacz"
+  },
+  "toolFreehand": {
+    "message": "Rysowanie odręczne"
+  },
+  "toolEmoji": {
+    "message": "Emoji / Naklejka"
+  },
+  "activateLicense": {
+    "message": "Aktywuj licencję"
+  },
+  "licenseKey": {
+    "message": "Klucz licencyjny"
+  },
+  "licenseKeyPlaceholder": {
+    "message": "Wpisz klucz licencyjny..."
+  },
+  "activate": {
+    "message": "Aktywuj"
+  },
+  "deactivate": {
+    "message": "Dezaktywuj licencję"
+  },
+  "licenseActive": {
+    "message": "Pro"
+  },
+  "licenseFree": {
+    "message": "Wersja darmowa"
+  },
+  "licenseActivating": {
+    "message": "Aktywacja..."
+  },
+  "licenseSuccess": {
+    "message": "Licencja aktywowana! Funkcje Pro zostały odblokowane."
+  },
+  "licenseError": {
+    "message": "Nieprawidłowy klucz licencyjny. Sprawdź i spróbuj ponownie."
+  },
+  "licenseAlreadyActive": {
+    "message": "Ta licencja jest aktywna na innym urządzeniu. Aktywacja tutaj ją tam dezaktywuje."
+  },
+  "upgradeTitle": {
+    "message": "Odblokuj ScreenFellow Pro"
+  },
+  "upgradeBody": {
+    "message": "Nieograniczone zrzuty pełnych stron. Dodawaj własne obrazy, znaki wodne i emoji. Eksport PDF, do 500 zrzutów z adnotacjami i własne presety. Jednorazowa opłata, bez subskrypcji!"
+  },
+  "upgradePrice": {
+    "message": "€15 — jednorazowo"
+  },
+  "upgradeBuy": {
+    "message": "Kup teraz (Bez subskrypcji!)"
+  },
+  "upgradeActivate": {
+    "message": "Mam już licencję"
+  },
+  "upgradeClose": {
+    "message": "Może później"
+  },
+  "watermarkText": {
+    "message": "ScreenFellow Free"
+  },
+  "exportingPNG": {
+    "message": "Zapisywanie PNG..."
+  },
+  "exportingPDF": {
+    "message": "Zapisywanie PDF..."
+  },
+  "pageTooLarge": {
+    "message": "Strona przekracza twój limit {limit}px — zwiększ go w Ustawieniach (maks. 100k px)."
+  },
+  "settingsTitle": {
+    "message": "Ustawienia"
+  },
+  "languageLabel": {
+    "message": "Język"
+  },
+  "shortcutsTitle": {
+    "message": "Ustaw skróty klawiaturowe"
+  },
+  "shortcutsOpen": {
+    "message": "Otwórz skróty Chrome ↗"
+  },
+  "confettiSectionTitle": {
+    "message": "Animacje"
+  },
+  "confettiLabel": {
+    "message": "Konfetti"
+  },
+  "settings": {
+    "message": "Ustawienia"
+  },
+  "close": {
+    "message": "Zamknij"
+  },
+  "cancel": {
+    "message": "Anuluj"
+  },
+  "color": {
+    "message": "Kolor"
+  },
+  "size": {
+    "message": "Rozmiar"
+  },
+  "opacity": {
+    "message": "Przezroczystość"
+  },
+  "strokeWidth": {
+    "message": "Grubość obramowania"
+  },
+  "presetStyles": {
+    "message": "Style presetów"
+  },
+  "licenseSettingsTitle": {
+    "message": "Licencja"
+  },
+  "licenseActivateHint": {
+    "message": "Wpisz klucz licencyjny, aby odblokować funkcje Pro na tym urządzeniu."
+  },
+  "licenseSettingsHint": {
+    "message": "Wszystkie funkcje Pro zostaną dezaktywowane. Licencję można ponownie aktywować w dowolnym momencie."
+  },
+  "licenseRelease": {
+    "message": "Zwolnij licencję i wróć do Free"
+  },
+  "releaseConfirmTitle": {
+    "message": "Zwolnić licencję Pro?"
+  },
+  "releaseConfirmBody": {
+    "message": "To urządzenie straci wszystkie funkcje Pro. Historia zostanie skrócona do ostatnich 10 zrzutów — starsze zostaną usunięte. Licencja pozostaje ważna i może być reaktywowana w każdej chwili."
+  },
+  "releaseConfirmOk": {
+    "message": "Tak, zwolnij"
+  },
+  "releaseConfirmCancel": {
+    "message": "Anuluj"
+  },
+  "historyLimitLabel": {
+    "message": "Limit historii zrzutów"
+  },
+  "historyLimitHint": {
+    "message": "Maksymalna liczba zrzutów przechowywanych w historii."
+  },
+  "back": {
+    "message": "Wstecz"
+  },
+  "zoomLevel": {
+    "message": "Poziom powiększenia"
+  },
+  "zoomActual": {
+    "message": "Rzeczywisty rozmiar (100%)"
+  },
+  "zoomFit": {
+    "message": "Dopasuj do ekranu"
+  },
+  "historySettings": {
+    "message": "Ustawienia historii"
+  },
+  "undoTitle": {
+    "message": "Cofnij (Ctrl+Z)"
+  },
+  "redoTitle": {
+    "message": "Ponów (Ctrl+Y)"
+  },
+  "editorHistory": {
+    "message": "Historia"
+  },
+  "editorHistoryMaxHint": {
+    "message": "Maks. przechowywane zrzuty. Najstarsze są usuwane pierwsze."
+  },
+  "editorNoScreenshots": {
+    "message": "Brak zrzutów ekranu."
+  },
+  "editorDeleteScreenshot": {
+    "message": "Usuń zrzut ekranu"
+  },
+  "editorLibraryHint": {
+    "message": "Wybierz zrzut ekranu z historii, aby go wyświetlić lub dodać adnotacje."
+  },
+  "editorLibraryArrow": {
+    "message": "Historia ↗"
+  },
+  "editorCanvasErrorTitle": {
+    "message": "Brak załadowanego zrzutu"
+  },
+  "editorCanvasErrorBody": {
+    "message": "Najpierw użyj okienka ScreenFellow, aby przechwycić stronę."
+  },
+  "editorFormatTitle": {
+    "message": "Format"
+  },
+  "licenseProActive": {
+    "message": "Licencja Pro aktywna"
+  },
+  "licenseFreeUpgrade": {
+    "message": "Darmowy — kliknij, aby przejść na Pro"
+  },
+  "licenseActivatedReload": {
+    "message": "Licencja aktywowana! Przeładowywanie…"
+  },
+  "editorPresetDeleteTitle": {
+    "message": "Usunąć ten preset?"
+  },
+  "editorPresetDeleteBody": {
+    "message": "Ten preset zostanie trwale usunięty."
+  },
+  "editorDeleteLabel": {
+    "message": "Usuń"
+  },
+  "historyLimitReduceTitle": {
+    "message": "Zmniejszyć limit historii?"
+  },
+  "historyLimitApply": {
+    "message": "Tak, zastosuj"
+  },
+  "editorDeleteScreenshotTitle": {
+    "message": "Usunąć ten zrzut ekranu?"
+  },
+  "editorBuyLicense": {
+    "message": "Kup licencję Pro"
+  },
+  "historyLimitDeleteWarning": {
+    "message": "Zostanie usuniętych {n} zrzut(ów) (najstarsze pierwsze). Tej akcji nie można cofnąć."
+  },
+  "toolPanTitle": {
+    "message": "Panorama (V)"
+  },
+  "toolSelectTitle": {
+    "message": "Zaznacz (S · Prawy przycisk)"
+  },
+  "toolRectTitle": {
+    "message": "Prostokąt (R)"
+  },
+  "toolEllipseTitle": {
+    "message": "Elipsa (E)"
+  },
+  "toolBadgeTitle": {
+    "message": "Odznaka (C)"
+  },
+  "toolArrowTitle": {
+    "message": "Strzałka (A)"
+  },
+  "toolTextTitle": {
+    "message": "Tekst (T)"
+  },
+  "toolHighlightTitle": {
+    "message": "Zaznacz (H)"
+  },
+  "toolFreehandTitle": {
+    "message": "Rysowanie odręczne (F)"
+  },
+  "toolBlurTitle": {
+    "message": "Rozmycie (B)"
+  },
+  "toolImageTitle": {
+    "message": "Obraz / Znak wodny (I)"
+  },
+  "toolEmojiTitle": {
+    "message": "Emoji (X)"
+  },
+  "toolLockedPro": {
+    "message": "Funkcja Pro — kliknij, aby aktywować"
+  },
+  "ofpTextStyle": {
+    "message": "Styl tekstu"
+  },
+  "ofpRectStyle": {
+    "message": "Styl prostokąta"
+  },
+  "ofpEllipseStyle": {
+    "message": "Styl elipsy"
+  },
+  "ofpBadgeStyle": {
+    "message": "Styl odznaki"
+  },
+  "ofpNumbering": {
+    "message": "Numerowanie"
+  },
+  "ofpHighlightColor": {
+    "message": "Kolor zaznaczenia"
+  },
+  "ofpPenStyle": {
+    "message": "Styl pióra"
+  },
+  "ofpArrowStyle": {
+    "message": "Styl strzałki"
+  },
+  "ofpImageStyle": {
+    "message": "Obraz / Znak wodny"
+  },
+  "ofpFormatFuture": {
+    "message": "Opcje formatowania dostępne w przyszłej aktualizacji."
+  },
+  "ofpCornerRadius": {
+    "message": "Promień narożnika"
+  },
+  "ofpPenWidth": {
+    "message": "Grubość pióra"
+  },
+  "ofpBorderColor": {
+    "message": "Kolor obramowania"
+  },
+  "ofpShadow": {
+    "message": "Cień"
+  },
+  "ofpBlurOutside": {
+    "message": "Rozmycie zewnętrzne"
+  },
+  "ofpBlurAmount": {
+    "message": "Intensywność rozmycia"
+  },
+  "ofpArrowWidth": {
+    "message": "Szerokość"
+  },
+  "ofpArrowType": {
+    "message": "Typ"
+  },
+  "ofpBlurStrength": {
+    "message": "Siła rozmycia"
+  },
+  "ofpStyle": {
+    "message": "Styl"
+  },
+  "ofpAlignment": {
+    "message": "Wyrównanie"
+  },
+  "ofpFont": {
+    "message": "Czcionka"
+  },
+  "ofpTextColor": {
+    "message": "Kolor tekstu"
+  },
+  "ofpFontSize": {
+    "message": "Rozmiar czcionki"
+  },
+  "ofpFillColor": {
+    "message": "Kolor wypełnienia"
+  },
+  "ofpSequence": {
+    "message": "Sekwencja"
+  },
+  "ofpBorderType": {
+    "message": "Typ obramowania"
+  },
+  "ofpFilled": {
+    "message": "● Wypełniony"
+  },
+  "ofpOutline": {
+    "message": "○ Kontur"
+  },
+  "ofpContinueNumeric": {
+    "message": "Kontynuuj stąd (tylko liczby)"
+  },
+  "ofpContinueFrom": {
+    "message": "Kontynuuj od {from} → następny: {next}"
+  },
+  "ofpImageUpload": {
+    "message": "↑ Prześlij obraz"
+  },
+  "arrowTypeDesign": {
+    "message": "Strzałka projektowa"
+  },
+  "arrowTypeDesignGradient": {
+    "message": "Projekt + Gradient"
+  },
+  "arrowTypeSimple": {
+    "message": "Prosta strzałka"
+  },
+  "arrowTypeDouble": {
+    "message": "Podwójna strzałka"
+  },
+  "arrowTypeLine": {
+    "message": "Linia"
+  },
+  "arrowTypeLineDot": {
+    "message": "Linia + Punkt"
+  },
+  "arrowTypeLineTwoDots": {
+    "message": "Linia + Dwa punkty"
+  },
+  "presetDeleteMinOne": {
+    "message": "Wymagany co najmniej 1 preset"
+  },
+  "presetDeleteBtn": {
+    "message": "Usuń preset"
+  },
+  "exportGuide": {
+    "message": "Eksportuj jako przewodnik (HTML)"
+  },
+  "badgeStepDescription": {
+    "message": "Opis kroku"
+  },
+  "badgeStepDescriptionPlaceholder": {
+    "message": "Co użytkownik powinien tu zrobić..."
+  },
+  "guideBeaconHint": {
+    "message": "Kliknij odznakę ↑"
+  },
+  "guideStep": {
+    "message": "Krok"
+  },
+  "toolCropTitle": {
+    "message": "Przytnij (K)"
+  },
+  "toolUrlFrameTitle": {
+    "message": "URL i znacznik czasu (U)"
+  },
+  "toolCropApply": {
+    "message": "Zastosuj przycinanie"
+  },
+  "toolCropHint": {
+    "message": "Przycina oryginalny zrzut ekranu — zapisywany jako nowy wpis w historii."
+  },
+  "ofpUrlFrameStyle": {
+    "message": "Styl ramki"
+  },
+  "urlFrameNone": {
+    "message": "Brak"
+  },
+  "urlFrameMac": {
+    "message": "Mac OS X"
+  },
+  "urlFrameWin": {
+    "message": "Windows"
+  },
+  "urlFrameBarTop": {
+    "message": "Pasek URL — góra"
+  },
+  "urlFrameBarBottom": {
+    "message": "Pasek URL — dół"
+  },
+  "ofpDateTime": {
+    "message": "Data i godzina"
+  },
+  "dateTimeNone": {
+    "message": "Brak"
+  },
+  "dateTimeDate": {
+    "message": "Data"
+  },
+  "dateTimeDateTime": {
+    "message": "Data i godzina"
+  },
+  "dateTimeISO": {
+    "message": "ISO"
+  },
+  "noUrlCaptured": {
+    "message": "Brak zapisanego URL dla tego zrzutu"
+  },
+  "urlFrameExportHint": {
+    "message": "URL i znacznik czasu są stosowane przy eksporcie i niewidoczne w podglądzie."
+  },
+  "screenshotNamePlaceholder": {
+    "message": "Nazwij ten zrzut ekranu..."
+  },
+  "historySearchPlaceholder": {
+    "message": "Szukaj zrzutów ekranu..."
+  },
+  "historyNoResults": {
+    "message": "Brak zrzutów spełniających kryteria wyszukiwania."
+  },
+  "saveAsPreset": {
+    "message": "Zapisz jako preset"
+  },
+  "presetSaved": {
+    "message": "Zapisano!"
+  },
+  "presetMaxReached": {
+    "message": "Osiągnięto limit {n} własnych presetów"
+  },
+  "pixelLimitSectionTitle": {
+    "message": "Limit pełnej strony"
+  },
+  "pixelLimitLabel": {
+    "message": "Maks. wysokość w pikselach"
+  },
+  "pixelLimitHint": {
+    "message": "Maksymalna wysokość podczas przechwytywania pełnych stron."
+  },
+  "captureAnalyzing": {
+    "message": "Analizowanie strony..."
+  },
+  "captureStitching": {
+    "message": "Przetwarzanie..."
+  },
+  "captureDone": {
+    "message": "Gotowe!"
+  },
+  "clearAllScreenshots": {
+    "message": "Usuń wszystkie zrzuty ekranu"
+  },
+  "clearAllConfirmTitle": {
+    "message": "Usunąć wszystkie zrzuty ekranu?"
+  },
+  "clearAllConfirmBody": {
+    "message": "Wszystkie zapisane zrzuty ekranu zostaną trwale usunięte."
+  },
+  "clearAllConfirmBtn": {
+    "message": "Tak, usuń wszystkie"
+  }
 }

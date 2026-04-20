@@ -20,17 +20,19 @@ export async function exportPNG(canvas) {
 
 export function getAnnotatedDataUrl(fabricCanvas) {
   return new Promise((resolve) => {
-    const zoom = fabricCanvas.getZoom();
-    const w = Math.round(fabricCanvas.getWidth() / zoom);
-    const h = Math.round(fabricCanvas.getHeight() / zoom);
-    fabricCanvas.setZoom(1);
+    const savedVpt = [...fabricCanvas.viewportTransform];
+    const savedW = fabricCanvas.getWidth();
+    const savedH = fabricCanvas.getHeight();
+    const w = fabricCanvas._origW || savedW;
+    const h = fabricCanvas._origH || savedH;
+    fabricCanvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     fabricCanvas.setWidth(w);
     fabricCanvas.setHeight(h);
     fabricCanvas.renderAll();
     const dataUrl = fabricCanvas.getElement().toDataURL('image/png');
-    fabricCanvas.setZoom(zoom);
-    fabricCanvas.setWidth(Math.round(w * zoom));
-    fabricCanvas.setHeight(Math.round(h * zoom));
+    fabricCanvas.setViewportTransform(savedVpt);
+    fabricCanvas.setWidth(savedW);
+    fabricCanvas.setHeight(savedH);
     fabricCanvas.renderAll();
     resolve(dataUrl);
   });
@@ -43,9 +45,8 @@ export function downloadDataUrl(dataUrl, ext) {
 }
 
 export async function exportPDF(canvas) {
-  const zoom = canvas.getZoom();
-  const realW = Math.round(canvas.getWidth() / zoom);
-  const realH = Math.round(canvas.getHeight() / zoom);
+  const realW = canvas._origW || canvas.getWidth();
+  const realH = canvas._origH || canvas.getHeight();
   const blob = await canvasToBlob(canvas, 'image/jpeg', 0.92);
   const pdfBlob = await buildPDF(blob, realW, realH);
   downloadBlob(pdfBlob, buildFilename('pdf'));
@@ -155,13 +156,13 @@ function s(str) {
 
 function canvasToBlob(fabricCanvas, type, quality = 1) {
   return new Promise((resolve) => {
-    const zoom = fabricCanvas.getZoom();
-    const origW = fabricCanvas.getWidth();
-    const origH = fabricCanvas.getHeight();
-    const w = Math.round(origW / zoom);
-    const h = Math.round(origH / zoom);
+    const savedVpt = [...fabricCanvas.viewportTransform];
+    const savedW = fabricCanvas.getWidth();
+    const savedH = fabricCanvas.getHeight();
+    const w = fabricCanvas._origW || savedW;
+    const h = fabricCanvas._origH || savedH;
 
-    fabricCanvas.setZoom(1);
+    fabricCanvas.setViewportTransform([1, 0, 0, 1, 0, 0]);
     fabricCanvas.setWidth(w);
     fabricCanvas.setHeight(h);
     fabricCanvas.renderAll();
@@ -169,9 +170,9 @@ function canvasToBlob(fabricCanvas, type, quality = 1) {
     const el = fabricCanvas.getElement();
 
     const finish = (blob) => {
-      fabricCanvas.setZoom(zoom);
-      fabricCanvas.setWidth(origW);
-      fabricCanvas.setHeight(origH);
+      fabricCanvas.setViewportTransform(savedVpt);
+      fabricCanvas.setWidth(savedW);
+      fabricCanvas.setHeight(savedH);
       fabricCanvas.renderAll();
       resolve(blob);
     };
@@ -193,8 +194,17 @@ function canvasToBlob(fabricCanvas, type, quality = 1) {
 }
 
 function downloadBlob(blob, filename) {
+  if (!blob) {
+    alert('Export failed: the screenshot may be too large for your device\'s memory. Try zooming into a smaller region before exporting.');
+    return;
+  }
   const url = URL.createObjectURL(blob);
-  chrome.downloads.download({ url, filename, saveAs: true }, () => {
+  chrome.downloads.download({ url, filename, saveAs: true }, (downloadId) => {
+    if (chrome.runtime.lastError) {
+      URL.revokeObjectURL(url);
+      alert('Download failed: ' + chrome.runtime.lastError.message);
+      return;
+    }
     setTimeout(() => URL.revokeObjectURL(url), 10000);
   });
 }

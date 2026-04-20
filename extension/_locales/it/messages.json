@@ -1,185 +1,581 @@
 {
-  "appName": { "message": "ScreenFellow: Screenshot Intera Pagina e Feedback Design" },
-  "appDescription": { "message": "Cattura pagine web intere con scorrimento automatico, annotale con strumenti professionali ed esporta come PNG o PDF." },
-  "captureVisible": { "message": "Cattura area visibile" },
-  "captureVisibleDesc": { "message": "Screenshot di quello che vedi ora" },
-  "captureFullPage": { "message": "Cattura pagina intera" },
-  "captureFullPageDesc": { "message": "Scorrimento automatico e unione dell'intera pagina" },
-  "captureSelection": { "message": "Cattura selezione" },
-  "captureSelectionDesc": { "message": "Disegna un'area da catturare" },
-  "openLibrary": { "message": "Apri libreria screenshot" },
-  "offlineMessage": { "message": "Sei offline. ScreenFellow richiede una connessione internet." },
-  "capturing": { "message": "Acquisizione in corso..." },
-  "captureError": { "message": "Impossibile catturare questa pagina. Le pagine interne di Chrome non possono essere screenshot." },
-  "saveAsImage": { "message": "Salva come immagine (PNG)" },
-  "saveAsPDF": { "message": "Salva come PDF" },
-  "edit": { "message": "Modifica e annota" },
-  "editProOnly": { "message": "Modifica e annota (Pro)" },
-  "original": { "message": "Originale" },
-  "annotated": { "message": "Annotato" },
-  "undo": { "message": "Annulla" },
-  "redo": { "message": "Ripristina" },
-  "download": { "message": "Scarica" },
-  "toolSelect": { "message": "Seleziona" },
-  "toolRect": { "message": "Rettangolo" },
-  "toolCircle": { "message": "Cerchio numerato" },
-  "toolArrow": { "message": "Freccia" },
-  "toolText": { "message": "Testo" },
-  "toolHighlight": { "message": "Evidenzia" },
-  "toolFreehand": { "message": "Disegno libero" },
-  "toolEmoji": { "message": "Emoji / Sticker" },
-  "activateLicense": { "message": "Attiva licenza" },
-  "licenseKey": { "message": "Chiave di licenza" },
-  "licenseKeyPlaceholder": { "message": "Inserisci la chiave di licenza..." },
-  "activate": { "message": "Attiva" },
-  "deactivate": { "message": "Disattiva licenza" },
-  "licenseActive": { "message": "Pro" },
-  "licenseFree": { "message": "Versione gratuita" },
-  "licenseActivating": { "message": "Attivazione..." },
-  "licenseSuccess": { "message": "Licenza attivata con successo! Le funzioni Pro sono sbloccate." },
-  "licenseError": { "message": "Chiave di licenza non valida. Controlla e riprova." },
-  "licenseAlreadyActive": { "message": "Questa licenza è attiva su un altro dispositivo. Attivarla qui la disattiverà lì." },
-  "upgradeTitle": { "message": "Sblocca ScreenFellow Pro" },
-  "upgradeBody": { "message": "Screenshot di pagine intere illimitati. Aggiungi immagini personalizzate, filigrane ed emoji. Esportazione PDF, fino a 500 screenshot annotati e preset personalizzati. Un piccolo pagamento unico, senza abbonamento!" },
-  "upgradePrice": { "message": "€15 — pagamento unico" },
-  "upgradeBuy": { "message": "Acquista ora (Senza abbonamento!)" },
-  "upgradeActivate": { "message": "Ho già una licenza" },
-  "upgradeClose": { "message": "Forse più tardi" },
-  "watermarkText": { "message": "ScreenFellow Free" },
-  "exportingPNG": { "message": "Salvataggio PNG..." },
-  "exportingPDF": { "message": "Salvataggio PDF..." },
-  "pageTooLarge": { "message": "La pagina supera 20.000px — vengono catturati solo i primi 20.000px." },
-  "settingsTitle": { "message": "Impostazioni" },
-  "languageLabel": { "message": "Lingua" },
-  "shortcutsTitle": { "message": "Imposta scorciatoie da tastiera" },
-  "shortcutsOpen": { "message": "Apri scorciatoie Chrome ↗" },
-  "confettiSectionTitle": { "message": "Animazioni" },
-  "confettiLabel": { "message": "Coriandoli" },
-  "settings": { "message": "Impostazioni" },
-  "close": { "message": "Chiudi" },
-  "cancel": { "message": "Annulla" },
-  "color": { "message": "Colore" },
-  "size": { "message": "Dimensione" },
-  "opacity": { "message": "Opacità" },
-  "strokeWidth": { "message": "Spessore bordo" },
-  "presetStyles": { "message": "Stili predefiniti" },
-  "licenseSettingsTitle": { "message": "Licenza" },
-  "licenseActivateHint": { "message": "Inserisci la chiave di licenza per sbloccare le funzioni Pro su questo dispositivo." },
-  "licenseSettingsHint": { "message": "Tutte le funzioni Pro verranno disattivate. La licenza può essere riattivata in qualsiasi momento." },
-  "licenseRelease": { "message": "Rilascia licenza e torna a Free" },
-  "releaseConfirmTitle": { "message": "Rilasciare la licenza Pro?" },
-  "releaseConfirmBody": { "message": "Questo dispositivo perderà tutte le funzioni Pro. La cronologia verrà ridotta agli ultimi 10 screenshot — quelli più vecchi verranno eliminati. La licenza rimane valida e può essere riattivata in qualsiasi momento." },
-  "releaseConfirmOk": { "message": "Sì, rilascia" },
-  "releaseConfirmCancel": { "message": "Annulla" },
-  "historyLimitLabel": { "message": "Limite cronologia screenshot" },
-  "historyLimitHint": { "message": "Numero massimo di screenshot da conservare nella cronologia." },
-  "back": { "message": "Indietro" },
-  "zoomLevel": { "message": "Livello zoom" },
-  "zoomActual": { "message": "Dimensione reale (100%)" },
-  "zoomFit": { "message": "Adatta allo schermo" },
-  "historySettings": { "message": "Impostazioni cronologia" },
-  "undoTitle": { "message": "Annulla (Ctrl+Z)" },
-  "redoTitle": { "message": "Ripristina (Ctrl+Y)" },
-  "editorHistory": { "message": "Cronologia" },
-  "editorHistoryMaxHint": { "message": "Max. screenshot salvati. I più vecchi vengono rimossi per primi." },
-  "editorNoScreenshots": { "message": "Ancora nessuno screenshot." },
-  "editorDeleteScreenshot": { "message": "Elimina screenshot" },
-  "editorLibraryHint": { "message": "Seleziona uno screenshot dalla cronologia per visualizzarlo o annotarlo." },
-  "editorLibraryArrow": { "message": "Cronologia ↗" },
-  "editorCanvasErrorTitle": { "message": "Nessuno screenshot caricato" },
-  "editorCanvasErrorBody": { "message": "Usa il popup di ScreenFellow per catturare prima una pagina." },
-  "editorFormatTitle": { "message": "Formato" },
-  "licenseProActive": { "message": "Licenza Pro attiva" },
-  "licenseFreeUpgrade": { "message": "Gratuito — clicca per passare a Pro" },
-  "licenseActivatedReload": { "message": "Licenza attivata! Ricaricamento…" },
-  "editorPresetDeleteTitle": { "message": "Eliminare questo preset?" },
-  "editorPresetDeleteBody": { "message": "Questo preset verrà eliminato definitivamente." },
-  "editorDeleteLabel": { "message": "Elimina" },
-  "historyLimitReduceTitle": { "message": "Ridurre il limite della cronologia?" },
-  "historyLimitApply": { "message": "Sì, applica" },
-  "editorDeleteScreenshotTitle": { "message": "Eliminare questo screenshot?" },
-  "editorBuyLicense": { "message": "Acquista licenza Pro" },
-  "historyLimitDeleteWarning": { "message": "Verranno eliminati {n} screenshot (i più vecchi prima). Questa azione non può essere annullata." },
-  "toolPanTitle": { "message": "Panoramica (V)" },
-  "toolSelectTitle": { "message": "Seleziona (S · Clic destro)" },
-  "toolRectTitle": { "message": "Rettangolo (R)" },
-  "toolEllipseTitle": { "message": "Ellisse (E)" },
-  "toolBadgeTitle": { "message": "Badge (C)" },
-  "toolArrowTitle": { "message": "Freccia (A)" },
-  "toolTextTitle": { "message": "Testo (T)" },
-  "toolHighlightTitle": { "message": "Evidenzia (H)" },
-  "toolFreehandTitle": { "message": "Disegno libero (F)" },
-  "toolBlurTitle": { "message": "Sfocatura (B)" },
-  "toolImageTitle": { "message": "Immagine / Filigrana (I)" },
-  "toolEmojiTitle": { "message": "Emoji (X)" },
-  "toolLockedPro": { "message": "Funzione Pro — clicca per attivare" },
-  "ofpTextStyle": { "message": "Stile testo" },
-  "ofpRectStyle": { "message": "Stile rettangolo" },
-  "ofpEllipseStyle": { "message": "Stile ellisse" },
-  "ofpBadgeStyle": { "message": "Stile badge" },
-  "ofpNumbering": { "message": "Numerazione" },
-  "ofpHighlightColor": { "message": "Colore evidenziazione" },
-  "ofpPenStyle": { "message": "Stile penna" },
-  "ofpArrowStyle": { "message": "Stile freccia" },
-  "ofpImageStyle": { "message": "Immagine / Filigrana" },
-  "ofpFormatFuture": { "message": "Opzioni di formato disponibili in un aggiornamento futuro." },
-  "ofpCornerRadius": { "message": "Raggio angoli" },
-  "ofpPenWidth": { "message": "Spessore penna" },
-  "ofpBorderColor": { "message": "Colore bordo" },
-  "ofpShadow": { "message": "Ombra" },
-  "ofpBlurOutside": { "message": "Sfocatura esterna" },
-  "ofpBlurAmount": { "message": "Intensità sfocatura" },
-  "ofpArrowWidth": { "message": "Larghezza" },
-  "ofpArrowType": { "message": "Tipo" },
-  "ofpBlurStrength": { "message": "Intensità sfocatura" },
-  "ofpStyle": { "message": "Stile" },
-  "ofpAlignment": { "message": "Allineamento" },
-  "ofpFont": { "message": "Carattere" },
-  "ofpTextColor": { "message": "Colore testo" },
-  "ofpFontSize": { "message": "Dimensione carattere" },
-  "ofpFillColor": { "message": "Colore riempimento" },
-  "ofpSequence": { "message": "Sequenza" },
-  "ofpBorderType": { "message": "Tipo bordo" },
-  "ofpFilled": { "message": "● Pieno" },
-  "ofpOutline": { "message": "○ Contorno" },
-  "ofpContinueNumeric": { "message": "Continua da qui (solo numeri)" },
-  "ofpContinueFrom": { "message": "Continua da {from} → successivo: {next}" },
-  "ofpImageUpload": { "message": "↑ Carica immagine" },
-  "arrowTypeDesign": { "message": "Freccia design" },
-  "arrowTypeDesignGradient": { "message": "Design + Gradiente" },
-  "arrowTypeSimple": { "message": "Freccia semplice" },
-  "arrowTypeDouble": { "message": "Freccia doppia" },
-  "arrowTypeLine": { "message": "Linea" },
-  "arrowTypeLineDot": { "message": "Linea + Punto" },
-  "arrowTypeLineTwoDots": { "message": "Linea + Due punti" },
-  "presetDeleteMinOne": { "message": "È richiesto almeno 1 preset" },
-  "presetDeleteBtn": { "message": "Elimina preset" },
-  "exportGuide": { "message": "Esporta come guida (HTML)" },
-  "badgeStepDescription": { "message": "Descrizione del passo" },
-  "badgeStepDescriptionPlaceholder": { "message": "Cosa deve fare l'utente qui..." },
-  "guideBeaconHint": { "message": "Clicca su un badge ↑" },
-  "guideStep": { "message": "Passo" },
-  "toolCropTitle": { "message": "Ritaglia (K)" },
-  "toolUrlFrameTitle": { "message": "URL e timestamp (U)" },
-  "toolCropApply": { "message": "Applica ritaglio" },
-  "toolCropHint": { "message": "Ritaglia lo screenshot originale — salvato come nuova voce nella cronologia." },
-  "ofpUrlFrameStyle": { "message": "Stile cornice" },
-  "urlFrameNone": { "message": "Nessuno" },
-  "urlFrameMac": { "message": "Mac OS X" },
-  "urlFrameWin": { "message": "Windows" },
-  "urlFrameBarTop": { "message": "Barra URL — in alto" },
-  "urlFrameBarBottom": { "message": "Barra URL — in basso" },
-  "ofpDateTime": { "message": "Data e ora" },
-  "dateTimeNone": { "message": "Nessuna" },
-  "dateTimeDate": { "message": "Data" },
-  "dateTimeDateTime": { "message": "Data e ora" },
-  "dateTimeISO": { "message": "ISO" },
-  "noUrlCaptured": { "message": "Nessun URL registrato per questo screenshot" },
-  "urlFrameExportHint": { "message": "URL e timestamp vengono applicati all'esportazione e non sono visibili nell'anteprima." },
-  "screenshotNamePlaceholder": { "message": "Dai un nome a questo screenshot..." },
-  "historySearchPlaceholder": { "message": "Cerca screenshot..." },
-  "historyNoResults": { "message": "Nessuno screenshot corrisponde alla ricerca." },
-  "saveAsPreset": { "message": "Salva come preset" },
-  "presetSaved": { "message": "Salvato!" },
-  "presetMaxReached": { "message": "Raggiunto il limite max. di {n} preset personalizzati" }
+  "appName": {
+    "message": "ScreenFellow: Screenshot Intera Pagina e Feedback Design"
+  },
+  "appDescription": {
+    "message": "Cattura pagine web intere con scorrimento automatico, annotale con strumenti professionali ed esporta come PNG o PDF."
+  },
+  "captureVisible": {
+    "message": "Cattura area visibile"
+  },
+  "captureVisibleDesc": {
+    "message": "Screenshot di quello che vedi ora"
+  },
+  "captureFullPage": {
+    "message": "Cattura pagina intera"
+  },
+  "captureFullPageDesc": {
+    "message": "Scorrimento automatico e unione dell'intera pagina"
+  },
+  "captureSelection": {
+    "message": "Cattura selezione"
+  },
+  "captureSelectionDesc": {
+    "message": "Disegna un'area da catturare"
+  },
+  "openLibrary": {
+    "message": "Apri libreria screenshot"
+  },
+  "offlineMessage": {
+    "message": "Sei offline. ScreenFellow richiede una connessione internet."
+  },
+  "capturing": {
+    "message": "Acquisizione in corso..."
+  },
+  "captureError": {
+    "message": "Impossibile catturare questa pagina. Le pagine interne di Chrome non possono essere screenshot."
+  },
+  "saveAsImage": {
+    "message": "Salva come immagine (PNG)"
+  },
+  "saveAsPDF": {
+    "message": "Salva come PDF"
+  },
+  "edit": {
+    "message": "Modifica e annota"
+  },
+  "editProOnly": {
+    "message": "Modifica e annota (Pro)"
+  },
+  "original": {
+    "message": "Originale"
+  },
+  "annotated": {
+    "message": "Annotato"
+  },
+  "undo": {
+    "message": "Annulla"
+  },
+  "redo": {
+    "message": "Ripristina"
+  },
+  "download": {
+    "message": "Scarica"
+  },
+  "toolSelect": {
+    "message": "Seleziona"
+  },
+  "toolRect": {
+    "message": "Rettangolo"
+  },
+  "toolCircle": {
+    "message": "Cerchio numerato"
+  },
+  "toolArrow": {
+    "message": "Freccia"
+  },
+  "toolText": {
+    "message": "Testo"
+  },
+  "toolHighlight": {
+    "message": "Evidenzia"
+  },
+  "toolFreehand": {
+    "message": "Disegno libero"
+  },
+  "toolEmoji": {
+    "message": "Emoji / Sticker"
+  },
+  "activateLicense": {
+    "message": "Attiva licenza"
+  },
+  "licenseKey": {
+    "message": "Chiave di licenza"
+  },
+  "licenseKeyPlaceholder": {
+    "message": "Inserisci la chiave di licenza..."
+  },
+  "activate": {
+    "message": "Attiva"
+  },
+  "deactivate": {
+    "message": "Disattiva licenza"
+  },
+  "licenseActive": {
+    "message": "Pro"
+  },
+  "licenseFree": {
+    "message": "Versione gratuita"
+  },
+  "licenseActivating": {
+    "message": "Attivazione..."
+  },
+  "licenseSuccess": {
+    "message": "Licenza attivata con successo! Le funzioni Pro sono sbloccate."
+  },
+  "licenseError": {
+    "message": "Chiave di licenza non valida. Controlla e riprova."
+  },
+  "licenseAlreadyActive": {
+    "message": "Questa licenza è attiva su un altro dispositivo. Attivarla qui la disattiverà lì."
+  },
+  "upgradeTitle": {
+    "message": "Sblocca ScreenFellow Pro"
+  },
+  "upgradeBody": {
+    "message": "Screenshot di pagine intere illimitati. Aggiungi immagini personalizzate, filigrane ed emoji. Esportazione PDF, fino a 500 screenshot annotati e preset personalizzati. Un piccolo pagamento unico, senza abbonamento!"
+  },
+  "upgradePrice": {
+    "message": "€15 — pagamento unico"
+  },
+  "upgradeBuy": {
+    "message": "Acquista ora (Senza abbonamento!)"
+  },
+  "upgradeActivate": {
+    "message": "Ho già una licenza"
+  },
+  "upgradeClose": {
+    "message": "Forse più tardi"
+  },
+  "watermarkText": {
+    "message": "ScreenFellow Free"
+  },
+  "exportingPNG": {
+    "message": "Salvataggio PNG..."
+  },
+  "exportingPDF": {
+    "message": "Salvataggio PDF..."
+  },
+  "pageTooLarge": {
+    "message": "La pagina supera il tuo limite di {limit}px — aumentalo nelle Impostazioni (max. 100k px)."
+  },
+  "settingsTitle": {
+    "message": "Impostazioni"
+  },
+  "languageLabel": {
+    "message": "Lingua"
+  },
+  "shortcutsTitle": {
+    "message": "Imposta scorciatoie da tastiera"
+  },
+  "shortcutsOpen": {
+    "message": "Apri scorciatoie Chrome ↗"
+  },
+  "confettiSectionTitle": {
+    "message": "Animazioni"
+  },
+  "confettiLabel": {
+    "message": "Coriandoli"
+  },
+  "settings": {
+    "message": "Impostazioni"
+  },
+  "close": {
+    "message": "Chiudi"
+  },
+  "cancel": {
+    "message": "Annulla"
+  },
+  "color": {
+    "message": "Colore"
+  },
+  "size": {
+    "message": "Dimensione"
+  },
+  "opacity": {
+    "message": "Opacità"
+  },
+  "strokeWidth": {
+    "message": "Spessore bordo"
+  },
+  "presetStyles": {
+    "message": "Stili predefiniti"
+  },
+  "licenseSettingsTitle": {
+    "message": "Licenza"
+  },
+  "licenseActivateHint": {
+    "message": "Inserisci la chiave di licenza per sbloccare le funzioni Pro su questo dispositivo."
+  },
+  "licenseSettingsHint": {
+    "message": "Tutte le funzioni Pro verranno disattivate. La licenza può essere riattivata in qualsiasi momento."
+  },
+  "licenseRelease": {
+    "message": "Rilascia licenza e torna a Free"
+  },
+  "releaseConfirmTitle": {
+    "message": "Rilasciare la licenza Pro?"
+  },
+  "releaseConfirmBody": {
+    "message": "Questo dispositivo perderà tutte le funzioni Pro. La cronologia verrà ridotta agli ultimi 10 screenshot — quelli più vecchi verranno eliminati. La licenza rimane valida e può essere riattivata in qualsiasi momento."
+  },
+  "releaseConfirmOk": {
+    "message": "Sì, rilascia"
+  },
+  "releaseConfirmCancel": {
+    "message": "Annulla"
+  },
+  "historyLimitLabel": {
+    "message": "Limite cronologia screenshot"
+  },
+  "historyLimitHint": {
+    "message": "Numero massimo di screenshot da conservare nella cronologia."
+  },
+  "back": {
+    "message": "Indietro"
+  },
+  "zoomLevel": {
+    "message": "Livello zoom"
+  },
+  "zoomActual": {
+    "message": "Dimensione reale (100%)"
+  },
+  "zoomFit": {
+    "message": "Adatta allo schermo"
+  },
+  "historySettings": {
+    "message": "Impostazioni cronologia"
+  },
+  "undoTitle": {
+    "message": "Annulla (Ctrl+Z)"
+  },
+  "redoTitle": {
+    "message": "Ripristina (Ctrl+Y)"
+  },
+  "editorHistory": {
+    "message": "Cronologia"
+  },
+  "editorHistoryMaxHint": {
+    "message": "Max. screenshot salvati. I più vecchi vengono rimossi per primi."
+  },
+  "editorNoScreenshots": {
+    "message": "Ancora nessuno screenshot."
+  },
+  "editorDeleteScreenshot": {
+    "message": "Elimina screenshot"
+  },
+  "editorLibraryHint": {
+    "message": "Seleziona uno screenshot dalla cronologia per visualizzarlo o annotarlo."
+  },
+  "editorLibraryArrow": {
+    "message": "Cronologia ↗"
+  },
+  "editorCanvasErrorTitle": {
+    "message": "Nessuno screenshot caricato"
+  },
+  "editorCanvasErrorBody": {
+    "message": "Usa il popup di ScreenFellow per catturare prima una pagina."
+  },
+  "editorFormatTitle": {
+    "message": "Formato"
+  },
+  "licenseProActive": {
+    "message": "Licenza Pro attiva"
+  },
+  "licenseFreeUpgrade": {
+    "message": "Gratuito — clicca per passare a Pro"
+  },
+  "licenseActivatedReload": {
+    "message": "Licenza attivata! Ricaricamento…"
+  },
+  "editorPresetDeleteTitle": {
+    "message": "Eliminare questo preset?"
+  },
+  "editorPresetDeleteBody": {
+    "message": "Questo preset verrà eliminato definitivamente."
+  },
+  "editorDeleteLabel": {
+    "message": "Elimina"
+  },
+  "historyLimitReduceTitle": {
+    "message": "Ridurre il limite della cronologia?"
+  },
+  "historyLimitApply": {
+    "message": "Sì, applica"
+  },
+  "editorDeleteScreenshotTitle": {
+    "message": "Eliminare questo screenshot?"
+  },
+  "editorBuyLicense": {
+    "message": "Acquista licenza Pro"
+  },
+  "historyLimitDeleteWarning": {
+    "message": "Verranno eliminati {n} screenshot (i più vecchi prima). Questa azione non può essere annullata."
+  },
+  "toolPanTitle": {
+    "message": "Panoramica (V)"
+  },
+  "toolSelectTitle": {
+    "message": "Seleziona (S · Clic destro)"
+  },
+  "toolRectTitle": {
+    "message": "Rettangolo (R)"
+  },
+  "toolEllipseTitle": {
+    "message": "Ellisse (E)"
+  },
+  "toolBadgeTitle": {
+    "message": "Badge (C)"
+  },
+  "toolArrowTitle": {
+    "message": "Freccia (A)"
+  },
+  "toolTextTitle": {
+    "message": "Testo (T)"
+  },
+  "toolHighlightTitle": {
+    "message": "Evidenzia (H)"
+  },
+  "toolFreehandTitle": {
+    "message": "Disegno libero (F)"
+  },
+  "toolBlurTitle": {
+    "message": "Sfocatura (B)"
+  },
+  "toolImageTitle": {
+    "message": "Immagine / Filigrana (I)"
+  },
+  "toolEmojiTitle": {
+    "message": "Emoji (X)"
+  },
+  "toolLockedPro": {
+    "message": "Funzione Pro — clicca per attivare"
+  },
+  "ofpTextStyle": {
+    "message": "Stile testo"
+  },
+  "ofpRectStyle": {
+    "message": "Stile rettangolo"
+  },
+  "ofpEllipseStyle": {
+    "message": "Stile ellisse"
+  },
+  "ofpBadgeStyle": {
+    "message": "Stile badge"
+  },
+  "ofpNumbering": {
+    "message": "Numerazione"
+  },
+  "ofpHighlightColor": {
+    "message": "Colore evidenziazione"
+  },
+  "ofpPenStyle": {
+    "message": "Stile penna"
+  },
+  "ofpArrowStyle": {
+    "message": "Stile freccia"
+  },
+  "ofpImageStyle": {
+    "message": "Immagine / Filigrana"
+  },
+  "ofpFormatFuture": {
+    "message": "Opzioni di formato disponibili in un aggiornamento futuro."
+  },
+  "ofpCornerRadius": {
+    "message": "Raggio angoli"
+  },
+  "ofpPenWidth": {
+    "message": "Spessore penna"
+  },
+  "ofpBorderColor": {
+    "message": "Colore bordo"
+  },
+  "ofpShadow": {
+    "message": "Ombra"
+  },
+  "ofpBlurOutside": {
+    "message": "Sfocatura esterna"
+  },
+  "ofpBlurAmount": {
+    "message": "Intensità sfocatura"
+  },
+  "ofpArrowWidth": {
+    "message": "Larghezza"
+  },
+  "ofpArrowType": {
+    "message": "Tipo"
+  },
+  "ofpBlurStrength": {
+    "message": "Intensità sfocatura"
+  },
+  "ofpStyle": {
+    "message": "Stile"
+  },
+  "ofpAlignment": {
+    "message": "Allineamento"
+  },
+  "ofpFont": {
+    "message": "Carattere"
+  },
+  "ofpTextColor": {
+    "message": "Colore testo"
+  },
+  "ofpFontSize": {
+    "message": "Dimensione carattere"
+  },
+  "ofpFillColor": {
+    "message": "Colore riempimento"
+  },
+  "ofpSequence": {
+    "message": "Sequenza"
+  },
+  "ofpBorderType": {
+    "message": "Tipo bordo"
+  },
+  "ofpFilled": {
+    "message": "● Pieno"
+  },
+  "ofpOutline": {
+    "message": "○ Contorno"
+  },
+  "ofpContinueNumeric": {
+    "message": "Continua da qui (solo numeri)"
+  },
+  "ofpContinueFrom": {
+    "message": "Continua da {from} → successivo: {next}"
+  },
+  "ofpImageUpload": {
+    "message": "↑ Carica immagine"
+  },
+  "arrowTypeDesign": {
+    "message": "Freccia design"
+  },
+  "arrowTypeDesignGradient": {
+    "message": "Design + Gradiente"
+  },
+  "arrowTypeSimple": {
+    "message": "Freccia semplice"
+  },
+  "arrowTypeDouble": {
+    "message": "Freccia doppia"
+  },
+  "arrowTypeLine": {
+    "message": "Linea"
+  },
+  "arrowTypeLineDot": {
+    "message": "Linea + Punto"
+  },
+  "arrowTypeLineTwoDots": {
+    "message": "Linea + Due punti"
+  },
+  "presetDeleteMinOne": {
+    "message": "È richiesto almeno 1 preset"
+  },
+  "presetDeleteBtn": {
+    "message": "Elimina preset"
+  },
+  "exportGuide": {
+    "message": "Esporta come guida (HTML)"
+  },
+  "badgeStepDescription": {
+    "message": "Descrizione del passo"
+  },
+  "badgeStepDescriptionPlaceholder": {
+    "message": "Cosa deve fare l'utente qui..."
+  },
+  "guideBeaconHint": {
+    "message": "Clicca su un badge ↑"
+  },
+  "guideStep": {
+    "message": "Passo"
+  },
+  "toolCropTitle": {
+    "message": "Ritaglia (K)"
+  },
+  "toolUrlFrameTitle": {
+    "message": "URL e timestamp (U)"
+  },
+  "toolCropApply": {
+    "message": "Applica ritaglio"
+  },
+  "toolCropHint": {
+    "message": "Ritaglia lo screenshot originale — salvato come nuova voce nella cronologia."
+  },
+  "ofpUrlFrameStyle": {
+    "message": "Stile cornice"
+  },
+  "urlFrameNone": {
+    "message": "Nessuno"
+  },
+  "urlFrameMac": {
+    "message": "Mac OS X"
+  },
+  "urlFrameWin": {
+    "message": "Windows"
+  },
+  "urlFrameBarTop": {
+    "message": "Barra URL — in alto"
+  },
+  "urlFrameBarBottom": {
+    "message": "Barra URL — in basso"
+  },
+  "ofpDateTime": {
+    "message": "Data e ora"
+  },
+  "dateTimeNone": {
+    "message": "Nessuna"
+  },
+  "dateTimeDate": {
+    "message": "Data"
+  },
+  "dateTimeDateTime": {
+    "message": "Data e ora"
+  },
+  "dateTimeISO": {
+    "message": "ISO"
+  },
+  "noUrlCaptured": {
+    "message": "Nessun URL registrato per questo screenshot"
+  },
+  "urlFrameExportHint": {
+    "message": "URL e timestamp vengono applicati all'esportazione e non sono visibili nell'anteprima."
+  },
+  "screenshotNamePlaceholder": {
+    "message": "Dai un nome a questo screenshot..."
+  },
+  "historySearchPlaceholder": {
+    "message": "Cerca screenshot..."
+  },
+  "historyNoResults": {
+    "message": "Nessuno screenshot corrisponde alla ricerca."
+  },
+  "saveAsPreset": {
+    "message": "Salva come preset"
+  },
+  "presetSaved": {
+    "message": "Salvato!"
+  },
+  "presetMaxReached": {
+    "message": "Raggiunto il limite max. di {n} preset personalizzati"
+  },
+  "pixelLimitSectionTitle": {
+    "message": "Limite pagina intera"
+  },
+  "pixelLimitLabel": {
+    "message": "Altezza massima in pixel"
+  },
+  "pixelLimitHint": {
+    "message": "Altezza massima durante la cattura di pagine intere."
+  },
+  "captureAnalyzing": {
+    "message": "Analisi pagina..."
+  },
+  "captureStitching": {
+    "message": "Elaborazione..."
+  },
+  "captureDone": {
+    "message": "Fatto!"
+  },
+  "clearAllScreenshots": {
+    "message": "Elimina tutti gli screenshot"
+  },
+  "clearAllConfirmTitle": {
+    "message": "Eliminare tutti gli screenshot?"
+  },
+  "clearAllConfirmBody": {
+    "message": "Tutti gli screenshot salvati saranno eliminati in modo permanente."
+  },
+  "clearAllConfirmBtn": {
+    "message": "Sì, elimina tutto"
+  }
 }

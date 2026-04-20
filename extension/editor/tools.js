@@ -374,6 +374,14 @@ fabric.ArrowShape = ArrowShape;
 
 let canvas = null;
 let currentTool = 'pan';
+let viewportCenterGetter = null;
+
+export function setViewportCenterGetter(fn) { viewportCenterGetter = fn; }
+
+function getViewportCenter() {
+  if (viewportCenterGetter) return viewportCenterGetter();
+  return { x: canvas.getWidth() / 2, y: canvas.getHeight() / 2 };
+}
 let selectedBadgePreset = BADGE_PRESETS[0];
 let badgeMode = 'numeric';
 let badgeNextOverride = null;
@@ -395,7 +403,7 @@ let onObjectAdded = null;
 // Pan state
 let isPanning = false;
 let panStartX = 0, panStartY = 0;
-let panScrollStartX = 0, panScrollStartY = 0;
+let panTranslateStartX = 0, panTranslateStartY = 0;
 
 // Source image for blur tool
 let sourceImgEl = null;
@@ -433,6 +441,7 @@ export function setTool(tool) {
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush.color = currentFreehandPreset.color;
     canvas.freeDrawingBrush.width = currentFreehandPreset.width;
+    canvas.freeDrawingBrush.decimate = 3;
     patchFreehandBrushForShift();
   } else if (tool === 'emoji') {
     canvas.defaultCursor = 'default';
@@ -451,8 +460,51 @@ export function setDrawWidth(w) {
 
 export function setBadgePreset(preset) { selectedBadgePreset = preset; }
 export function setBadgeMode(mode) { badgeMode = mode; }
-export function setBadgeNextValue(val) { badgeNextOverride = val; }
 export function setEllipsePreset(preset) { currentEllipsePreset = preset; }
+
+function getBadgeTextRef(obj) {
+  if (obj._textRef) return obj._textRef;
+  const ch = obj.getObjects ? obj.getObjects() : [];
+  return ch.find(c => c.type === 'text' || c.type === 'i-text') || null;
+}
+
+export function renumberBadgesAfterDelete(deletedValue, deletedType) {
+  canvas.getObjects().forEach(obj => {
+    if (!obj._isBadge) return;
+    const sameType = deletedType === 'alpha' ? obj._badgeType === 'alpha' : obj._badgeType !== 'alpha';
+    if (!sameType || obj._badgeValue <= deletedValue) return;
+    obj._badgeValue--;
+    const ref = getBadgeTextRef(obj);
+    if (ref) ref.set({ text: deletedType === 'alpha' ? numToAlpha(obj._badgeValue) : String(obj._badgeValue) });
+  });
+  canvas.renderAll();
+}
+
+export function setBadgePosition(badge, newValue) {
+  const oldValue = badge._badgeValue;
+  const badgeType = badge._badgeType;
+  const total = canvas.getObjects().filter(o => o._isBadge && (badgeType === 'alpha' ? o._badgeType === 'alpha' : o._badgeType !== 'alpha')).length;
+  newValue = Math.max(1, Math.min(newValue, total));
+  if (newValue === oldValue) return oldValue;
+  canvas.getObjects().forEach(obj => {
+    if (!obj._isBadge || obj === badge) return;
+    const sameType = badgeType === 'alpha' ? obj._badgeType === 'alpha' : obj._badgeType !== 'alpha';
+    if (!sameType) return;
+    let v = obj._badgeValue;
+    if (newValue < oldValue && v >= newValue && v < oldValue) v++;
+    else if (newValue > oldValue && v > oldValue && v <= newValue) v--;
+    if (v !== obj._badgeValue) {
+      obj._badgeValue = v;
+      const ref = getBadgeTextRef(obj);
+      if (ref) ref.set({ text: badgeType === 'alpha' ? numToAlpha(v) : String(v) });
+    }
+  });
+  badge._badgeValue = newValue;
+  const ref = getBadgeTextRef(badge);
+  if (ref) ref.set({ text: badgeType === 'alpha' ? numToAlpha(newValue) : String(newValue) });
+  canvas.renderAll();
+  return newValue;
+}
 export function setHighlightPreset(preset) { currentHighlightPreset = preset; }
 export function setFreehandPreset(preset) {
   currentFreehandPreset = preset;
@@ -495,12 +547,14 @@ function patchFreehandBrushForShift() {
       if (ctx) {
         canvas.clearContext(ctx);
         ctx.save();
+        const vpt = canvas.viewportTransform;
+        ctx.transform(vpt[0], vpt[1], vpt[2], vpt[3], vpt[4], vpt[5]);
         ctx.strokeStyle = this.color;
         ctx.lineWidth   = this.width;
         ctx.lineCap     = 'round';
         ctx.beginPath();
-        ctx.moveTo(_freehandShiftStart.x * canvas.getZoom(), _freehandShiftStart.y * canvas.getZoom());
-        ctx.lineTo(pointer.x * canvas.getZoom(), pointer.y * canvas.getZoom());
+        ctx.moveTo(_freehandShiftStart.x, _freehandShiftStart.y);
+        ctx.lineTo(pointer.x, pointer.y);
         ctx.stroke();
         ctx.restore();
       }
@@ -594,11 +648,10 @@ function handleMouseDown(e) {
   if (currentTool === 'pan') {
     isPanning = true;
     canvas.discardActiveObject();
-    const area = getCanvasArea();
     panStartX = e.e.clientX;
     panStartY = e.e.clientY;
-    panScrollStartX = area.scrollLeft;
-    panScrollStartY = area.scrollTop;
+    panTranslateStartX = canvas.viewportTransform[4];
+    panTranslateStartY = canvas.viewportTransform[5];
     canvas.defaultCursor = 'grabbing';
     canvas.setCursor('grabbing');
     return;
@@ -696,9 +749,11 @@ function handleMouseDown(e) {
 
 function handleMouseMove(e) {
   if (currentTool === 'pan' && isPanning) {
-    const area = getCanvasArea();
-    area.scrollLeft = panScrollStartX - (e.e.clientX - panStartX);
-    area.scrollTop  = panScrollStartY - (e.e.clientY - panStartY);
+    const vpt = [...canvas.viewportTransform];
+    vpt[4] = panTranslateStartX + (e.e.clientX - panStartX);
+    vpt[5] = panTranslateStartY + (e.e.clientY - panStartY);
+    canvas.setViewportTransform(vpt);
+    canvas.renderAll();
     return;
   }
 
@@ -1007,9 +1062,10 @@ export function placeImage(dataUrl, opacity = 1, savedScale = null) {
     const maxW = canvas.getWidth()  / zoom * 0.5;
     const maxH = canvas.getHeight() / zoom * 0.5;
     const scale = savedScale ?? Math.min(maxW / img.width, maxH / img.height, 1);
+    const { x, y } = getViewportCenter();
     img.set({
-      left: canvas.getWidth()  / zoom / 2,
-      top:  canvas.getHeight() / zoom / 2,
+      left: x,
+      top:  y,
       originX: 'center', originY: 'center',
       scaleX: scale, scaleY: scale,
       opacity,
@@ -1026,9 +1082,7 @@ export function placeImage(dataUrl, opacity = 1, savedScale = null) {
 }
 
 export function placeEmoji(emoji) {
-  const zoom = canvas.getZoom();
-  const centerX = canvas.getWidth()  / zoom / 2;
-  const centerY = canvas.getHeight() / zoom / 2;
+  const { x: centerX, y: centerY } = getViewportCenter();
 
   const text = new fabric.Text(emoji, {
     left: centerX,

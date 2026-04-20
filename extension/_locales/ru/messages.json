@@ -1,185 +1,581 @@
 {
-  "appName": { "message": "ScreenFellow: Полный скриншот страницы и дизайн-фидбек" },
-  "appDescription": { "message": "Создавайте полные скриншоты веб-страниц с автопрокруткой, аннотируйте их профессиональными инструментами и экспортируйте в PNG или PDF." },
-  "captureVisible": { "message": "Захватить видимую область" },
-  "captureVisibleDesc": { "message": "Скриншот того, что видите сейчас" },
-  "captureFullPage": { "message": "Захватить всю страницу" },
-  "captureFullPageDesc": { "message": "Автопрокрутка и сборка всей страницы" },
-  "captureSelection": { "message": "Захватить выделение" },
-  "captureSelectionDesc": { "message": "Нарисуйте область для захвата" },
-  "openLibrary": { "message": "Открыть библиотеку скриншотов" },
-  "offlineMessage": { "message": "Нет подключения. ScreenFellow требует интернет-соединения." },
-  "capturing": { "message": "Захват..." },
-  "captureError": { "message": "Не удалось захватить эту страницу. Внутренние страницы Chrome недоступны." },
-  "saveAsImage": { "message": "Сохранить как изображение (PNG)" },
-  "saveAsPDF": { "message": "Сохранить как PDF" },
-  "edit": { "message": "Редактировать и аннотировать" },
-  "editProOnly": { "message": "Редактировать и аннотировать (Pro)" },
-  "original": { "message": "Оригинал" },
-  "annotated": { "message": "С аннотациями" },
-  "undo": { "message": "Отменить" },
-  "redo": { "message": "Повторить" },
-  "download": { "message": "Скачать" },
-  "toolSelect": { "message": "Выбор" },
-  "toolRect": { "message": "Прямоугольник" },
-  "toolCircle": { "message": "Нумерованный круг" },
-  "toolArrow": { "message": "Стрелка" },
-  "toolText": { "message": "Текст" },
-  "toolHighlight": { "message": "Выделение" },
-  "toolFreehand": { "message": "Свободное рисование" },
-  "toolEmoji": { "message": "Эмодзи / Стикер" },
-  "activateLicense": { "message": "Активировать лицензию" },
-  "licenseKey": { "message": "Лицензионный ключ" },
-  "licenseKeyPlaceholder": { "message": "Введите лицензионный ключ..." },
-  "activate": { "message": "Активировать" },
-  "deactivate": { "message": "Деактивировать лицензию" },
-  "licenseActive": { "message": "Pro" },
-  "licenseFree": { "message": "Бесплатная версия" },
-  "licenseActivating": { "message": "Активация..." },
-  "licenseSuccess": { "message": "Лицензия успешно активирована! Функции Pro разблокированы." },
-  "licenseError": { "message": "Неверный лицензионный ключ. Проверьте и попробуйте снова." },
-  "licenseAlreadyActive": { "message": "Эта лицензия активна на другом устройстве. Активация здесь деактивирует её там." },
-  "upgradeTitle": { "message": "Разблокировать ScreenFellow Pro" },
-  "upgradeBody": { "message": "Неограниченные скриншоты полной страницы. Добавляйте изображения, водяные знаки и эмодзи. Экспорт в PDF, до 500 аннотированных скриншотов и пользовательские пресеты. Единоразовая оплата без подписки!" },
-  "upgradePrice": { "message": "€15 — единоразово" },
-  "upgradeBuy": { "message": "Купить (Без подписки!)" },
-  "upgradeActivate": { "message": "У меня уже есть лицензия" },
-  "upgradeClose": { "message": "Может быть позже" },
-  "watermarkText": { "message": "ScreenFellow Free" },
-  "exportingPNG": { "message": "Сохранение PNG..." },
-  "exportingPDF": { "message": "Сохранение PDF..." },
-  "pageTooLarge": { "message": "Страница превышает 20 000 пкс — захватываются только первые 20 000 пкс." },
-  "settingsTitle": { "message": "Настройки" },
-  "languageLabel": { "message": "Язык" },
-  "shortcutsTitle": { "message": "Настроить горячие клавиши" },
-  "shortcutsOpen": { "message": "Открыть горячие клавиши Chrome ↗" },
-  "confettiSectionTitle": { "message": "Анимации" },
-  "confettiLabel": { "message": "Конфетти" },
-  "settings": { "message": "Настройки" },
-  "close": { "message": "Закрыть" },
-  "cancel": { "message": "Отмена" },
-  "color": { "message": "Цвет" },
-  "size": { "message": "Размер" },
-  "opacity": { "message": "Прозрачность" },
-  "strokeWidth": { "message": "Ширина рамки" },
-  "presetStyles": { "message": "Стили пресетов" },
-  "licenseSettingsTitle": { "message": "Лицензия" },
-  "licenseActivateHint": { "message": "Введите лицензионный ключ, чтобы разблокировать функции Pro на этом устройстве." },
-  "licenseSettingsHint": { "message": "Все функции Pro будут деактивированы. Лицензию можно повторно активировать в любое время." },
-  "licenseRelease": { "message": "Освободить лицензию и перейти на Free" },
-  "releaseConfirmTitle": { "message": "Освободить лицензию Pro?" },
-  "releaseConfirmBody": { "message": "Это устройство потеряет все функции Pro. История скриншотов будет сокращена до последних 10 — более старые будут удалены. Лицензия остаётся действительной и может быть активирована повторно." },
-  "releaseConfirmOk": { "message": "Да, освободить" },
-  "releaseConfirmCancel": { "message": "Отмена" },
-  "historyLimitLabel": { "message": "Лимит истории скриншотов" },
-  "historyLimitHint": { "message": "Максимальное количество скриншотов в истории." },
-  "back": { "message": "Назад" },
-  "zoomLevel": { "message": "Уровень масштаба" },
-  "zoomActual": { "message": "Реальный размер (100%)" },
-  "zoomFit": { "message": "Подогнать под экран" },
-  "historySettings": { "message": "Настройки истории" },
-  "undoTitle": { "message": "Отменить (Ctrl+Z)" },
-  "redoTitle": { "message": "Повторить (Ctrl+Y)" },
-  "editorHistory": { "message": "История" },
-  "editorHistoryMaxHint": { "message": "Макс. сохранённых скриншотов. Старые удаляются первыми." },
-  "editorNoScreenshots": { "message": "Скриншотов пока нет." },
-  "editorDeleteScreenshot": { "message": "Удалить скриншот" },
-  "editorLibraryHint": { "message": "Выберите скриншот из истории для просмотра или аннотирования." },
-  "editorLibraryArrow": { "message": "История ↗" },
-  "editorCanvasErrorTitle": { "message": "Скриншот не загружен" },
-  "editorCanvasErrorBody": { "message": "Сначала захватите страницу через popup ScreenFellow." },
-  "editorFormatTitle": { "message": "Формат" },
-  "licenseProActive": { "message": "Лицензия Pro активна" },
-  "licenseFreeUpgrade": { "message": "Бесплатно — нажмите для перехода на Pro" },
-  "licenseActivatedReload": { "message": "Лицензия активирована! Перезагрузка…" },
-  "editorPresetDeleteTitle": { "message": "Удалить этот пресет?" },
-  "editorPresetDeleteBody": { "message": "Этот пресет будет удалён навсегда." },
-  "editorDeleteLabel": { "message": "Удалить" },
-  "historyLimitReduceTitle": { "message": "Уменьшить лимит истории?" },
-  "historyLimitApply": { "message": "Да, применить" },
-  "editorDeleteScreenshotTitle": { "message": "Удалить этот скриншот?" },
-  "editorBuyLicense": { "message": "Купить лицензию Pro" },
-  "historyLimitDeleteWarning": { "message": "Будет удалено {n} скриншот(ов) (старые первыми). Это действие нельзя отменить." },
-  "toolPanTitle": { "message": "Панорама (V)" },
-  "toolSelectTitle": { "message": "Выбор (S · Правая кнопка)" },
-  "toolRectTitle": { "message": "Прямоугольник (R)" },
-  "toolEllipseTitle": { "message": "Эллипс (E)" },
-  "toolBadgeTitle": { "message": "Бейдж (C)" },
-  "toolArrowTitle": { "message": "Стрелка (A)" },
-  "toolTextTitle": { "message": "Текст (T)" },
-  "toolHighlightTitle": { "message": "Выделение (H)" },
-  "toolFreehandTitle": { "message": "Свободное рисование (F)" },
-  "toolBlurTitle": { "message": "Размытие (B)" },
-  "toolImageTitle": { "message": "Изображение / Водяной знак (I)" },
-  "toolEmojiTitle": { "message": "Эмодзи (X)" },
-  "toolLockedPro": { "message": "Функция Pro — нажмите для активации" },
-  "ofpTextStyle": { "message": "Стиль текста" },
-  "ofpRectStyle": { "message": "Стиль прямоугольника" },
-  "ofpEllipseStyle": { "message": "Стиль эллипса" },
-  "ofpBadgeStyle": { "message": "Стиль бейджа" },
-  "ofpNumbering": { "message": "Нумерация" },
-  "ofpHighlightColor": { "message": "Цвет выделения" },
-  "ofpPenStyle": { "message": "Стиль пера" },
-  "ofpArrowStyle": { "message": "Стиль стрелки" },
-  "ofpImageStyle": { "message": "Изображение / Водяной знак" },
-  "ofpFormatFuture": { "message": "Параметры формата появятся в будущем обновлении." },
-  "ofpCornerRadius": { "message": "Радиус скругления" },
-  "ofpPenWidth": { "message": "Толщина пера" },
-  "ofpBorderColor": { "message": "Цвет рамки" },
-  "ofpShadow": { "message": "Тень" },
-  "ofpBlurOutside": { "message": "Размытие снаружи" },
-  "ofpBlurAmount": { "message": "Интенсивность размытия" },
-  "ofpArrowWidth": { "message": "Ширина" },
-  "ofpArrowType": { "message": "Тип" },
-  "ofpBlurStrength": { "message": "Сила размытия" },
-  "ofpStyle": { "message": "Стиль" },
-  "ofpAlignment": { "message": "Выравнивание" },
-  "ofpFont": { "message": "Шрифт" },
-  "ofpTextColor": { "message": "Цвет текста" },
-  "ofpFontSize": { "message": "Размер шрифта" },
-  "ofpFillColor": { "message": "Цвет заливки" },
-  "ofpSequence": { "message": "Последовательность" },
-  "ofpBorderType": { "message": "Тип рамки" },
-  "ofpFilled": { "message": "● Заливка" },
-  "ofpOutline": { "message": "○ Контур" },
-  "ofpContinueNumeric": { "message": "Продолжить отсюда (только числа)" },
-  "ofpContinueFrom": { "message": "Продолжить с {from} → следующий: {next}" },
-  "ofpImageUpload": { "message": "↑ Загрузить изображение" },
-  "arrowTypeDesign": { "message": "Дизайнерская стрелка" },
-  "arrowTypeDesignGradient": { "message": "Дизайн + Градиент" },
-  "arrowTypeSimple": { "message": "Простая стрелка" },
-  "arrowTypeDouble": { "message": "Двойная стрелка" },
-  "arrowTypeLine": { "message": "Линия" },
-  "arrowTypeLineDot": { "message": "Линия + Точка" },
-  "arrowTypeLineTwoDots": { "message": "Линия + Две точки" },
-  "presetDeleteMinOne": { "message": "Необходим минимум 1 пресет" },
-  "presetDeleteBtn": { "message": "Удалить пресет" },
-  "exportGuide": { "message": "Экспортировать как руководство (HTML)" },
-  "badgeStepDescription": { "message": "Описание шага" },
-  "badgeStepDescriptionPlaceholder": { "message": "Что должен сделать пользователь здесь..." },
-  "guideBeaconHint": { "message": "Нажмите на бейдж ↑" },
-  "guideStep": { "message": "Шаг" },
-  "toolCropTitle": { "message": "Обрезать (K)" },
-  "toolUrlFrameTitle": { "message": "URL и метка времени (U)" },
-  "toolCropApply": { "message": "Применить обрезку" },
-  "toolCropHint": { "message": "Обрезает оригинальный скриншот — сохраняется как новая запись в истории." },
-  "ofpUrlFrameStyle": { "message": "Стиль рамки" },
-  "urlFrameNone": { "message": "Нет" },
-  "urlFrameMac": { "message": "Mac OS X" },
-  "urlFrameWin": { "message": "Windows" },
-  "urlFrameBarTop": { "message": "Строка URL — сверху" },
-  "urlFrameBarBottom": { "message": "Строка URL — снизу" },
-  "ofpDateTime": { "message": "Дата и время" },
-  "dateTimeNone": { "message": "Нет" },
-  "dateTimeDate": { "message": "Дата" },
-  "dateTimeDateTime": { "message": "Дата и время" },
-  "dateTimeISO": { "message": "ISO" },
-  "noUrlCaptured": { "message": "URL для этого скриншота не сохранён" },
-  "urlFrameExportHint": { "message": "URL и метка времени применяются при экспорте и не отображаются в предпросмотре." },
-  "screenshotNamePlaceholder": { "message": "Назвать скриншот..." },
-  "historySearchPlaceholder": { "message": "Поиск скриншотов..." },
-  "historyNoResults": { "message": "Скриншоты не найдены." },
-  "saveAsPreset": { "message": "Сохранить как пресет" },
-  "presetSaved": { "message": "Сохранено!" },
-  "presetMaxReached": { "message": "Достигнут макс. предел {n} пользовательских пресетов" }
+  "appName": {
+    "message": "ScreenFellow: Полный скриншот страницы и дизайн-фидбек"
+  },
+  "appDescription": {
+    "message": "Создавайте полные скриншоты веб-страниц с автопрокруткой, аннотируйте их профессиональными инструментами и экспортируйте в PNG или PDF."
+  },
+  "captureVisible": {
+    "message": "Захватить видимую область"
+  },
+  "captureVisibleDesc": {
+    "message": "Скриншот того, что видите сейчас"
+  },
+  "captureFullPage": {
+    "message": "Захватить всю страницу"
+  },
+  "captureFullPageDesc": {
+    "message": "Автопрокрутка и сборка всей страницы"
+  },
+  "captureSelection": {
+    "message": "Захватить выделение"
+  },
+  "captureSelectionDesc": {
+    "message": "Нарисуйте область для захвата"
+  },
+  "openLibrary": {
+    "message": "Открыть библиотеку скриншотов"
+  },
+  "offlineMessage": {
+    "message": "Нет подключения. ScreenFellow требует интернет-соединения."
+  },
+  "capturing": {
+    "message": "Захват..."
+  },
+  "captureError": {
+    "message": "Не удалось захватить эту страницу. Внутренние страницы Chrome недоступны."
+  },
+  "saveAsImage": {
+    "message": "Сохранить как изображение (PNG)"
+  },
+  "saveAsPDF": {
+    "message": "Сохранить как PDF"
+  },
+  "edit": {
+    "message": "Редактировать и аннотировать"
+  },
+  "editProOnly": {
+    "message": "Редактировать и аннотировать (Pro)"
+  },
+  "original": {
+    "message": "Оригинал"
+  },
+  "annotated": {
+    "message": "С аннотациями"
+  },
+  "undo": {
+    "message": "Отменить"
+  },
+  "redo": {
+    "message": "Повторить"
+  },
+  "download": {
+    "message": "Скачать"
+  },
+  "toolSelect": {
+    "message": "Выбор"
+  },
+  "toolRect": {
+    "message": "Прямоугольник"
+  },
+  "toolCircle": {
+    "message": "Нумерованный круг"
+  },
+  "toolArrow": {
+    "message": "Стрелка"
+  },
+  "toolText": {
+    "message": "Текст"
+  },
+  "toolHighlight": {
+    "message": "Выделение"
+  },
+  "toolFreehand": {
+    "message": "Свободное рисование"
+  },
+  "toolEmoji": {
+    "message": "Эмодзи / Стикер"
+  },
+  "activateLicense": {
+    "message": "Активировать лицензию"
+  },
+  "licenseKey": {
+    "message": "Лицензионный ключ"
+  },
+  "licenseKeyPlaceholder": {
+    "message": "Введите лицензионный ключ..."
+  },
+  "activate": {
+    "message": "Активировать"
+  },
+  "deactivate": {
+    "message": "Деактивировать лицензию"
+  },
+  "licenseActive": {
+    "message": "Pro"
+  },
+  "licenseFree": {
+    "message": "Бесплатная версия"
+  },
+  "licenseActivating": {
+    "message": "Активация..."
+  },
+  "licenseSuccess": {
+    "message": "Лицензия успешно активирована! Функции Pro разблокированы."
+  },
+  "licenseError": {
+    "message": "Неверный лицензионный ключ. Проверьте и попробуйте снова."
+  },
+  "licenseAlreadyActive": {
+    "message": "Эта лицензия активна на другом устройстве. Активация здесь деактивирует её там."
+  },
+  "upgradeTitle": {
+    "message": "Разблокировать ScreenFellow Pro"
+  },
+  "upgradeBody": {
+    "message": "Неограниченные скриншоты полной страницы. Добавляйте изображения, водяные знаки и эмодзи. Экспорт в PDF, до 500 аннотированных скриншотов и пользовательские пресеты. Единоразовая оплата без подписки!"
+  },
+  "upgradePrice": {
+    "message": "€15 — единоразово"
+  },
+  "upgradeBuy": {
+    "message": "Купить (Без подписки!)"
+  },
+  "upgradeActivate": {
+    "message": "У меня уже есть лицензия"
+  },
+  "upgradeClose": {
+    "message": "Может быть позже"
+  },
+  "watermarkText": {
+    "message": "ScreenFellow Free"
+  },
+  "exportingPNG": {
+    "message": "Сохранение PNG..."
+  },
+  "exportingPDF": {
+    "message": "Сохранение PDF..."
+  },
+  "pageTooLarge": {
+    "message": "Страница превышает ваш лимит {limit}пкс — увеличьте его в настройках (макс. 100k пкс)."
+  },
+  "settingsTitle": {
+    "message": "Настройки"
+  },
+  "languageLabel": {
+    "message": "Язык"
+  },
+  "shortcutsTitle": {
+    "message": "Настроить горячие клавиши"
+  },
+  "shortcutsOpen": {
+    "message": "Открыть горячие клавиши Chrome ↗"
+  },
+  "confettiSectionTitle": {
+    "message": "Анимации"
+  },
+  "confettiLabel": {
+    "message": "Конфетти"
+  },
+  "settings": {
+    "message": "Настройки"
+  },
+  "close": {
+    "message": "Закрыть"
+  },
+  "cancel": {
+    "message": "Отмена"
+  },
+  "color": {
+    "message": "Цвет"
+  },
+  "size": {
+    "message": "Размер"
+  },
+  "opacity": {
+    "message": "Прозрачность"
+  },
+  "strokeWidth": {
+    "message": "Ширина рамки"
+  },
+  "presetStyles": {
+    "message": "Стили пресетов"
+  },
+  "licenseSettingsTitle": {
+    "message": "Лицензия"
+  },
+  "licenseActivateHint": {
+    "message": "Введите лицензионный ключ, чтобы разблокировать функции Pro на этом устройстве."
+  },
+  "licenseSettingsHint": {
+    "message": "Все функции Pro будут деактивированы. Лицензию можно повторно активировать в любое время."
+  },
+  "licenseRelease": {
+    "message": "Освободить лицензию и перейти на Free"
+  },
+  "releaseConfirmTitle": {
+    "message": "Освободить лицензию Pro?"
+  },
+  "releaseConfirmBody": {
+    "message": "Это устройство потеряет все функции Pro. История скриншотов будет сокращена до последних 10 — более старые будут удалены. Лицензия остаётся действительной и может быть активирована повторно."
+  },
+  "releaseConfirmOk": {
+    "message": "Да, освободить"
+  },
+  "releaseConfirmCancel": {
+    "message": "Отмена"
+  },
+  "historyLimitLabel": {
+    "message": "Лимит истории скриншотов"
+  },
+  "historyLimitHint": {
+    "message": "Максимальное количество скриншотов в истории."
+  },
+  "back": {
+    "message": "Назад"
+  },
+  "zoomLevel": {
+    "message": "Уровень масштаба"
+  },
+  "zoomActual": {
+    "message": "Реальный размер (100%)"
+  },
+  "zoomFit": {
+    "message": "Подогнать под экран"
+  },
+  "historySettings": {
+    "message": "Настройки истории"
+  },
+  "undoTitle": {
+    "message": "Отменить (Ctrl+Z)"
+  },
+  "redoTitle": {
+    "message": "Повторить (Ctrl+Y)"
+  },
+  "editorHistory": {
+    "message": "История"
+  },
+  "editorHistoryMaxHint": {
+    "message": "Макс. сохранённых скриншотов. Старые удаляются первыми."
+  },
+  "editorNoScreenshots": {
+    "message": "Скриншотов пока нет."
+  },
+  "editorDeleteScreenshot": {
+    "message": "Удалить скриншот"
+  },
+  "editorLibraryHint": {
+    "message": "Выберите скриншот из истории для просмотра или аннотирования."
+  },
+  "editorLibraryArrow": {
+    "message": "История ↗"
+  },
+  "editorCanvasErrorTitle": {
+    "message": "Скриншот не загружен"
+  },
+  "editorCanvasErrorBody": {
+    "message": "Сначала захватите страницу через popup ScreenFellow."
+  },
+  "editorFormatTitle": {
+    "message": "Формат"
+  },
+  "licenseProActive": {
+    "message": "Лицензия Pro активна"
+  },
+  "licenseFreeUpgrade": {
+    "message": "Бесплатно — нажмите для перехода на Pro"
+  },
+  "licenseActivatedReload": {
+    "message": "Лицензия активирована! Перезагрузка…"
+  },
+  "editorPresetDeleteTitle": {
+    "message": "Удалить этот пресет?"
+  },
+  "editorPresetDeleteBody": {
+    "message": "Этот пресет будет удалён навсегда."
+  },
+  "editorDeleteLabel": {
+    "message": "Удалить"
+  },
+  "historyLimitReduceTitle": {
+    "message": "Уменьшить лимит истории?"
+  },
+  "historyLimitApply": {
+    "message": "Да, применить"
+  },
+  "editorDeleteScreenshotTitle": {
+    "message": "Удалить этот скриншот?"
+  },
+  "editorBuyLicense": {
+    "message": "Купить лицензию Pro"
+  },
+  "historyLimitDeleteWarning": {
+    "message": "Будет удалено {n} скриншот(ов) (старые первыми). Это действие нельзя отменить."
+  },
+  "toolPanTitle": {
+    "message": "Панорама (V)"
+  },
+  "toolSelectTitle": {
+    "message": "Выбор (S · Правая кнопка)"
+  },
+  "toolRectTitle": {
+    "message": "Прямоугольник (R)"
+  },
+  "toolEllipseTitle": {
+    "message": "Эллипс (E)"
+  },
+  "toolBadgeTitle": {
+    "message": "Бейдж (C)"
+  },
+  "toolArrowTitle": {
+    "message": "Стрелка (A)"
+  },
+  "toolTextTitle": {
+    "message": "Текст (T)"
+  },
+  "toolHighlightTitle": {
+    "message": "Выделение (H)"
+  },
+  "toolFreehandTitle": {
+    "message": "Свободное рисование (F)"
+  },
+  "toolBlurTitle": {
+    "message": "Размытие (B)"
+  },
+  "toolImageTitle": {
+    "message": "Изображение / Водяной знак (I)"
+  },
+  "toolEmojiTitle": {
+    "message": "Эмодзи (X)"
+  },
+  "toolLockedPro": {
+    "message": "Функция Pro — нажмите для активации"
+  },
+  "ofpTextStyle": {
+    "message": "Стиль текста"
+  },
+  "ofpRectStyle": {
+    "message": "Стиль прямоугольника"
+  },
+  "ofpEllipseStyle": {
+    "message": "Стиль эллипса"
+  },
+  "ofpBadgeStyle": {
+    "message": "Стиль бейджа"
+  },
+  "ofpNumbering": {
+    "message": "Нумерация"
+  },
+  "ofpHighlightColor": {
+    "message": "Цвет выделения"
+  },
+  "ofpPenStyle": {
+    "message": "Стиль пера"
+  },
+  "ofpArrowStyle": {
+    "message": "Стиль стрелки"
+  },
+  "ofpImageStyle": {
+    "message": "Изображение / Водяной знак"
+  },
+  "ofpFormatFuture": {
+    "message": "Параметры формата появятся в будущем обновлении."
+  },
+  "ofpCornerRadius": {
+    "message": "Радиус скругления"
+  },
+  "ofpPenWidth": {
+    "message": "Толщина пера"
+  },
+  "ofpBorderColor": {
+    "message": "Цвет рамки"
+  },
+  "ofpShadow": {
+    "message": "Тень"
+  },
+  "ofpBlurOutside": {
+    "message": "Размытие снаружи"
+  },
+  "ofpBlurAmount": {
+    "message": "Интенсивность размытия"
+  },
+  "ofpArrowWidth": {
+    "message": "Ширина"
+  },
+  "ofpArrowType": {
+    "message": "Тип"
+  },
+  "ofpBlurStrength": {
+    "message": "Сила размытия"
+  },
+  "ofpStyle": {
+    "message": "Стиль"
+  },
+  "ofpAlignment": {
+    "message": "Выравнивание"
+  },
+  "ofpFont": {
+    "message": "Шрифт"
+  },
+  "ofpTextColor": {
+    "message": "Цвет текста"
+  },
+  "ofpFontSize": {
+    "message": "Размер шрифта"
+  },
+  "ofpFillColor": {
+    "message": "Цвет заливки"
+  },
+  "ofpSequence": {
+    "message": "Последовательность"
+  },
+  "ofpBorderType": {
+    "message": "Тип рамки"
+  },
+  "ofpFilled": {
+    "message": "● Заливка"
+  },
+  "ofpOutline": {
+    "message": "○ Контур"
+  },
+  "ofpContinueNumeric": {
+    "message": "Продолжить отсюда (только числа)"
+  },
+  "ofpContinueFrom": {
+    "message": "Продолжить с {from} → следующий: {next}"
+  },
+  "ofpImageUpload": {
+    "message": "↑ Загрузить изображение"
+  },
+  "arrowTypeDesign": {
+    "message": "Дизайнерская стрелка"
+  },
+  "arrowTypeDesignGradient": {
+    "message": "Дизайн + Градиент"
+  },
+  "arrowTypeSimple": {
+    "message": "Простая стрелка"
+  },
+  "arrowTypeDouble": {
+    "message": "Двойная стрелка"
+  },
+  "arrowTypeLine": {
+    "message": "Линия"
+  },
+  "arrowTypeLineDot": {
+    "message": "Линия + Точка"
+  },
+  "arrowTypeLineTwoDots": {
+    "message": "Линия + Две точки"
+  },
+  "presetDeleteMinOne": {
+    "message": "Необходим минимум 1 пресет"
+  },
+  "presetDeleteBtn": {
+    "message": "Удалить пресет"
+  },
+  "exportGuide": {
+    "message": "Экспортировать как руководство (HTML)"
+  },
+  "badgeStepDescription": {
+    "message": "Описание шага"
+  },
+  "badgeStepDescriptionPlaceholder": {
+    "message": "Что должен сделать пользователь здесь..."
+  },
+  "guideBeaconHint": {
+    "message": "Нажмите на бейдж ↑"
+  },
+  "guideStep": {
+    "message": "Шаг"
+  },
+  "toolCropTitle": {
+    "message": "Обрезать (K)"
+  },
+  "toolUrlFrameTitle": {
+    "message": "URL и метка времени (U)"
+  },
+  "toolCropApply": {
+    "message": "Применить обрезку"
+  },
+  "toolCropHint": {
+    "message": "Обрезает оригинальный скриншот — сохраняется как новая запись в истории."
+  },
+  "ofpUrlFrameStyle": {
+    "message": "Стиль рамки"
+  },
+  "urlFrameNone": {
+    "message": "Нет"
+  },
+  "urlFrameMac": {
+    "message": "Mac OS X"
+  },
+  "urlFrameWin": {
+    "message": "Windows"
+  },
+  "urlFrameBarTop": {
+    "message": "Строка URL — сверху"
+  },
+  "urlFrameBarBottom": {
+    "message": "Строка URL — снизу"
+  },
+  "ofpDateTime": {
+    "message": "Дата и время"
+  },
+  "dateTimeNone": {
+    "message": "Нет"
+  },
+  "dateTimeDate": {
+    "message": "Дата"
+  },
+  "dateTimeDateTime": {
+    "message": "Дата и время"
+  },
+  "dateTimeISO": {
+    "message": "ISO"
+  },
+  "noUrlCaptured": {
+    "message": "URL для этого скриншота не сохранён"
+  },
+  "urlFrameExportHint": {
+    "message": "URL и метка времени применяются при экспорте и не отображаются в предпросмотре."
+  },
+  "screenshotNamePlaceholder": {
+    "message": "Назвать скриншот..."
+  },
+  "historySearchPlaceholder": {
+    "message": "Поиск скриншотов..."
+  },
+  "historyNoResults": {
+    "message": "Скриншоты не найдены."
+  },
+  "saveAsPreset": {
+    "message": "Сохранить как пресет"
+  },
+  "presetSaved": {
+    "message": "Сохранено!"
+  },
+  "presetMaxReached": {
+    "message": "Достигнут макс. предел {n} пользовательских пресетов"
+  },
+  "pixelLimitSectionTitle": {
+    "message": "Лимит полной страницы"
+  },
+  "pixelLimitLabel": {
+    "message": "Макс. высота в пикселях"
+  },
+  "pixelLimitHint": {
+    "message": "Максимальная высота при захвате полных страниц."
+  },
+  "captureAnalyzing": {
+    "message": "Анализ страницы..."
+  },
+  "captureStitching": {
+    "message": "Обработка..."
+  },
+  "captureDone": {
+    "message": "Готово!"
+  },
+  "clearAllScreenshots": {
+    "message": "Удалить все скриншоты"
+  },
+  "clearAllConfirmTitle": {
+    "message": "Удалить все скриншоты?"
+  },
+  "clearAllConfirmBody": {
+    "message": "Все сохранённые скриншоты будут удалены безвозвратно."
+  },
+  "clearAllConfirmBtn": {
+    "message": "Да, удалить всё"
+  }
 }

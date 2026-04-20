@@ -45,7 +45,7 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
         await handleCaptureFullPage(msg.tabId);
         sendResponse({ ok: true });
       } else if (msg.action === 'selectionCaptured') {
-        await openEditorTab(msg.dataUrl, sender.tab?.id, msg.dpr || 1);
+        await openEditorTab(msg.dataUrl, sender.tab?.id, msg.dpr || 1, msg.truncated || false, msg.pixelLimit || 50000, msg.isFullPage || false);
         sendResponse({ ok: true });
       } else if (msg.action === 'captureVisibleForStitch') {
         const dataUrl = await chrome.tabs.captureVisibleTab(sender.tab.windowId, { format: 'png' });
@@ -113,7 +113,7 @@ async function startSelectionMode(tabId) {
   await chrome.tabs.sendMessage(tabId, { action: 'startSelection' });
 }
 
-async function openEditorTab(dataUrl, sourceTabId, dpr = 1) {
+async function openEditorTab(dataUrl, sourceTabId, dpr = 1, truncated = false, pixelLimit = 50000, isFullPage = false) {
   let pageUrl = '';
   if (sourceTabId) {
     try { pageUrl = (await chrome.tabs.get(sourceTabId)).url || ''; } catch(e) {}
@@ -129,8 +129,9 @@ async function openEditorTab(dataUrl, sourceTabId, dpr = 1) {
     cssBlob    = await fetch(dataUrl).then(r => r.blob());
   }
 
+  let entryId = null;
   try {
-    const { entry, thumbDataUrl } = await buildHistoryEntry(cssDataUrl, pageUrl);
+    const { entry, thumbDataUrl } = await buildHistoryEntry(cssDataUrl, pageUrl, isFullPage);
     await Promise.all([dbSave(entry.id, cssBlob), dbSaveThumbnail(entry.id, thumbDataUrl)]);
 
     const { screenshot_history = [], license_status, history_limit_user } = await chrome.storage.local.get(['screenshot_history', 'license_status', 'history_limit_user']);
@@ -146,11 +147,13 @@ async function openEditorTab(dataUrl, sourceTabId, dpr = 1) {
       ]);
     }
     await chrome.storage.local.set({ screenshot_history });
+    entryId = entry.id;
   } catch (e) {
     console.warn('ScreenFellow: could not save to history', e);
   }
 
-  await chrome.storage.session.set({ pendingScreenshot: cssDataUrl, sourceTabId, pageUrl });
+  // Store only the ID — the full data URL can exceed session storage quota on large pages
+  await chrome.storage.session.set({ pendingScreenshotId: entryId, sourceTabId, pageUrl, truncated, pixelLimit });
   const editorUrl = chrome.runtime.getURL('editor/editor.html');
   await chrome.tabs.create({ url: editorUrl });
 }
@@ -167,7 +170,7 @@ async function scaleImage(dataUrl, factor) {
 
 // ─── History helpers (OffscreenCanvas available in service worker) ───────────
 
-async function buildHistoryEntry(dataUrl, pageUrl = '') {
+async function buildHistoryEntry(dataUrl, pageUrl = '', isFullPage = false) {
   const res = await fetch(dataUrl);
   const blob = await res.blob();
   const bitmap = await createImageBitmap(blob);
@@ -180,7 +183,7 @@ async function buildHistoryEntry(dataUrl, pageUrl = '') {
   const thumbDataUrl = await blobToBase64(thumbBlob);
 
   return {
-    entry: { id: crypto.randomUUID(), timestamp: Date.now(), url: pageUrl },
+    entry: { id: crypto.randomUUID(), timestamp: Date.now(), url: pageUrl, isFullPage },
     thumbDataUrl,
   };
 }

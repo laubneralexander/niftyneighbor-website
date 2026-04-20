@@ -79,7 +79,7 @@
 
     <div id="capture-progress" class="capture-progress hidden">
       <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
-      <span id="progress-text" data-i18n="capturing"></span>
+      <span id="progress-text"></span>
     </div>
 
     <footer class="popup-footer">
@@ -133,6 +133,20 @@
             <input type="checkbox" id="toggle-confetti" checked>
             <span class="toggle-slider"></span>
           </label>
+        </div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="settings-section">
+        <div class="settings-section-label" data-i18n="pixelLimitSectionTitle"></div>
+        <div class="settings-toggle-row">
+          <span class="settings-toggle-label" data-i18n="pixelLimitLabel"></span>
+          <div class="pixel-limit-seg" id="pixel-limit-seg">
+            <button class="pixel-limit-opt" data-value="50000">50k</button>
+            <button class="pixel-limit-opt" data-value="75000">75k</button>
+            <button class="pixel-limit-opt" data-value="100000">100k</button>
+          </div>
         </div>
       </div>
 

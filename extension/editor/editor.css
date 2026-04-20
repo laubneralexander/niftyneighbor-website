@@ -13,8 +13,8 @@ body {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  height: 44px;
-  padding: 0 10px;
+  height: 54px;
+  padding: 0 14px;
   background: var(--bg-surface);
   border-bottom: 1px solid var(--border-color);
   flex-shrink: 0;
@@ -29,7 +29,7 @@ body {
 }
 
 .logo-img {
-  height: 24px;
+  height: 28px;
   width: auto;
   display: block;
   object-fit: contain;
@@ -47,7 +47,7 @@ body {
   width: 1px;
   height: 16px;
   background: var(--border-color);
-  margin: 0 4px;
+  margin: 0 12px;
 }
 
 /* Zoom Dropdown */
@@ -84,12 +84,12 @@ body {
 }
 
 .view-badge {
-  font-size: 9px;
-  font-weight: 800;
-  letter-spacing: 0.08em;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  padding: 3px 9px;
-  border-radius: 5px;
+  padding: 5px 13px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: opacity 0.15s, box-shadow 0.15s;
@@ -131,14 +131,14 @@ body {
 
 /* Left Toolbar */
 .toolbar {
-  width: 48px;
+  width: 58px;
   background: var(--bg-surface);
   border-right: 1px solid var(--border-color);
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 8px 0 8px;
-  gap: 1px;
+  padding: 10px 0;
+  gap: 2px;
   flex-shrink: 0;
   overflow-y: auto;
   position: relative;
@@ -152,9 +152,9 @@ body {
 }
 
 .tool-btn {
-  width: 34px;
-  height: 34px;
-  font-size: 15px;
+  width: 42px;
+  height: 42px;
+  font-size: 17px;
   border-radius: var(--border-radius-sm);
 }
 
@@ -227,18 +227,18 @@ body {
 }
 
 .toolbar-divider {
-  width: 30px;
+  width: 36px;
   height: 1px;
   background: var(--border-color);
-  margin: 5px 0;
+  margin: 6px 0;
   flex-shrink: 0;
 }
 
 /* ─── Tool Options Panel ──────────────────────────────────────────────────── */
 .tool-options-panel {
   position: fixed;
-  left: 56px;
-  top: 50px;
+  left: 68px;
+  top: 62px;
   z-index: 300;
   background: rgba(16,16,26,0.97);
   backdrop-filter: blur(16px);
@@ -470,8 +470,8 @@ body {
 /* Emoji Picker */
 .emoji-picker {
   position: fixed;
-  left: 56px;
-  top: 50px;
+  left: 68px;
+  top: 62px;
   background: var(--bg-elevated);
   border: 1px solid rgba(255,255,255,0.1);
   border-radius: var(--border-radius);
@@ -535,7 +535,7 @@ body {
 /* Canvas Area */
 .canvas-area {
   flex: 1;
-  overflow: auto;
+  overflow: hidden;
   background: #07070C;
   display: flex;
   position: relative;
@@ -583,20 +583,25 @@ body {
 }
 
 .canvas-scroll-wrapper {
-  min-width: 100%;
-  min-height: 100%;
-  display: flex;
-  align-items: flex-start;
-  justify-content: flex-start;
-  padding: 24px;
-  box-sizing: border-box;
+  position: absolute;
+  inset: 0;
+}
+
+.canvas-scale-host {
+  position: absolute;
+  inset: 0;
 }
 
 #canvas-container {
-  flex-shrink: 0;
+  position: absolute;
+  inset: 0;
   line-height: 0;
-  box-shadow: 0 0 0 1px rgba(255,255,255,0.06), 0 8px 40px rgba(0,0,0,0.6);
-  position: relative;
+}
+
+/* Unused rule kept as no-op — textarea no longer needs special handling now that the canvas
+   element is viewport-sized (Fabric's hidden textarea stays within visible bounds). */
+#canvas-container.sf-zoom-out textarea {
+  /* no override needed */
 }
 
 /* ── Crop Overlay ─────────────────────────────────────────────────────────── */
@@ -637,13 +642,13 @@ body {
 .crop-handle.se { bottom:-5px; right:-5px; cursor:se-resize; }
 #crop-action-bar {
   position: absolute;
-  bottom: 16px;
+  bottom: 20px;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
   gap: 8px;
   pointer-events: all;
-  z-index: 51;
+  z-index: 200;
   white-space: nowrap;
 }
 #crop-action-bar button {
@@ -657,8 +662,71 @@ body {
 }
 #crop-cancel-btn { background: #4a4a5a; color: #fff; }
 #crop-cancel-btn:hover { background: #5a5a6a; }
+#crop-reset-btn  { background: #4a4a5a; color: #fff; }
+#crop-reset-btn:hover  { background: #5a5a6a; }
 #crop-apply-btn  { background: #5B5BD6; color: #fff; }
 #crop-apply-btn:hover  { background: #4E4EC4; }
+
+/* ── Slice Overlay ─────────────────────────────────────────────────────────── */
+#slice-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 50;
+  pointer-events: none;
+}
+.slice-shade {
+  position: absolute;
+  background: rgba(0,0,0,0.55);
+  pointer-events: all;
+}
+#slice-band {
+  position: absolute;
+  left: 0;
+  right: 0;
+  background: rgba(220,38,38,0.2);
+  border-top: 1.5px dashed rgba(255,100,100,0.9);
+  border-bottom: 1.5px dashed rgba(255,100,100,0.9);
+  cursor: move;
+  pointer-events: all;
+  box-sizing: border-box;
+}
+.slice-handle {
+  position: absolute;
+  left: calc(50% - 6px);
+  width: 12px;
+  height: 8px;
+  background: #fff;
+  border: 1.5px solid rgba(0,0,0,0.3);
+  border-radius: 2px;
+  box-sizing: border-box;
+}
+.slice-handle.n { top: -4px; cursor: n-resize; }
+.slice-handle.s { bottom: -4px; cursor: s-resize; }
+#slice-action-bar {
+  position: absolute;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 200;
+  white-space: nowrap;
+}
+#slice-action-bar button {
+  padding: 7px 16px;
+  border-radius: 6px;
+  border: none;
+  font-size: 13px;
+  font-family: var(--font-family);
+  cursor: pointer;
+  transition: background .15s;
+}
+#slice-cancel-btn { background: #4a4a5a; color: #fff; }
+#slice-cancel-btn:hover { background: #5a5a6a; }
+#slice-reset-btn  { background: #4a4a5a; color: #fff; }
+#slice-reset-btn:hover  { background: #5a5a6a; }
+#slice-apply-btn  { background: #dc2626; color: #fff; }
+#slice-apply-btn:hover  { background: #b91c1c; }
 
 /* Right Sidebar */
 .sidebar {
@@ -672,10 +740,10 @@ body {
 }
 
 .sidebar-section {
-  padding: 10px 12px;
+  padding: 12px 14px;
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
   flex-shrink: 0;
 }
 
@@ -691,7 +759,7 @@ body {
   width: 100%;
   justify-content: center;
   font-size: var(--font-size-xs);
-  padding: 7px 10px;
+  padding: 9px 12px;
 }
 
 
@@ -775,6 +843,20 @@ body {
   text-align: right;
 }
 
+.history-clear-btn {
+  width: 100%;
+  margin-top: 10px;
+  font-size: var(--font-size-xs);
+  color: #FCA5A5;
+  border-color: rgba(252, 165, 165, 0.25);
+  padding: 5px 10px;
+}
+.history-clear-btn:hover {
+  background: rgba(239, 68, 68, 0.12);
+  border-color: rgba(252, 165, 165, 0.45);
+  color: #FCA5A5;
+}
+
 .history-list {
   flex: 1;
   overflow-y: auto;
@@ -802,62 +884,118 @@ body {
 .history-thumb {
   width: 100%;
   height: auto;
+  min-height: 90px;
+  max-height: 160px;
   display: block;
+  object-fit: cover;
+  object-position: top;
 }
 
-.history-delete-btn {
+/* Fullpage badge — bottom-right, always visible, above hover overlay */
+.history-fullpage-badge {
   position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  display: none;
-  background: rgba(239, 68, 68, 0.88);
-  border: none;
-  cursor: pointer;
-  padding: 7px 8px;
-  font-size: 11px;
-  font-weight: 600;
-  color: #fff;
-  letter-spacing: 0.02em;
-  text-align: center;
-  transition: background 0.1s;
-  backdrop-filter: blur(2px);
+  bottom: 6px;
+  right: 6px;
+  z-index: 3;
+  width: 20px;
+  height: 20px;
+  background: rgba(10,10,20,0.72);
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  backdrop-filter: blur(4px);
 }
-.history-delete-btn:hover { background: rgba(220, 38, 38, 0.96); }
-.history-item:hover .history-delete-btn { display: flex; align-items: center; justify-content: center; gap: 4px; }
+.history-fullpage-badge svg { width: 11px; height: 11px; opacity: 0.75; color: #fff; }
 
+/* Hover overlay — dark layer that makes text readable */
+.history-hover-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  opacity: 0;
+  transition: opacity 0.15s;
+  pointer-events: none;
+  z-index: 1;
+}
+.history-item:hover .history-hover-overlay { opacity: 1; }
+
+/* Always-visible timestamp (bottom-left, normal state only) */
+.history-ts-badge {
+  position: absolute;
+  bottom: 5px;
+  left: 6px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.8);
+  background: rgba(0,0,0,0.52);
+  border-radius: 3px;
+  padding: 1px 5px;
+  pointer-events: none;
+  z-index: 2;
+  line-height: 1.4;
+  transition: opacity 0.12s;
+}
+.history-item:hover .history-ts-badge { opacity: 0; }
+
+/* Round delete X — top-right, on hover */
+.history-delete-x {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.55);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.8);
+  font-size: 11px;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 4;
+  padding: 0;
+  line-height: 1;
+  transition: background var(--transition), color var(--transition), border-color var(--transition);
+}
+.history-item:hover .history-delete-x { display: flex; }
+.history-delete-x:hover { background: rgba(220,38,38,0.9); color: #fff; border-color: transparent; }
+
+/* Meta area — appears on hover, sits above the dark overlay */
 .history-meta {
   position: absolute;
-  bottom: 4px;
-  left: 4px;
-  right: 4px;
-  pointer-events: none;
+  inset: 0;
+  padding: 34px 8px 8px 8px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 1px;
+  gap: 4px;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 2;
+  transition: opacity 0.15s;
 }
-.history-item:hover .history-meta { display: none; }
+.history-item:hover .history-meta { opacity: 1; pointer-events: auto; }
 
 .history-name {
-  font-size: 9px;
+  font-size: 12px;
   font-weight: 600;
-  color: rgba(255,255,255,0.9);
-  background: rgba(0,0,0,0.65);
-  border-radius: 3px;
-  padding: 1px 4px;
+  color: rgba(255,255,255,0.95);
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  line-height: 1.3;
+  pointer-events: none;
 }
 
 .history-timestamp {
-  font-size: 9px;
-  color: rgba(255,255,255,0.6);
-  background: rgba(0,0,0,0.55);
-  border-radius: 3px;
-  padding: 1px 4px;
+  font-size: 10px;
+  color: rgba(255,255,255,0.75);
+  line-height: 1.3;
+  pointer-events: none;
 }
 
 .history-search-wrap {
@@ -893,6 +1031,241 @@ body {
 .screenshot-name-input:focus { border-bottom-color: rgba(255,255,255,0.4); }
 .screenshot-name-input::placeholder { color: var(--text-muted); font-style: italic; }
 
+.sf-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%) translateY(12px);
+  background: #2a2a3a;
+  color: #e2e2f0;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 8px;
+  padding: 10px 18px;
+  font-size: 13px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  opacity: 0;
+  transition: opacity 0.2s, transform 0.2s;
+  z-index: 9999;
+  max-width: 480px;
+  text-align: center;
+  pointer-events: none;
+}
+.sf-toast.sf-toast-visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Multi-select checkbox */
+.history-checkbox {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 18px;
+  height: 18px;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255,255,255,0.4);
+  background: rgba(0,0,0,0.55);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 5;
+  cursor: pointer;
+  backdrop-filter: blur(3px);
+  transition: background var(--transition), border-color var(--transition);
+  flex-shrink: 0;
+}
+.history-item:hover .history-checkbox,
+.history-list.selection-mode .history-checkbox { display: flex; }
+.history-item.selected .history-checkbox {
+  display: flex;
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+}
+.history-item.selected { border-color: var(--color-primary) !important; }
+
+/* Selection-active lockdown — only the 3 export buttons remain interactive */
+body.selection-active .toolbar,
+body.selection-active .topbar,
+body.selection-active .canvas-area,
+body.selection-active .tool-options-panel,
+body.selection-active .preset-panel,
+body.selection-active .emoji-picker,
+body.selection-active .history-search-wrap,
+body.selection-active .history-settings-panel,
+body.selection-active .history-header {
+  pointer-events: none !important;
+  opacity: 0.35;
+  transition: opacity 0.15s;
+}
+body.selection-active #sidebar-export-section {
+  pointer-events: auto !important;
+  opacity: 1 !important;
+}
+
+#btn-cancel-selection {
+  background: rgba(255,255,255,0.12);
+  border-color: rgba(255,255,255,0.35);
+  color: rgba(255,255,255,0.9);
+}
+#btn-cancel-selection:hover {
+  background: rgba(255,255,255,0.2);
+  border-color: rgba(255,255,255,0.55);
+  color: #fff;
+}
+
+/* Tag chips displayed in history item metadata */
+.history-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 4px;
+}
+.history-tag-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 5px 8px 5px 13px;
+  background: #5B5BD6;
+  border: 1px solid #5B5BD6;
+  border-radius: 14px;
+  color: #fff;
+  max-width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  cursor: pointer;
+  transition: background var(--transition), border-color var(--transition);
+}
+.history-tag-chip:hover { background: #4a4ab8; border-color: #4a4ab8; }
+.history-tag-chip span:first-child { overflow: hidden; text-overflow: ellipsis; color: #fff; }
+.tag-chip-x {
+  flex-shrink: 0;
+  width: 17px;
+  height: 17px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  cursor: pointer;
+  line-height: 1;
+  color: rgba(255,255,255,0.8);
+  padding: 0;
+  transition: background var(--transition), color var(--transition);
+}
+.tag-chip-x:hover { background: rgba(239,68,68,0.85); color: #fff; }
+
+/* "Tag hinzufügen" — full text button, shown on hover via meta visibility */
+.history-tag-add-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 12px;
+  padding: 5px 14px;
+  background: rgba(91,91,214,0.2);
+  border: 1px solid rgba(91,91,214,0.65);
+  border-radius: 14px;
+  color: rgba(200,200,255,0.9);
+  cursor: pointer;
+  font-family: var(--font-family);
+  white-space: nowrap;
+  transition: background var(--transition), border-color var(--transition), color var(--transition);
+}
+.history-tag-add-btn:hover {
+  background: #5B5BD6;
+  border-color: #5B5BD6;
+  color: #fff;
+}
+
+/* Inline tag input (replaces add button while typing) */
+.history-tag-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: rgba(91,91,214,0.15);
+  border: 1px solid rgba(91,91,214,0.65);
+  border-radius: 14px;
+  color: #fff;
+  font-size: 11px;
+  padding: 3px 10px;
+  outline: none;
+  font-family: var(--font-family);
+}
+.history-tag-input::placeholder { color: rgba(255,255,255,0.35); }
+.history-tag-input:focus { border-color: rgba(91,91,214,0.9); background: rgba(91,91,214,0.25); }
+
+
+/* Tag dropdown panel */
+.tag-dropdown {
+  position: fixed;
+  z-index: 9999;
+  min-width: 200px;
+  max-width: 234px;
+  background: var(--bg-elevated);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: var(--border-radius);
+  padding: 6px;
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.tag-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 7px 10px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: rgba(255,255,255,0.85);
+  transition: background var(--transition);
+}
+.tag-dropdown-item:hover { background: rgba(91,91,214,0.25); }
+.tag-dropdown-item.selected { background: rgba(91,91,214,0.2); color: #fff; }
+.tag-dropdown-check {
+  width: 14px;
+  flex-shrink: 0;
+  font-size: 12px;
+  color: #5B5BD6;
+  font-weight: 700;
+}
+.tag-dropdown-name { flex: 1; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.tag-dropdown-del {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+  transition: background var(--transition), color var(--transition);
+}
+.tag-dropdown-del:hover { background: rgba(239,68,68,0.7); color: #fff; }
+.tag-dropdown-divider {
+  height: 1px;
+  background: rgba(255,255,255,0.1);
+  margin: 4px 0;
+}
+.tag-dropdown-input {
+  width: 100%;
+  box-sizing: border-box;
+  background: var(--bg-base);
+  border: 1px solid var(--border-color);
+  border-radius: var(--border-radius-sm);
+  color: var(--text-primary);
+  font-size: 13px;
+  padding: 7px 10px;
+  outline: none;
+  font-family: var(--font-family);
+  margin-top: 2px;
+}
+.tag-dropdown-input::placeholder { color: rgba(255,255,255,0.3); }
+.tag-dropdown-input:focus { border-color: var(--color-primary); }
+
 .history-empty {
   font-size: var(--font-size-xs);
   color: var(--text-muted);
@@ -904,7 +1277,7 @@ body {
 /* Preset panel (text tool) — floating above toolbar */
 .preset-panel {
   position: fixed;
-  left: 52px;
+  left: 66px;
   bottom: 8px;
   background: var(--bg-elevated);
   border: 1px solid rgba(255,255,255,0.1);

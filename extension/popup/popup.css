@@ -394,5 +394,35 @@ body {
   transform: translateX(16px);
 }
 
+/* Pixel Limit Segmented Control */
+.pixel-limit-seg {
+  display: flex;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.pixel-limit-opt {
+  background: transparent;
+  border: none;
+  border-left: 1px solid var(--border-color);
+  color: var(--text-muted);
+  font-size: 11px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+  line-height: 1;
+}
+
+.pixel-limit-opt:first-child { border-left: none; }
+
+.pixel-limit-opt:hover { background: rgba(255,255,255,0.06); color: var(--text-primary); }
+
+.pixel-limit-opt.active {
+  background: #5B5BD6;
+  color: #fff;
+}
+
 /* Utility */
 .hidden { display: none !important; }

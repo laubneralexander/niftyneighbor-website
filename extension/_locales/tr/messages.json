@@ -1,185 +1,581 @@
 {
-  "appName": { "message": "ScreenFellow: Tam Sayfa Ekran Görüntüsü ve Tasarım Geri Bildirimi" },
-  "appDescription": { "message": "Otomatik kaydırmayla tam web sayfası ekran görüntüsü alın, profesyonel araçlarla açıklama ekleyin ve PNG veya PDF olarak dışa aktarın." },
-  "captureVisible": { "message": "Görünür alanı yakala" },
-  "captureVisibleDesc": { "message": "Şu an gördüklerinizin ekran görüntüsü" },
-  "captureFullPage": { "message": "Tam sayfayı yakala" },
-  "captureFullPageDesc": { "message": "Otomatik kaydırma ve tüm sayfayı birleştirme" },
-  "captureSelection": { "message": "Seçimi yakala" },
-  "captureSelectionDesc": { "message": "Yakalamak için bir alan çizin" },
-  "openLibrary": { "message": "Ekran görüntüsü kitaplığını aç" },
-  "offlineMessage": { "message": "Çevrimdışısınız. ScreenFellow internet bağlantısı gerektirir." },
-  "capturing": { "message": "Yakalanıyor..." },
-  "captureError": { "message": "Bu sayfa yakalanamıyor. Chrome dahili sayfaları ekran görüntüsü alınamaz." },
-  "saveAsImage": { "message": "Görüntü olarak kaydet (PNG)" },
-  "saveAsPDF": { "message": "PDF olarak kaydet" },
-  "edit": { "message": "Düzenle ve Açıklama Ekle" },
-  "editProOnly": { "message": "Düzenle ve Açıklama Ekle (Pro)" },
-  "original": { "message": "Orijinal" },
-  "annotated": { "message": "Açıklamalı" },
-  "undo": { "message": "Geri Al" },
-  "redo": { "message": "Yeniden Yap" },
-  "download": { "message": "İndir" },
-  "toolSelect": { "message": "Seç" },
-  "toolRect": { "message": "Dikdörtgen" },
-  "toolCircle": { "message": "Numaralı Daire" },
-  "toolArrow": { "message": "Ok" },
-  "toolText": { "message": "Metin" },
-  "toolHighlight": { "message": "Vurgula" },
-  "toolFreehand": { "message": "Serbest Çizim" },
-  "toolEmoji": { "message": "Emoji / Çıkartma" },
-  "activateLicense": { "message": "Lisansı Etkinleştir" },
-  "licenseKey": { "message": "Lisans Anahtarı" },
-  "licenseKeyPlaceholder": { "message": "Lisans anahtarınızı girin..." },
-  "activate": { "message": "Etkinleştir" },
-  "deactivate": { "message": "Lisansı Devre Dışı Bırak" },
-  "licenseActive": { "message": "Pro" },
-  "licenseFree": { "message": "Ücretsiz Sürüm" },
-  "licenseActivating": { "message": "Etkinleştiriliyor..." },
-  "licenseSuccess": { "message": "Lisans başarıyla etkinleştirildi! Pro özellikler kilidi açıldı." },
-  "licenseError": { "message": "Geçersiz lisans anahtarı. Lütfen kontrol edip tekrar deneyin." },
-  "licenseAlreadyActive": { "message": "Bu lisans başka bir cihazda etkin. Burada etkinleştirmek oradaki cihazı devre dışı bırakır." },
-  "upgradeTitle": { "message": "ScreenFellow Pro'yu Aç" },
-  "upgradeBody": { "message": "Sınırsız tam sayfa ekran görüntüsü. Özel resimler, filigranlar ve emoji ekleyin. PDF dışa aktarma, 500'e kadar açıklamalı ekran görüntüsü ve özel önayarlar. Küçük bir kerelik ödeme, abonelik yok!" },
-  "upgradePrice": { "message": "€15 — tek seferlik" },
-  "upgradeBuy": { "message": "Şimdi Satın Al (Abonelik Yok!)" },
-  "upgradeActivate": { "message": "Zaten lisansım var" },
-  "upgradeClose": { "message": "Belki daha sonra" },
-  "watermarkText": { "message": "ScreenFellow Free" },
-  "exportingPNG": { "message": "PNG kaydediliyor..." },
-  "exportingPDF": { "message": "PDF kaydediliyor..." },
-  "pageTooLarge": { "message": "Sayfa 20.000px aşıyor — yalnızca ilk 20.000px yakalanıyor." },
-  "settingsTitle": { "message": "Ayarlar" },
-  "languageLabel": { "message": "Dil" },
-  "shortcutsTitle": { "message": "Klavye kısayollarını ayarla" },
-  "shortcutsOpen": { "message": "Chrome Kısayollarını Aç ↗" },
-  "confettiSectionTitle": { "message": "Animasyonlar" },
-  "confettiLabel": { "message": "Konfeti" },
-  "settings": { "message": "Ayarlar" },
-  "close": { "message": "Kapat" },
-  "cancel": { "message": "İptal" },
-  "color": { "message": "Renk" },
-  "size": { "message": "Boyut" },
-  "opacity": { "message": "Opaklık" },
-  "strokeWidth": { "message": "Kenarlık Genişliği" },
-  "presetStyles": { "message": "Önayar Stilleri" },
-  "licenseSettingsTitle": { "message": "Lisans" },
-  "licenseActivateHint": { "message": "Bu cihazda Pro özellikleri açmak için lisans anahtarınızı girin." },
-  "licenseSettingsHint": { "message": "Tüm Pro özellikler devre dışı bırakılacak. Lisans istediğiniz zaman yeniden etkinleştirilebilir." },
-  "licenseRelease": { "message": "Lisansı Serbest Bırak ve Free'ye Geç" },
-  "releaseConfirmTitle": { "message": "Pro Lisansını Serbest Bırak?" },
-  "releaseConfirmBody": { "message": "Bu cihaz tüm Pro özelliklerini kaybedecek. Ekran görüntüsü geçmişiniz son 10'a kısaltılacak — eski olanlar silinecek. Lisans geçerli kalır ve istediğiniz zaman yeniden etkinleştirilebilir." },
-  "releaseConfirmOk": { "message": "Evet, serbest bırak" },
-  "releaseConfirmCancel": { "message": "İptal" },
-  "historyLimitLabel": { "message": "Ekran Görüntüsü Geçmiş Limiti" },
-  "historyLimitHint": { "message": "Geçmişinizde tutulacak maksimum ekran görüntüsü sayısı." },
-  "back": { "message": "Geri" },
-  "zoomLevel": { "message": "Yakınlaştırma Seviyesi" },
-  "zoomActual": { "message": "Gerçek boyut (100%)" },
-  "zoomFit": { "message": "Ekrana sığdır" },
-  "historySettings": { "message": "Geçmiş Ayarları" },
-  "undoTitle": { "message": "Geri Al (Ctrl+Z)" },
-  "redoTitle": { "message": "Yeniden Yap (Ctrl+Y)" },
-  "editorHistory": { "message": "Geçmiş" },
-  "editorHistoryMaxHint": { "message": "Maks. saklanan ekran görüntüsü. En eskiler önce kaldırılır." },
-  "editorNoScreenshots": { "message": "Henüz ekran görüntüsü yok." },
-  "editorDeleteScreenshot": { "message": "Ekran görüntüsünü sil" },
-  "editorLibraryHint": { "message": "Görüntülemek veya açıklama eklemek için geçmişinizden bir ekran görüntüsü seçin." },
-  "editorLibraryArrow": { "message": "Geçmiş ↗" },
-  "editorCanvasErrorTitle": { "message": "Ekran görüntüsü yüklenmedi" },
-  "editorCanvasErrorBody": { "message": "Önce ScreenFellow açılır penceresini kullanarak bir sayfa yakalayın." },
-  "editorFormatTitle": { "message": "Biçim" },
-  "licenseProActive": { "message": "Pro Lisansı etkin" },
-  "licenseFreeUpgrade": { "message": "Ücretsiz — Pro'ya yükseltmek için tıklayın" },
-  "licenseActivatedReload": { "message": "Lisans etkinleştirildi! Yeniden yükleniyor…" },
-  "editorPresetDeleteTitle": { "message": "Bu önayarı sil?" },
-  "editorPresetDeleteBody": { "message": "Bu önayar kalıcı olarak kaldırılacak." },
-  "editorDeleteLabel": { "message": "Sil" },
-  "historyLimitReduceTitle": { "message": "Geçmiş limiti azaltılsın mı?" },
-  "historyLimitApply": { "message": "Evet, uygula" },
-  "editorDeleteScreenshotTitle": { "message": "Bu ekran görüntüsü silinsin mi?" },
-  "editorBuyLicense": { "message": "Pro Lisansı Satın Al" },
-  "historyLimitDeleteWarning": { "message": "{n} ekran görüntüsü silinecek (en eskiler önce). Bu işlem geri alınamaz." },
-  "toolPanTitle": { "message": "Kaydır (V)" },
-  "toolSelectTitle": { "message": "Seç (S · Sağ tıklama)" },
-  "toolRectTitle": { "message": "Dikdörtgen (R)" },
-  "toolEllipseTitle": { "message": "Elips (E)" },
-  "toolBadgeTitle": { "message": "Rozet (C)" },
-  "toolArrowTitle": { "message": "Ok (A)" },
-  "toolTextTitle": { "message": "Metin (T)" },
-  "toolHighlightTitle": { "message": "Vurgula (H)" },
-  "toolFreehandTitle": { "message": "Serbest Çizim (F)" },
-  "toolBlurTitle": { "message": "Bulanıklaştır (B)" },
-  "toolImageTitle": { "message": "Resim / Filigran (I)" },
-  "toolEmojiTitle": { "message": "Emoji (X)" },
-  "toolLockedPro": { "message": "Pro özelliği — etkinleştirmek için tıklayın" },
-  "ofpTextStyle": { "message": "Metin Stili" },
-  "ofpRectStyle": { "message": "Dikdörtgen Stili" },
-  "ofpEllipseStyle": { "message": "Elips Stili" },
-  "ofpBadgeStyle": { "message": "Rozet Stili" },
-  "ofpNumbering": { "message": "Numaralandırma" },
-  "ofpHighlightColor": { "message": "Vurgulama Rengi" },
-  "ofpPenStyle": { "message": "Kalem Stili" },
-  "ofpArrowStyle": { "message": "Ok Stili" },
-  "ofpImageStyle": { "message": "Resim / Filigran" },
-  "ofpFormatFuture": { "message": "Bu nesne için biçim seçenekleri yakında gelecek." },
-  "ofpCornerRadius": { "message": "Köşe Yarıçapı" },
-  "ofpPenWidth": { "message": "Kalem Genişliği" },
-  "ofpBorderColor": { "message": "Kenarlık Rengi" },
-  "ofpShadow": { "message": "Gölge" },
-  "ofpBlurOutside": { "message": "Dışı bulanıklaştır" },
-  "ofpBlurAmount": { "message": "Bulanıklık yoğunluğu" },
-  "ofpArrowWidth": { "message": "Genişlik" },
-  "ofpArrowType": { "message": "Tür" },
-  "ofpBlurStrength": { "message": "Bulanıklık Gücü" },
-  "ofpStyle": { "message": "Stil" },
-  "ofpAlignment": { "message": "Hizalama" },
-  "ofpFont": { "message": "Yazı Tipi" },
-  "ofpTextColor": { "message": "Metin Rengi" },
-  "ofpFontSize": { "message": "Yazı Tipi Boyutu" },
-  "ofpFillColor": { "message": "Dolgu Rengi" },
-  "ofpSequence": { "message": "Sıra" },
-  "ofpBorderType": { "message": "Kenarlık Türü" },
-  "ofpFilled": { "message": "● Dolu" },
-  "ofpOutline": { "message": "○ Anahat" },
-  "ofpContinueNumeric": { "message": "Buradan devam et (yalnızca sayısal)" },
-  "ofpContinueFrom": { "message": "{from}'dan devam et → sıradaki: {next}" },
-  "ofpImageUpload": { "message": "↑ Resim yükle" },
-  "arrowTypeDesign": { "message": "Tasarım Oku" },
-  "arrowTypeDesignGradient": { "message": "Tasarım + Degrade" },
-  "arrowTypeSimple": { "message": "Basit Ok" },
-  "arrowTypeDouble": { "message": "Çift Ok" },
-  "arrowTypeLine": { "message": "Çizgi" },
-  "arrowTypeLineDot": { "message": "Çizgi + Nokta" },
-  "arrowTypeLineTwoDots": { "message": "Çizgi + İki Nokta" },
-  "presetDeleteMinOne": { "message": "En az 1 önayar gerekli" },
-  "presetDeleteBtn": { "message": "Önayarı sil" },
-  "exportGuide": { "message": "Kılavuz olarak dışa aktar (HTML)" },
-  "badgeStepDescription": { "message": "Adım Açıklaması" },
-  "badgeStepDescriptionPlaceholder": { "message": "Kullanıcı burada ne yapmalı..." },
-  "guideBeaconHint": { "message": "Bir rozete tıklayın ↑" },
-  "guideStep": { "message": "Adım" },
-  "toolCropTitle": { "message": "Kırp (K)" },
-  "toolUrlFrameTitle": { "message": "URL ve Zaman Damgası (U)" },
-  "toolCropApply": { "message": "Kırpmayı Uygula" },
-  "toolCropHint": { "message": "Orijinal ekran görüntüsünü kırpar — geçmişte yeni girdi olarak kaydedilir." },
-  "ofpUrlFrameStyle": { "message": "Çerçeve Stili" },
-  "urlFrameNone": { "message": "Yok" },
-  "urlFrameMac": { "message": "Mac OS X" },
-  "urlFrameWin": { "message": "Windows" },
-  "urlFrameBarTop": { "message": "URL çubuğu — üst" },
-  "urlFrameBarBottom": { "message": "URL çubuğu — alt" },
-  "ofpDateTime": { "message": "Tarih ve Saat" },
-  "dateTimeNone": { "message": "Yok" },
-  "dateTimeDate": { "message": "Tarih" },
-  "dateTimeDateTime": { "message": "Tarih ve Saat" },
-  "dateTimeISO": { "message": "ISO" },
-  "noUrlCaptured": { "message": "Bu ekran görüntüsü için URL kaydedilmedi" },
-  "urlFrameExportHint": { "message": "URL ve zaman damgası dışa aktarmada uygulanır ve önizlemede görünmez." },
-  "screenshotNamePlaceholder": { "message": "Bu ekran görüntüsünü adlandırın..." },
-  "historySearchPlaceholder": { "message": "Ekran görüntüsü ara..." },
-  "historyNoResults": { "message": "Aramanızla eşleşen ekran görüntüsü yok." },
-  "saveAsPreset": { "message": "Önayar olarak kaydet" },
-  "presetSaved": { "message": "Kaydedildi!" },
-  "presetMaxReached": { "message": "Maks. {n} özel önayar limitine ulaşıldı" }
+  "appName": {
+    "message": "ScreenFellow: Tam Sayfa Ekran Görüntüsü ve Tasarım Geri Bildirimi"
+  },
+  "appDescription": {
+    "message": "Otomatik kaydırmayla tam web sayfası ekran görüntüsü alın, profesyonel araçlarla açıklama ekleyin ve PNG veya PDF olarak dışa aktarın."
+  },
+  "captureVisible": {
+    "message": "Görünür alanı yakala"
+  },
+  "captureVisibleDesc": {
+    "message": "Şu an gördüklerinizin ekran görüntüsü"
+  },
+  "captureFullPage": {
+    "message": "Tam sayfayı yakala"
+  },
+  "captureFullPageDesc": {
+    "message": "Otomatik kaydırma ve tüm sayfayı birleştirme"
+  },
+  "captureSelection": {
+    "message": "Seçimi yakala"
+  },
+  "captureSelectionDesc": {
+    "message": "Yakalamak için bir alan çizin"
+  },
+  "openLibrary": {
+    "message": "Ekran görüntüsü kitaplığını aç"
+  },
+  "offlineMessage": {
+    "message": "Çevrimdışısınız. ScreenFellow internet bağlantısı gerektirir."
+  },
+  "capturing": {
+    "message": "Yakalanıyor..."
+  },
+  "captureError": {
+    "message": "Bu sayfa yakalanamıyor. Chrome dahili sayfaları ekran görüntüsü alınamaz."
+  },
+  "saveAsImage": {
+    "message": "Görüntü olarak kaydet (PNG)"
+  },
+  "saveAsPDF": {
+    "message": "PDF olarak kaydet"
+  },
+  "edit": {
+    "message": "Düzenle ve Açıklama Ekle"
+  },
+  "editProOnly": {
+    "message": "Düzenle ve Açıklama Ekle (Pro)"
+  },
+  "original": {
+    "message": "Orijinal"
+  },
+  "annotated": {
+    "message": "Açıklamalı"
+  },
+  "undo": {
+    "message": "Geri Al"
+  },
+  "redo": {
+    "message": "Yeniden Yap"
+  },
+  "download": {
+    "message": "İndir"
+  },
+  "toolSelect": {
+    "message": "Seç"
+  },
+  "toolRect": {
+    "message": "Dikdörtgen"
+  },
+  "toolCircle": {
+    "message": "Numaralı Daire"
+  },
+  "toolArrow": {
+    "message": "Ok"
+  },
+  "toolText": {
+    "message": "Metin"
+  },
+  "toolHighlight": {
+    "message": "Vurgula"
+  },
+  "toolFreehand": {
+    "message": "Serbest Çizim"
+  },
+  "toolEmoji": {
+    "message": "Emoji / Çıkartma"
+  },
+  "activateLicense": {
+    "message": "Lisansı Etkinleştir"
+  },
+  "licenseKey": {
+    "message": "Lisans Anahtarı"
+  },
+  "licenseKeyPlaceholder": {
+    "message": "Lisans anahtarınızı girin..."
+  },
+  "activate": {
+    "message": "Etkinleştir"
+  },
+  "deactivate": {
+    "message": "Lisansı Devre Dışı Bırak"
+  },
+  "licenseActive": {
+    "message": "Pro"
+  },
+  "licenseFree": {
+    "message": "Ücretsiz Sürüm"
+  },
+  "licenseActivating": {
+    "message": "Etkinleştiriliyor..."
+  },
+  "licenseSuccess": {
+    "message": "Lisans başarıyla etkinleştirildi! Pro özellikler kilidi açıldı."
+  },
+  "licenseError": {
+    "message": "Geçersiz lisans anahtarı. Lütfen kontrol edip tekrar deneyin."
+  },
+  "licenseAlreadyActive": {
+    "message": "Bu lisans başka bir cihazda etkin. Burada etkinleştirmek oradaki cihazı devre dışı bırakır."
+  },
+  "upgradeTitle": {
+    "message": "ScreenFellow Pro'yu Aç"
+  },
+  "upgradeBody": {
+    "message": "Sınırsız tam sayfa ekran görüntüsü. Özel resimler, filigranlar ve emoji ekleyin. PDF dışa aktarma, 500'e kadar açıklamalı ekran görüntüsü ve özel önayarlar. Küçük bir kerelik ödeme, abonelik yok!"
+  },
+  "upgradePrice": {
+    "message": "€15 — tek seferlik"
+  },
+  "upgradeBuy": {
+    "message": "Şimdi Satın Al (Abonelik Yok!)"
+  },
+  "upgradeActivate": {
+    "message": "Zaten lisansım var"
+  },
+  "upgradeClose": {
+    "message": "Belki daha sonra"
+  },
+  "watermarkText": {
+    "message": "ScreenFellow Free"
+  },
+  "exportingPNG": {
+    "message": "PNG kaydediliyor..."
+  },
+  "exportingPDF": {
+    "message": "PDF kaydediliyor..."
+  },
+  "pageTooLarge": {
+    "message": "Sayfa {limit}px limitini aşıyor — Ayarlar'dan limiti artırın (maks. 100k px)."
+  },
+  "settingsTitle": {
+    "message": "Ayarlar"
+  },
+  "languageLabel": {
+    "message": "Dil"
+  },
+  "shortcutsTitle": {
+    "message": "Klavye kısayollarını ayarla"
+  },
+  "shortcutsOpen": {
+    "message": "Chrome Kısayollarını Aç ↗"
+  },
+  "confettiSectionTitle": {
+    "message": "Animasyonlar"
+  },
+  "confettiLabel": {
+    "message": "Konfeti"
+  },
+  "settings": {
+    "message": "Ayarlar"
+  },
+  "close": {
+    "message": "Kapat"
+  },
+  "cancel": {
+    "message": "İptal"
+  },
+  "color": {
+    "message": "Renk"
+  },
+  "size": {
+    "message": "Boyut"
+  },
+  "opacity": {
+    "message": "Opaklık"
+  },
+  "strokeWidth": {
+    "message": "Kenarlık Genişliği"
+  },
+  "presetStyles": {
+    "message": "Önayar Stilleri"
+  },
+  "licenseSettingsTitle": {
+    "message": "Lisans"
+  },
+  "licenseActivateHint": {
+    "message": "Bu cihazda Pro özellikleri açmak için lisans anahtarınızı girin."
+  },
+  "licenseSettingsHint": {
+    "message": "Tüm Pro özellikler devre dışı bırakılacak. Lisans istediğiniz zaman yeniden etkinleştirilebilir."
+  },
+  "licenseRelease": {
+    "message": "Lisansı Serbest Bırak ve Free'ye Geç"
+  },
+  "releaseConfirmTitle": {
+    "message": "Pro Lisansını Serbest Bırak?"
+  },
+  "releaseConfirmBody": {
+    "message": "Bu cihaz tüm Pro özelliklerini kaybedecek. Ekran görüntüsü geçmişiniz son 10'a kısaltılacak — eski olanlar silinecek. Lisans geçerli kalır ve istediğiniz zaman yeniden etkinleştirilebilir."
+  },
+  "releaseConfirmOk": {
+    "message": "Evet, serbest bırak"
+  },
+  "releaseConfirmCancel": {
+    "message": "İptal"
+  },
+  "historyLimitLabel": {
+    "message": "Ekran Görüntüsü Geçmiş Limiti"
+  },
+  "historyLimitHint": {
+    "message": "Geçmişinizde tutulacak maksimum ekran görüntüsü sayısı."
+  },
+  "back": {
+    "message": "Geri"
+  },
+  "zoomLevel": {
+    "message": "Yakınlaştırma Seviyesi"
+  },
+  "zoomActual": {
+    "message": "Gerçek boyut (100%)"
+  },
+  "zoomFit": {
+    "message": "Ekrana sığdır"
+  },
+  "historySettings": {
+    "message": "Geçmiş Ayarları"
+  },
+  "undoTitle": {
+    "message": "Geri Al (Ctrl+Z)"
+  },
+  "redoTitle": {
+    "message": "Yeniden Yap (Ctrl+Y)"
+  },
+  "editorHistory": {
+    "message": "Geçmiş"
+  },
+  "editorHistoryMaxHint": {
+    "message": "Maks. saklanan ekran görüntüsü. En eskiler önce kaldırılır."
+  },
+  "editorNoScreenshots": {
+    "message": "Henüz ekran görüntüsü yok."
+  },
+  "editorDeleteScreenshot": {
+    "message": "Ekran görüntüsünü sil"
+  },
+  "editorLibraryHint": {
+    "message": "Görüntülemek veya açıklama eklemek için geçmişinizden bir ekran görüntüsü seçin."
+  },
+  "editorLibraryArrow": {
+    "message": "Geçmiş ↗"
+  },
+  "editorCanvasErrorTitle": {
+    "message": "Ekran görüntüsü yüklenmedi"
+  },
+  "editorCanvasErrorBody": {
+    "message": "Önce ScreenFellow açılır penceresini kullanarak bir sayfa yakalayın."
+  },
+  "editorFormatTitle": {
+    "message": "Biçim"
+  },
+  "licenseProActive": {
+    "message": "Pro Lisansı etkin"
+  },
+  "licenseFreeUpgrade": {
+    "message": "Ücretsiz — Pro'ya yükseltmek için tıklayın"
+  },
+  "licenseActivatedReload": {
+    "message": "Lisans etkinleştirildi! Yeniden yükleniyor…"
+  },
+  "editorPresetDeleteTitle": {
+    "message": "Bu önayarı sil?"
+  },
+  "editorPresetDeleteBody": {
+    "message": "Bu önayar kalıcı olarak kaldırılacak."
+  },
+  "editorDeleteLabel": {
+    "message": "Sil"
+  },
+  "historyLimitReduceTitle": {
+    "message": "Geçmiş limiti azaltılsın mı?"
+  },
+  "historyLimitApply": {
+    "message": "Evet, uygula"
+  },
+  "editorDeleteScreenshotTitle": {
+    "message": "Bu ekran görüntüsü silinsin mi?"
+  },
+  "editorBuyLicense": {
+    "message": "Pro Lisansı Satın Al"
+  },
+  "historyLimitDeleteWarning": {
+    "message": "{n} ekran görüntüsü silinecek (en eskiler önce). Bu işlem geri alınamaz."
+  },
+  "toolPanTitle": {
+    "message": "Kaydır (V)"
+  },
+  "toolSelectTitle": {
+    "message": "Seç (S · Sağ tıklama)"
+  },
+  "toolRectTitle": {
+    "message": "Dikdörtgen (R)"
+  },
+  "toolEllipseTitle": {
+    "message": "Elips (E)"
+  },
+  "toolBadgeTitle": {
+    "message": "Rozet (C)"
+  },
+  "toolArrowTitle": {
+    "message": "Ok (A)"
+  },
+  "toolTextTitle": {
+    "message": "Metin (T)"
+  },
+  "toolHighlightTitle": {
+    "message": "Vurgula (H)"
+  },
+  "toolFreehandTitle": {
+    "message": "Serbest Çizim (F)"
+  },
+  "toolBlurTitle": {
+    "message": "Bulanıklaştır (B)"
+  },
+  "toolImageTitle": {
+    "message": "Resim / Filigran (I)"
+  },
+  "toolEmojiTitle": {
+    "message": "Emoji (X)"
+  },
+  "toolLockedPro": {
+    "message": "Pro özelliği — etkinleştirmek için tıklayın"
+  },
+  "ofpTextStyle": {
+    "message": "Metin Stili"
+  },
+  "ofpRectStyle": {
+    "message": "Dikdörtgen Stili"
+  },
+  "ofpEllipseStyle": {
+    "message": "Elips Stili"
+  },
+  "ofpBadgeStyle": {
+    "message": "Rozet Stili"
+  },
+  "ofpNumbering": {
+    "message": "Numaralandırma"
+  },
+  "ofpHighlightColor": {
+    "message": "Vurgulama Rengi"
+  },
+  "ofpPenStyle": {
+    "message": "Kalem Stili"
+  },
+  "ofpArrowStyle": {
+    "message": "Ok Stili"
+  },
+  "ofpImageStyle": {
+    "message": "Resim / Filigran"
+  },
+  "ofpFormatFuture": {
+    "message": "Bu nesne için biçim seçenekleri yakında gelecek."
+  },
+  "ofpCornerRadius": {
+    "message": "Köşe Yarıçapı"
+  },
+  "ofpPenWidth": {
+    "message": "Kalem Genişliği"
+  },
+  "ofpBorderColor": {
+    "message": "Kenarlık Rengi"
+  },
+  "ofpShadow": {
+    "message": "Gölge"
+  },
+  "ofpBlurOutside": {
+    "message": "Dışı bulanıklaştır"
+  },
+  "ofpBlurAmount": {
+    "message": "Bulanıklık yoğunluğu"
+  },
+  "ofpArrowWidth": {
+    "message": "Genişlik"
+  },
+  "ofpArrowType": {
+    "message": "Tür"
+  },
+  "ofpBlurStrength": {
+    "message": "Bulanıklık Gücü"
+  },
+  "ofpStyle": {
+    "message": "Stil"
+  },
+  "ofpAlignment": {
+    "message": "Hizalama"
+  },
+  "ofpFont": {
+    "message": "Yazı Tipi"
+  },
+  "ofpTextColor": {
+    "message": "Metin Rengi"
+  },
+  "ofpFontSize": {
+    "message": "Yazı Tipi Boyutu"
+  },
+  "ofpFillColor": {
+    "message": "Dolgu Rengi"
+  },
+  "ofpSequence": {
+    "message": "Sıra"
+  },
+  "ofpBorderType": {
+    "message": "Kenarlık Türü"
+  },
+  "ofpFilled": {
+    "message": "● Dolu"
+  },
+  "ofpOutline": {
+    "message": "○ Anahat"
+  },
+  "ofpContinueNumeric": {
+    "message": "Buradan devam et (yalnızca sayısal)"
+  },
+  "ofpContinueFrom": {
+    "message": "{from}'dan devam et → sıradaki: {next}"
+  },
+  "ofpImageUpload": {
+    "message": "↑ Resim yükle"
+  },
+  "arrowTypeDesign": {
+    "message": "Tasarım Oku"
+  },
+  "arrowTypeDesignGradient": {
+    "message": "Tasarım + Degrade"
+  },
+  "arrowTypeSimple": {
+    "message": "Basit Ok"
+  },
+  "arrowTypeDouble": {
+    "message": "Çift Ok"
+  },
+  "arrowTypeLine": {
+    "message": "Çizgi"
+  },
+  "arrowTypeLineDot": {
+    "message": "Çizgi + Nokta"
+  },
+  "arrowTypeLineTwoDots": {
+    "message": "Çizgi + İki Nokta"
+  },
+  "presetDeleteMinOne": {
+    "message": "En az 1 önayar gerekli"
+  },
+  "presetDeleteBtn": {
+    "message": "Önayarı sil"
+  },
+  "exportGuide": {
+    "message": "Kılavuz olarak dışa aktar (HTML)"
+  },
+  "badgeStepDescription": {
+    "message": "Adım Açıklaması"
+  },
+  "badgeStepDescriptionPlaceholder": {
+    "message": "Kullanıcı burada ne yapmalı..."
+  },
+  "guideBeaconHint": {
+    "message": "Bir rozete tıklayın ↑"
+  },
+  "guideStep": {
+    "message": "Adım"
+  },
+  "toolCropTitle": {
+    "message": "Kırp (K)"
+  },
+  "toolUrlFrameTitle": {
+    "message": "URL ve Zaman Damgası (U)"
+  },
+  "toolCropApply": {
+    "message": "Kırpmayı Uygula"
+  },
+  "toolCropHint": {
+    "message": "Orijinal ekran görüntüsünü kırpar — geçmişte yeni girdi olarak kaydedilir."
+  },
+  "ofpUrlFrameStyle": {
+    "message": "Çerçeve Stili"
+  },
+  "urlFrameNone": {
+    "message": "Yok"
+  },
+  "urlFrameMac": {
+    "message": "Mac OS X"
+  },
+  "urlFrameWin": {
+    "message": "Windows"
+  },
+  "urlFrameBarTop": {
+    "message": "URL çubuğu — üst"
+  },
+  "urlFrameBarBottom": {
+    "message": "URL çubuğu — alt"
+  },
+  "ofpDateTime": {
+    "message": "Tarih ve Saat"
+  },
+  "dateTimeNone": {
+    "message": "Yok"
+  },
+  "dateTimeDate": {
+    "message": "Tarih"
+  },
+  "dateTimeDateTime": {
+    "message": "Tarih ve Saat"
+  },
+  "dateTimeISO": {
+    "message": "ISO"
+  },
+  "noUrlCaptured": {
+    "message": "Bu ekran görüntüsü için URL kaydedilmedi"
+  },
+  "urlFrameExportHint": {
+    "message": "URL ve zaman damgası dışa aktarmada uygulanır ve önizlemede görünmez."
+  },
+  "screenshotNamePlaceholder": {
+    "message": "Bu ekran görüntüsünü adlandırın..."
+  },
+  "historySearchPlaceholder": {
+    "message": "Ekran görüntüsü ara..."
+  },
+  "historyNoResults": {
+    "message": "Aramanızla eşleşen ekran görüntüsü yok."
+  },
+  "saveAsPreset": {
+    "message": "Önayar olarak kaydet"
+  },
+  "presetSaved": {
+    "message": "Kaydedildi!"
+  },
+  "presetMaxReached": {
+    "message": "Maks. {n} özel önayar limitine ulaşıldı"
+  },
+  "pixelLimitSectionTitle": {
+    "message": "Tam Sayfa Limiti"
+  },
+  "pixelLimitLabel": {
+    "message": "Maks. piksel yüksekliği"
+  },
+  "pixelLimitHint": {
+    "message": "Tam sayfa yakalarken maksimum yükseklik."
+  },
+  "captureAnalyzing": {
+    "message": "Sayfa analiz ediliyor..."
+  },
+  "captureStitching": {
+    "message": "İşleniyor..."
+  },
+  "captureDone": {
+    "message": "Tamam!"
+  },
+  "clearAllScreenshots": {
+    "message": "Tüm ekran görüntülerini sil"
+  },
+  "clearAllConfirmTitle": {
+    "message": "Tüm ekran görüntüleri silinsin mi?"
+  },
+  "clearAllConfirmBody": {
+    "message": "Kaydedilen tüm ekran görüntüleri kalıcı olarak silinecektir."
+  },
+  "clearAllConfirmBtn": {
+    "message": "Evet, tümünü sil"
+  }
 }
