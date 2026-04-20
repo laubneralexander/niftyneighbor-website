@@ -1,0 +1,9 @@
+# Workspace files (local only)
+context/
+plans/
+outputs/
+memory/
+.claude/
+scripts/
+shell-aliases.md
+CLAUDE.md

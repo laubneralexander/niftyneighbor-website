@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScreenFellow Editor</title>
+  <link rel="stylesheet" href="../styles/shared.css">
+  <link rel="stylesheet" href="editor.css">
+  <script src="../lib/fabric.min.js"></script>
+  <script src="../lib/jspdf.min.js"></script>
+</head>
+<body>
+  <!-- Top Bar -->
+  <header class="topbar">
+    <div class="topbar-left">
+      <img src="../logo/ScreenFellow_Logo_HL_transparent_1128x223.png" class="logo-img" alt="ScreenFellow">
+      <button id="btn-license-badge" class="topbar-plan-badge"></button>
+    </div>
+
+    <div class="topbar-center">
+      <button id="btn-undo" class="btn-icon" data-i18n-title="undoTitle" disabled>↩</button>
+      <button id="btn-redo" class="btn-icon" data-i18n-title="redoTitle" disabled>↪</button>
+      <span class="topbar-sep"></span>
+      <select id="zoom-select" class="zoom-select" data-i18n-title="zoomLevel">
+        <option value="300">300%</option>
+        <option value="200">200%</option>
+        <option value="150">150%</option>
+        <option value="100">100%</option>
+        <option value="75">75%</option>
+        <option value="50">50%</option>
+        <option value="25">25%</option>
+        <option value="10">10%</option>
+      </select>
+      <button id="btn-zoom-100" class="btn-icon" data-i18n-title="zoomActual">⊙</button>
+      <button id="btn-zoom-fit" class="btn-icon" data-i18n-title="zoomFit">⤢</button>
+    </div>
+
+    <div class="topbar-right">
+      <input id="screenshot-name-input" class="screenshot-name-input" type="text" data-i18n-placeholder="screenshotNamePlaceholder" maxlength="80" autocomplete="off" spellcheck="false">
+      <span class="topbar-sep"></span>
+      <div class="view-badges" id="view-toggle" data-state="annotated">
+        <button class="view-badge view-badge-original" id="btn-view-original" data-i18n="original"></button>
+        <button class="view-badge view-badge-edited" id="btn-view-edited" data-i18n="annotated"></button>
+      </div>
+    </div>
+  </header>
+
+  <div class="editor-layout">
+    <!-- Left Toolbar -->
+    <aside class="toolbar">
+      <div class="tool-group">
+        <button id="tool-pan"       class="btn-icon tool-btn active" data-tool="pan"       data-i18n-title="toolPanTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="3"/><line x1="8" y1="1" x2="8" y2="4"/><line x1="8" y1="12" x2="8" y2="15"/><line x1="1" y1="8" x2="4" y2="8"/><line x1="12" y1="8" x2="15" y2="8"/></svg></button>
+        <button id="tool-select"    class="btn-icon tool-btn"        data-tool="select"    data-i18n-title="toolSelectTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 2l10 5.5-4.5 1L11 14z"/></svg></button>
+        <div class="toolbar-divider"></div>
+        <button id="tool-rect"      class="btn-icon tool-btn"        data-tool="rect"      data-i18n-title="toolRectTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="12" height="9" rx="1.5"/></svg></button>
+        <button id="tool-ellipse"   class="btn-icon tool-btn"        data-tool="ellipse"   data-i18n-title="toolEllipseTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5"><ellipse cx="8" cy="8" rx="6" ry="4.5"/></svg></button>
+        <button id="tool-badge"     class="btn-icon tool-btn"        data-tool="badge"     data-i18n-title="toolBadgeTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><text x="8" y="12" text-anchor="middle" font-size="8" font-weight="bold" fill="currentColor" stroke="none" font-family="Arial">1</text></svg></button>
+        <button id="tool-arrow"     class="btn-icon tool-btn"        data-tool="arrow"     data-i18n-title="toolArrowTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><line x1="2" y1="13" x2="12" y2="3"/><polyline points="6,3 12,3 12,9"/></svg></button>
+        <button id="tool-text"      class="btn-icon tool-btn"        data-tool="text"      data-i18n-title="toolTextTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="currentColor" stroke="none"><text x="2" y="13" font-size="13" font-weight="bold" font-family="Arial">T</text></svg></button>
+        <button id="tool-highlight" class="btn-icon tool-btn"        data-tool="highlight" data-i18n-title="toolHighlightTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="4.5" y="1.5" width="7" height="6" rx="1"/><path d="M4.5 7.5l2 4h3l2-4"/><line x1="7.3" y1="11.5" x2="7.3" y2="13.5"/><line x1="8.7" y1="11.5" x2="8.7" y2="13.5"/><line x1="2" y1="15" x2="14" y2="15"/></svg></button>
+        <button id="tool-freehand"  class="btn-icon tool-btn"        data-tool="freehand"  data-i18n-title="toolFreehandTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 13 C4 10 5 7 7 7 C9 7 7 11 9 11 C11 11 12 8 14 5"/></svg></button>
+        <button id="tool-blur"      class="btn-icon tool-btn"        data-tool="blur"      data-i18n-title="toolBlurTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="2"/><line x1="5" y1="6" x2="11" y2="6" stroke-width="2"/><line x1="4" y1="9" x2="12" y2="9" stroke-width="2"/><line x1="6" y1="12" x2="10" y2="12" stroke-width="2"/></svg></button>
+        <button id="tool-image"     class="btn-icon tool-btn"        data-tool="image"     data-i18n-title="toolImageTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3" width="13" height="10" rx="1.5"/><circle cx="5" cy="7" r="1" fill="currentColor" stroke="none"/><path d="M1.5 10.5l3.5-3.5 2.5 2.5 2-2 4.5 4.5"/></svg></button>
+        <button id="tool-emoji"     class="btn-icon tool-btn"        data-tool="emoji"     data-i18n-title="toolEmojiTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><circle cx="5.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/><circle cx="10.5" cy="6.5" r="0.8" fill="currentColor" stroke="none"/><path d="M5.5 10Q8 12.5 10.5 10"/></svg></button>
+        <div class="toolbar-divider"></div>
+        <button id="tool-crop"      class="btn-icon tool-btn"        data-tool="crop"      data-i18n-title="toolCropTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 1v9h9"/><path d="M1 4h9v9"/></svg></button>
+        <button id="tool-urlframe"  class="btn-icon tool-btn"        data-tool="urlframe"  data-i18n-title="toolUrlFrameTitle"><svg class="tool-icon-svg" viewBox="0 0 16 16" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="2.5" width="13" height="11" rx="1.5"/><line x1="1.5" y1="6.5" x2="14.5" y2="6.5"/><circle cx="4" cy="4.5" r="0.75" fill="currentColor" stroke="none"/><circle cx="6.5" cy="4.5" r="0.75" fill="currentColor" stroke="none"/></svg></button>
+      </div>
+      <input type="file" id="image-file-input" accept="image/*" style="display:none">
+    </aside>
+
+    <!-- Emoji Picker (floating panel, outside toolbar to avoid overflow clipping) -->
+    <div id="emoji-picker" class="emoji-picker hidden">
+      <div class="emoji-picker-tabs" id="emoji-tabs"></div>
+      <div class="emoji-picker-grid" id="emoji-grid"></div>
+    </div>
+
+    <!-- Canvas Area -->
+    <main class="canvas-area">
+      <div class="canvas-scroll-wrapper">
+        <div id="canvas-container">
+          <canvas id="main-canvas"></canvas>
+        </div>
+      </div>
+      <!-- Library mode hint (shown when no screenshot is loaded) -->
+      <div id="library-hint" class="library-hint hidden">
+        <div class="library-hint-body">
+          <div class="library-hint-icon">
+            <svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <rect x="4" y="8" width="40" height="28" rx="3" stroke="currentColor" stroke-width="2.5"/>
+              <circle cx="24" cy="22" r="7" stroke="currentColor" stroke-width="2.5"/>
+              <circle cx="24" cy="22" r="3" fill="currentColor" opacity="0.4"/>
+              <path d="M19 8l2-4h6l2 4" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+              <line x1="16" y1="40" x2="32" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+              <line x1="24" y1="36" x2="24" y2="40" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <p class="library-hint-text" data-i18n="editorLibraryHint"></p>
+        </div>
+        <div class="library-hint-arrow" data-i18n="editorLibraryArrow"></div>
+      </div>
+    </main>
+
+    <!-- Right Sidebar -->
+    <aside class="sidebar">
+      <!-- Export Actions -->
+      <div class="sidebar-section">
+        <button id="btn-save-png" class="btn btn-primary sidebar-btn" data-i18n="saveAsImage" title="Ctrl+S"></button>
+        <button id="btn-save-pdf" class="btn btn-ghost sidebar-btn" data-i18n="saveAsPDF" title="Ctrl+Shift+S"></button>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- Screenshot History -->
+      <div class="sidebar-history">
+        <div class="history-header">
+          <span class="sidebar-label" data-i18n="editorHistory"></span>
+          <div class="history-header-right">
+            <span id="history-count" class="history-count"></span>
+            <button id="btn-history-settings" class="btn-history-gear" data-i18n-title="historySettings">⚙</button>
+          </div>
+        </div>
+        <div id="history-settings-panel" class="history-settings-panel hidden">
+          <p class="history-settings-hint" data-i18n="editorHistoryMaxHint"></p>
+          <div class="history-settings-row">
+            <input id="history-limit-slider" type="range" min="50" max="500" step="50" value="500" class="history-limit-slider">
+            <span id="history-limit-value" class="history-limit-val">500</span>
+          </div>
+        </div>
+        <div class="history-search-wrap">
+          <input id="history-search" class="history-search" type="text" data-i18n-placeholder="historySearchPlaceholder" autocomplete="off" spellcheck="false">
+        </div>
+        <div id="history-list" class="history-list"></div>
+      </div>
+    </aside>
+  </div>
+
+  <!-- Preset delete confirm modal -->
+  <div id="preset-delete-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="editorPresetDeleteTitle"></div>
+      <div class="modal-body" style="font-size:12px;color:rgba(255,255,255,0.55)" data-i18n="editorPresetDeleteBody"></div>
+      <div class="modal-actions">
+        <button id="btn-preset-del-confirm" class="btn btn-accent" data-i18n="editorDeleteLabel"></button>
+        <button id="btn-preset-del-cancel" class="btn btn-ghost" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- History limit reduce confirm modal -->
+  <div id="history-limit-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="historyLimitReduceTitle"></div>
+      <div id="history-limit-modal-body" class="modal-body" style="font-size:12px;color:rgba(255,255,255,0.55)"></div>
+      <div class="modal-actions">
+        <button id="btn-history-limit-confirm" class="btn btn-primary" data-i18n="historyLimitApply"></button>
+        <button id="btn-history-limit-cancel" class="btn btn-ghost" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Delete confirm modal -->
+  <div id="delete-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="editorDeleteScreenshotTitle"></div>
+      <div class="modal-actions">
+        <button id="btn-confirm-delete" class="btn btn-accent" data-i18n="editorDeleteLabel"></button>
+        <button id="btn-cancel-delete" class="btn btn-ghost" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade Modal -->
+  <div id="upgrade-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="upgradeTitle"></div>
+      <div class="modal-body" data-i18n="upgradeBody"></div>
+      <div class="modal-actions">
+        <button id="btn-upgrade-buy" class="btn btn-upgrade" data-i18n="upgradeBuy"></button>
+        <button id="btn-upgrade-license" class="btn btn-ghost" data-i18n="upgradeActivate"></button>
+        <button id="btn-upgrade-close" class="btn btn-ghost" data-i18n="upgradeClose"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- License Activation Modal -->
+  <div id="license-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="activateLicense"></div>
+      <div class="modal-body">
+        <input id="license-key-input" type="text" class="license-input" data-i18n-placeholder="licenseKeyPlaceholder" />
+        <p id="license-msg" class="license-msg hidden"></p>
+        <button id="btn-activate" class="btn btn-primary license-activate-btn" data-i18n="activateLicense"></button>
+      </div>
+      <div class="modal-actions license-secondary-actions">
+        <button id="btn-buy-license" class="btn btn-upgrade" data-i18n="editorBuyLicense"></button>
+        <button id="btn-cancel-license" class="btn btn-ghost" data-i18n="cancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Text preset panel -->
+  <div id="preset-panel" class="preset-panel hidden">
+    <div class="sidebar-label" style="padding:0 0 6px" data-i18n="presetStyles"></div>
+    <div id="preset-list" class="preset-list"></div>
+  </div>
+
+  <!-- Tool options panel (rect + future tools) -->
+  <div id="tool-options-panel" class="tool-options-panel hidden">
+    <div id="tool-options-body"></div>
+  </div>
+
+  <!-- Gear icon for selected object -->
+  <button id="object-gear-btn" class="object-gear-btn hidden" data-i18n-title="editorFormatTitle">⚙</button>
+
+  <!-- Per-object format panel -->
+  <div id="object-format-panel" class="object-format-panel hidden">
+    <div class="ofp-header">
+      <span class="ofp-title" data-i18n="editorFormatTitle"></span>
+      <button id="btn-close-format" class="ofp-close">✕</button>
+    </div>
+    <div id="object-format-body" class="ofp-body"></div>
+  </div>
+
+  <script type="module" src="presets.js"></script>
+  <script type="module" src="tools.js"></script>
+  <script type="module" src="editor.js"></script>
+</body>
+</html>

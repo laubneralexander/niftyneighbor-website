@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ScreenFellow</title>
+  <link rel="stylesheet" href="../styles/shared.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <!-- Offline Banner -->
+  <div id="offline-banner" class="offline-banner hidden">
+    <span>⚠</span>
+    <span data-i18n="offlineMessage"></span>
+  </div>
+
+  <!-- ═══ MAIN VIEW ══════════════════════════════════════════════════════════ -->
+  <div id="main-view">
+    <header class="popup-header">
+      <div class="logo">
+        <img src="../logo/ScreenFellow_Logo_HL_transparent_1128x223.png" class="logo-img" alt="ScreenFellow">
+      </div>
+      <div class="header-right">
+        <span id="plan-badge" class="plan-badge plan-badge-free">FREE</span>
+        <button id="btn-settings" class="btn-icon" data-i18n-title="settings">⚙</button>
+      </div>
+    </header>
+
+    <main class="popup-main">
+      <button id="btn-visible" class="capture-btn">
+        <svg class="capture-btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1.5" y="2.5" width="13" height="10" rx="1.5"/>
+          <line x1="1.5" y1="6" x2="14.5" y2="6"/>
+          <circle cx="3.5" cy="4.25" r="0.65" fill="currentColor" stroke="none"/>
+          <circle cx="5.5" cy="4.25" r="0.65" fill="currentColor" stroke="none"/>
+        </svg>
+        <div class="capture-btn-content">
+          <span class="capture-btn-label" data-i18n="captureVisible"></span>
+          <span class="capture-btn-shortcut" id="shortcut-visible"></span>
+        </div>
+      </button>
+
+      <button id="btn-fullpage" class="capture-btn">
+        <svg class="capture-btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="3.5" y="1" width="9" height="14" rx="1.5"/>
+          <line x1="6" y1="4.5" x2="10" y2="4.5"/>
+          <line x1="6" y1="7" x2="10" y2="7"/>
+          <line x1="6" y1="9.5" x2="10" y2="9.5"/>
+          <line x1="6" y1="12" x2="8.5" y2="12"/>
+        </svg>
+        <div class="capture-btn-content">
+          <span class="capture-btn-label" data-i18n="captureFullPage"></span>
+          <span class="capture-btn-shortcut" id="shortcut-fullpage"></span>
+        </div>
+      </button>
+
+      <button id="btn-selection" class="capture-btn">
+        <svg class="capture-btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="1.5" y="1.5" width="10" height="10" rx="1" stroke-dasharray="2.5 1.5"/>
+          <path d="M12.5 9.5 L14.5 7.5 L15 8 L13 10 Z" fill="currentColor" stroke="none"/>
+          <line x1="12.5" y1="9.5" x2="11.5" y2="13" stroke-width="1.3"/>
+          <line x1="14.5" y1="7.5" x2="13" y2="6" stroke-width="1.3"/>
+        </svg>
+        <div class="capture-btn-content">
+          <span class="capture-btn-label" data-i18n="captureSelection"></span>
+          <span class="capture-btn-shortcut" id="shortcut-selection"></span>
+        </div>
+      </button>
+
+      <div class="popup-divider"></div>
+
+      <button id="btn-library" class="library-btn">
+        <svg class="library-btn-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M1.5 4.5 L1.5 13 Q1.5 14 2.5 14 L13.5 14 Q14.5 14 14.5 13 L14.5 6 Q14.5 5 13.5 5 L7.5 5 L6 3 Q5.5 2 4.5 2 L2.5 2 Q1.5 2 1.5 3 Z"/>
+        </svg>
+        <span class="library-btn-label" data-i18n="openLibrary"></span>
+      </button>
+    </main>
+
+    <div id="capture-progress" class="capture-progress hidden">
+      <div class="progress-bar"><div id="progress-fill" class="progress-fill"></div></div>
+      <span id="progress-text" data-i18n="capturing"></span>
+    </div>
+
+    <footer class="popup-footer">
+      <a href="https://google.com" target="_blank" class="popup-made-by">Made with <span class="made-heart">♥</span> by <span class="made-name">NiftyNeighbor</span></a>
+    </footer>
+  </div>
+
+  <!-- ═══ SETTINGS VIEW ═════════════════════════════════════════════════════ -->
+  <div id="settings-view" class="hidden">
+    <header class="popup-header">
+      <button id="btn-settings-back" class="btn-icon" data-i18n-title="back">←</button>
+      <span class="logo-text" data-i18n="settingsTitle"></span>
+      <div style="width:32px"></div>
+    </header>
+
+    <div class="settings-body">
+      <div class="settings-section">
+        <div class="settings-section-label" data-i18n="languageLabel"></div>
+        <select id="lang-select" class="settings-select">
+          <option value="en">🇬🇧 English</option>
+          <option value="de">🇩🇪 Deutsch</option>
+          <option value="es">🇪🇸 Español</option>
+        </select>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="settings-section">
+        <div class="settings-section-label" data-i18n="shortcutsTitle"></div>
+        <button id="btn-open-shortcuts" class="btn btn-primary settings-btn" data-i18n="shortcutsOpen"></button>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <div class="settings-section">
+        <div class="settings-section-label" data-i18n="confettiSectionTitle"></div>
+        <div class="settings-toggle-row">
+          <span class="settings-toggle-label" data-i18n="confettiLabel"></span>
+          <label class="toggle-switch">
+            <input type="checkbox" id="toggle-confetti" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-divider"></div>
+
+      <!-- License section: shown for FREE users -->
+      <div id="activate-section" class="settings-section hidden">
+        <div class="settings-section-label" data-i18n="licenseSettingsTitle"></div>
+        <p class="settings-hint" data-i18n="licenseActivateHint"></p>
+        <input id="settings-license-input" type="text" class="input" data-i18n-placeholder="licenseKeyPlaceholder" />
+        <p id="settings-license-msg" class="license-msg hidden"></p>
+        <button id="btn-activate-inline" class="btn btn-primary settings-btn" data-i18n="activate"></button>
+        <button id="btn-buy-inline" class="btn btn-upgrade settings-btn" data-i18n="upgradeBuy"></button>
+      </div>
+
+      <!-- License section: shown for PRO users -->
+      <div id="license-section" class="settings-section hidden">
+        <div class="settings-section-label" data-i18n="licenseSettingsTitle"></div>
+        <button id="btn-release-license" class="btn btn-ghost settings-btn settings-btn-danger" data-i18n="licenseRelease"></button>
+        <p class="settings-hint" data-i18n="licenseSettingsHint"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Release Confirm Modal -->
+  <div id="release-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="releaseConfirmTitle"></div>
+      <div class="modal-body" data-i18n="releaseConfirmBody"></div>
+      <div class="modal-actions">
+        <button id="btn-release-confirm" class="btn btn-ghost settings-btn-danger" data-i18n="releaseConfirmOk"></button>
+        <button id="btn-release-cancel" class="btn btn-ghost" data-i18n="releaseConfirmCancel"></button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Upgrade Modal -->
+  <div id="upgrade-modal" class="modal-backdrop hidden">
+    <div class="modal">
+      <div class="modal-title" data-i18n="upgradeTitle"></div>
+      <div class="modal-body" data-i18n="upgradeBody"></div>
+      <div class="modal-actions">
+        <button id="btn-buy" class="btn btn-upgrade" data-i18n="upgradeBuy"></button>
+        <button id="btn-enter-license" class="btn btn-ghost" data-i18n="upgradeActivate"></button>
+        <button id="btn-close-upgrade" class="btn btn-ghost" data-i18n="upgradeClose"></button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="popup.js"></script>
+</body>
+</html>
