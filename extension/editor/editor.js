@@ -2785,7 +2785,10 @@ async function exportGuide() {
   const now = new Date();
   const pad = n => String(n).padStart(2,'0');
   const dateStr = `${now.getFullYear()}-${pad(now.getMonth()+1)}-${pad(now.getDate())}_${pad(now.getHours())}-${pad(now.getMinutes())}-${pad(now.getSeconds())}`;
-  const filename = `ScreenFellow-Guide-${dateStr}.html`;
+  const namePrefix = currentScreenshotName
+    ? currentScreenshotName.replace(/[^\w\s\-]/g, '').trim().replace(/\s+/g, '-').slice(0, 50)
+    : '';
+  const filename = namePrefix ? `${namePrefix}_Guide-${dateStr}.html` : `ScreenFellow-Guide-${dateStr}.html`;
   const dlUrl = URL.createObjectURL(blob);
   chrome.downloads.download({ url: dlUrl, filename, saveAs: true }, () => {
     setTimeout(() => URL.revokeObjectURL(dlUrl), 10000);
