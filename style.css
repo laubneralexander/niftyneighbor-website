@@ -1950,6 +1950,13 @@ footer {
   line-height: 1.8;
 }
 
+.legal-modal-content ul {
+  font-size: 14px;
+  color: var(--text-secondary);
+  line-height: 1.8;
+  margin: 8px 0 8px 20px;
+}
+
 .legal-modal-content a {
   color: var(--color-primary);
   text-decoration: underline;
