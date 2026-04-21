@@ -3094,7 +3094,17 @@
       },
     };
 
-    let currentLang = localStorage.getItem(LANG_KEY) || 'en';
+    const SUPPORTED_LANGS = Object.keys(translations);
+    function detectLang() {
+      const saved = localStorage.getItem(LANG_KEY);
+      if (saved && SUPPORTED_LANGS.includes(saved)) return saved;
+      const browser = (navigator.language || navigator.userLanguage || 'en').toLowerCase();
+      if (SUPPORTED_LANGS.includes(browser)) return browser;
+      const short = browser.split('-')[0];
+      const match = SUPPORTED_LANGS.find(l => l.startsWith(short));
+      return match || 'en';
+    }
+    let currentLang = detectLang();
 
     // ── Apply translations to data-i18n elements ─
     function applyLang(lang) {
