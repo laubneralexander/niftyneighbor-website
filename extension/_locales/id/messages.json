@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Screenshot Halaman Penuh & Umpan Balik Desain"
   },
   "appDescription": {
-    "message": "Ambil screenshot halaman web lengkap dengan gulir otomatis, beri anotasi dengan alat profesional, dan ekspor sebagai PNG atau PDF."
+    "message": "Tangkap, beri anotasi & bagikan screenshot sebagai panduan interaktif dengan preset & riwayat cerdas. Alat Pro #1!"
   },
   "captureVisible": {
     "message": "Tangkap area yang terlihat"
@@ -123,7 +123,7 @@
     "message": "Buka ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Screenshot halaman penuh tanpa batas. Tambahkan gambar kustom, tanda air, dan emoji. Ekspor PDF, hingga 500 screenshot teranotasi dan preset kustom. Pembayaran sekali, tanpa langganan!"
+    "message": "Buat screenshot halaman penuh tanpa batas dan panduan HTML interaktif dalam hitungan detik. Dengan gambar/tanda air, emoji, dan preset kustom, kelola hingga 500 snapshot dengan mudah.<br><br><strong>Keuntungan Pro Anda:</strong> Dapatkan akses eksklusif ke alat pengeditan premium kami untuk hasil yang sempurna.<br><br><strong>Yang Terbaik:</strong> Bayar sekali, gunakan selamanya. Tanpa stres berlangganan!"
   },
   "upgradePrice": {
     "message": "€15 — sekali bayar"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Ya, hapus semua"
+  },
+  "shiftStraightLine": {
+    "message": "Tahan ⇧ Shift saat menggambar untuk garis lurus"
+  },
+  "addTag": {
+    "message": "＋ Tambah tag"
+  },
+  "deleteTag": {
+    "message": "Hapus tag"
+  },
+  "changeTag": {
+    "message": "Ubah tag"
+  },
+  "fullPageBadge": {
+    "message": "Screenshot halaman penuh"
+  },
+  "showInImage": {
+    "message": "Tampilkan di gambar"
+  },
+  "copyUrl": {
+    "message": "Salin URL"
+  },
+  "openUrl": {
+    "message": "Buka di tab baru"
+  },
+  "selectionHint": {
+    "message": "Gambar seleksi — ESC untuk batal"
+  },
+  "clearSearch": {
+    "message": "Hapus pencarian"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Tindakan ini tidak dapat dibatalkan."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "Hapus {n} screenshot?"
+  },
+  "ofpRotation": {
+    "message": "Rotasi"
+  },
+  "tagNewPlaceholder": {
+    "message": "Nama tag baru…"
+  },
+  "toolCropReset": {
+    "message": "Atur ulang"
+  },
+  "toolSliceApply": {
+    "message": "Hapus bagian"
+  },
+  "toolSliceTitle": {
+    "message": "Hapus bagian"
   }
 }

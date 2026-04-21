@@ -33,6 +33,9 @@ export function applyI18n(root = document) {
   root.querySelectorAll('[data-i18n]').forEach(el => {
     const v = t(el.dataset.i18n); if (v !== el.dataset.i18n) el.textContent = v;
   });
+  root.querySelectorAll('[data-i18n-html]').forEach(el => {
+    const v = t(el.dataset.i18nHtml); if (v !== el.dataset.i18nHtml) el.innerHTML = v;
+  });
   root.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
     const v = t(el.dataset.i18nPlaceholder); if (v !== el.dataset.i18nPlaceholder) el.placeholder = v;
   });

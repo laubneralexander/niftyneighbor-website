@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Pełnostronicowe zrzuty ekranu i feedback projektowy"
   },
   "appDescription": {
-    "message": "Przechwytuj całe strony z automatycznym przewijaniem, dodawaj adnotacje profesjonalnymi narzędziami i eksportuj jako PNG lub PDF."
+    "message": "Przechwytuj, opisuj i udostępniaj zrzuty ekranu jako interaktywne przewodniki z presetami i historią. Narzędzie Pro #1!"
   },
   "captureVisible": {
     "message": "Przechwyć widoczny obszar"
@@ -123,7 +123,7 @@
     "message": "Odblokuj ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Nieograniczone zrzuty pełnych stron. Dodawaj własne obrazy, znaki wodne i emoji. Eksport PDF, do 500 zrzutów z adnotacjami i własne presety. Jednorazowa opłata, bez subskrypcji!"
+    "message": "Twórz nieograniczone zrzuty pełnych stron i interaktywne przewodniki HTML w kilka sekund. Dzięki obrazom/znakom wodnym, emoji i własnym presetom zarządzasz do 500 zrzutami bez wysiłku.<br><br><strong>Twoja przewaga Pro:</strong> Uzyskaj wyłączny dostęp do naszych narzędzi premium dla idealnego efektu.<br><br><strong>Najlepsze:</strong> Płać raz, korzystaj zawsze. Żadnego stresu z subskrypcją!"
   },
   "upgradePrice": {
     "message": "€15 — jednorazowo"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Tak, usuń wszystkie"
+  },
+  "shiftStraightLine": {
+    "message": "Przytrzymaj ⇧ Shift podczas rysowania, aby narysować linię prostą"
+  },
+  "addTag": {
+    "message": "＋ Dodaj tag"
+  },
+  "deleteTag": {
+    "message": "Usuń tag"
+  },
+  "changeTag": {
+    "message": "Zmień tag"
+  },
+  "fullPageBadge": {
+    "message": "Zrzut całej strony"
+  },
+  "showInImage": {
+    "message": "Pokaż na obrazie"
+  },
+  "copyUrl": {
+    "message": "Kopiuj URL"
+  },
+  "openUrl": {
+    "message": "Otwórz w nowej karcie"
+  },
+  "selectionHint": {
+    "message": "Zaznacz obszar — ESC aby anulować"
+  },
+  "clearSearch": {
+    "message": "Wyczyść wyszukiwanie"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Tej operacji nie można cofnąć."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "Usunąć {n} zrzutów ekranu?"
+  },
+  "ofpRotation": {
+    "message": "Obrót"
+  },
+  "tagNewPlaceholder": {
+    "message": "Nowa nazwa tagu…"
+  },
+  "toolCropReset": {
+    "message": "Resetuj"
+  },
+  "toolSliceApply": {
+    "message": "Usuń sekcję"
+  },
+  "toolSliceTitle": {
+    "message": "Usuń sekcję"
   }
 }

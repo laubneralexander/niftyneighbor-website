@@ -3,7 +3,7 @@
     "message": "ScreenFellow : Capture pleine page & Feedback design"
   },
   "appDescription": {
-    "message": "Capturez des pages web entières avec défilement automatique, annotez-les avec des outils professionnels et exportez en PNG ou PDF."
+    "message": "Capturez, annotez et partagez vos captures en guides interactifs avec presets & historique intelligent. L'outil pro ultime !"
   },
   "captureVisible": {
     "message": "Capturer la zone visible"
@@ -123,7 +123,7 @@
     "message": "Débloquer ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Captures pleine page illimitées. Ajoutez des images personnalisées, filigranes et emojis. Export PDF, jusqu'à 500 captures annotées et presets personnalisés. Un seul paiement modeste, sans abonnement !"
+    "message": "Créez des captures pleine page illimitées et des guides HTML interactifs en quelques secondes. Avec images/filigranes, emojis et presets personnalisés, gérez jusqu'à 500 captures sans effort.<br><br><strong>Votre avantage Pro :</strong> Accédez en exclusivité à nos outils d'édition premium pour un résultat parfait.<br><br><strong>Le meilleur :</strong> Payez une fois, utilisez pour toujours. Zéro stress d'abonnement !"
   },
   "upgradePrice": {
     "message": "15 € — paiement unique"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Oui, tout supprimer"
+  },
+  "shiftStraightLine": {
+    "message": "Maintenez ⇧ Shift en dessinant pour une ligne droite"
+  },
+  "addTag": {
+    "message": "＋ Ajouter un tag"
+  },
+  "deleteTag": {
+    "message": "Supprimer le tag"
+  },
+  "changeTag": {
+    "message": "Modifier le tag"
+  },
+  "fullPageBadge": {
+    "message": "Capture pleine page"
+  },
+  "showInImage": {
+    "message": "Afficher dans l'image"
+  },
+  "copyUrl": {
+    "message": "Copier l'URL"
+  },
+  "openUrl": {
+    "message": "Ouvrir dans un nouvel onglet"
+  },
+  "selectionHint": {
+    "message": "Tracez une sélection — ESC pour annuler"
+  },
+  "clearSearch": {
+    "message": "Effacer la recherche"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Cette action est irréversible."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "Supprimer {n} captures d’écran ?"
+  },
+  "ofpRotation": {
+    "message": "Rotation"
+  },
+  "tagNewPlaceholder": {
+    "message": "Nouveau nom de tag…"
+  },
+  "toolCropReset": {
+    "message": "Réinitialiser"
+  },
+  "toolSliceApply": {
+    "message": "Supprimer la section"
+  },
+  "toolSliceTitle": {
+    "message": "Supprimer la section"
   }
 }

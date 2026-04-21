@@ -50,6 +50,131 @@ chrome.runtime.onMessage.addListener((msg, sender, sendResponse) => {
       } else if (msg.action === 'captureVisibleForStitch') {
         const dataUrl = await chrome.tabs.captureVisibleTab(sender.tab.windowId, { format: 'png' });
         sendResponse({ dataUrl });
+      } else if (msg.action === 'killLenisMainWorld') {
+        await chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          world: 'MAIN',
+          func: function () {
+            var instances = [];
+            function isLenis(v) {
+              return v && typeof v === 'object' && typeof v.stop === 'function' &&
+                ('animatedScroll' in v || 'targetScroll' in v || 'lerp' in v || 'velocity' in v);
+            }
+            try {
+              Object.getOwnPropertyNames(window).forEach(function (k) {
+                try { var v = window[k]; if (isLenis(v)) { v.stop(); instances.push(v); } } catch (_) {}
+              });
+            } catch (_) {}
+            window.__sf_smooth_instances = instances;
+          }
+        });
+        sendResponse({ ok: true });
+      } else if (msg.action === 'restoreLenisMainWorld') {
+        await chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          world: 'MAIN',
+          func: function () {
+            try {
+              (window.__sf_smooth_instances || []).forEach(function (l) {
+                try { if (typeof l.start === 'function') l.start(); } catch (_) {}
+              });
+              delete window.__sf_smooth_instances;
+            } catch (_) {}
+          }
+        });
+        sendResponse({ ok: true });
+      } else if (msg.action === 'setupScrollLock') {
+        await chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          world: 'MAIN',
+          func: function () {
+            window.__sf_locked = false;
+            window.__sf_targetY = 0;
+
+            // Layer 1 — scrollTop property interceptor on html/body
+            var stDesc = Object.getOwnPropertyDescriptor(Element.prototype, 'scrollTop') ||
+                         Object.getOwnPropertyDescriptor(HTMLElement.prototype, 'scrollTop');
+            window.__sf_stDesc = stDesc || null;
+            if (stDesc && stDesc.set) {
+              function intercept(el) {
+                try {
+                  Object.defineProperty(el, 'scrollTop', {
+                    get: function () { return stDesc.get.call(this); },
+                    set: function (v) {
+                      if (window.__sf_locked && Math.abs(v - window.__sf_targetY) > 100) return;
+                      stDesc.set.call(this, v);
+                    },
+                    configurable: true,
+                  });
+                } catch (_) {}
+              }
+              intercept(document.documentElement);
+              intercept(document.body);
+            }
+
+            // Layer 2 — replace window.scrollTo / window.scroll
+            window.__sf_origScrollTo = window.scrollTo;
+            window.scrollTo = function (x, y) {
+              if (typeof x === 'object' && x !== null) { y = x.top || 0; x = x.left || 0; }
+              if (window.__sf_locked && Math.abs((y || 0) - window.__sf_targetY) > 100) return;
+              window.__sf_origScrollTo.call(window, x || 0, y || 0);
+            };
+            window.scroll = window.scrollTo;
+
+            // Layer 3 — setInterval fallback at 16 ms (rAF fires before setInterval
+            // in the same frame, so our interval always overwrites Lenis's rAF reset)
+            window.__sf_holdInterval = setInterval(function () {
+              if (!window.__sf_locked) return;
+              var y = window.__sf_targetY;
+              if (stDesc && stDesc.set) stDesc.set.call(document.documentElement, y);
+            }, 16);
+          }
+        });
+        sendResponse({ ok: true });
+      } else if (msg.action === 'scrollToLocked') {
+        await chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          world: 'MAIN',
+          args: [msg.y],
+          func: function (y) {
+            window.__sf_targetY = y;
+            window.__sf_locked = false;
+            if (window.__sf_origScrollTo) {
+              window.__sf_origScrollTo.call(window, 0, y);
+            } else {
+              try { window.scrollTo({ top: y, left: 0, behavior: 'instant' }); } catch (_) {}
+              try { window.scrollTo(0, y); } catch (_) {}
+            }
+            // Belt-and-suspenders: also set via native descriptor and scrollTop directly
+            if (window.__sf_stDesc && window.__sf_stDesc.set) {
+              window.__sf_stDesc.set.call(document.documentElement, y);
+            }
+            try { document.documentElement.scrollTop = y; } catch (_) {}
+            window.__sf_locked = true;
+            console.log('[SF scrollToLocked] y=', y, 'scrollY=', window.scrollY, 'origScrollTo=', !!window.__sf_origScrollTo);
+          }
+        });
+        sendResponse({ ok: true });
+      } else if (msg.action === 'teardownScrollLock') {
+        await chrome.scripting.executeScript({
+          target: { tabId: sender.tab.id },
+          world: 'MAIN',
+          func: function () {
+            window.__sf_locked = false;
+            if (window.__sf_holdInterval) { clearInterval(window.__sf_holdInterval); delete window.__sf_holdInterval; }
+            if (window.__sf_origScrollTo) {
+              window.scrollTo = window.__sf_origScrollTo;
+              window.scroll = window.__sf_origScrollTo;
+              delete window.__sf_origScrollTo;
+            }
+            try { delete document.documentElement.scrollTop; } catch (_) {}
+            try { delete document.body.scrollTop; } catch (_) {}
+            delete window.__sf_stDesc;
+            delete window.__sf_targetY;
+            delete window.__sf_locked;
+          }
+        });
+        sendResponse({ ok: true });
       } else if (msg.action === 'shortcutCapture') {
         // Triggered by content/shortcuts.js
         const tabId = sender.tab.id;

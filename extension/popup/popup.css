@@ -1,7 +1,20 @@
 body {
   width: 300px;
   min-height: 320px;
-  overflow: hidden;
+  overflow: visible;
+  position: relative; /* contains the absolute-positioned modal-backdrop */
+}
+
+/* In the popup, position:fixed doesn't make the window grow — override to absolute
+   so body scrollHeight expands and Chrome auto-resizes the popup window */
+.modal-backdrop {
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  min-height: 100%;
+  backdrop-filter: none;
+  align-items: flex-start;
+  padding: 20px 14px;
+  box-sizing: border-box;
 }
 
 /* Offline Banner */

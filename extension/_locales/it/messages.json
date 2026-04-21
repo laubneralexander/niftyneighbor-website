@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Screenshot Intera Pagina e Feedback Design"
   },
   "appDescription": {
-    "message": "Cattura pagine web intere con scorrimento automatico, annotale con strumenti professionali ed esporta come PNG o PDF."
+    "message": "Cattura, annota e condividi screenshot come guide interattive con preset personalizzati e cronologia smart. Lo strumento pro #1!"
   },
   "captureVisible": {
     "message": "Cattura area visibile"
@@ -123,7 +123,7 @@
     "message": "Sblocca ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Screenshot di pagine intere illimitati. Aggiungi immagini personalizzate, filigrane ed emoji. Esportazione PDF, fino a 500 screenshot annotati e preset personalizzati. Un piccolo pagamento unico, senza abbonamento!"
+    "message": "Crea screenshot a pagina intera illimitati e guide HTML interattive in pochi secondi. Con immagini/filigrane, emoji e preset personalizzati, gestisci fino a 500 screenshot senza sforzo.<br><br><strong>Il tuo vantaggio Pro:</strong> Accesso esclusivo ai nostri strumenti di editing premium per il risultato perfetto.<br><br><strong>La cosa migliore:</strong> Paga una volta, usa per sempre. Niente stress da abbonamento!"
   },
   "upgradePrice": {
     "message": "€15 — pagamento unico"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Sì, elimina tutto"
+  },
+  "shiftStraightLine": {
+    "message": "Tieni ⇧ Shift mentre disegni per una linea retta"
+  },
+  "addTag": {
+    "message": "＋ Aggiungi tag"
+  },
+  "deleteTag": {
+    "message": "Elimina tag"
+  },
+  "changeTag": {
+    "message": "Cambia tag"
+  },
+  "fullPageBadge": {
+    "message": "Screenshot a pagina intera"
+  },
+  "showInImage": {
+    "message": "Mostra nell'immagine"
+  },
+  "copyUrl": {
+    "message": "Copia URL"
+  },
+  "openUrl": {
+    "message": "Apri in nuova scheda"
+  },
+  "selectionHint": {
+    "message": "Disegna una selezione — ESC per annullare"
+  },
+  "clearSearch": {
+    "message": "Cancella ricerca"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Questa azione non può essere annullata."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "Eliminare {n} screenshot?"
+  },
+  "ofpRotation": {
+    "message": "Rotazione"
+  },
+  "tagNewPlaceholder": {
+    "message": "Nome del nuovo tag…"
+  },
+  "toolCropReset": {
+    "message": "Ripristina"
+  },
+  "toolSliceApply": {
+    "message": "Rimuovi sezione"
+  },
+  "toolSliceTitle": {
+    "message": "Rimuovi sezione"
   }
 }

@@ -3,7 +3,7 @@
     "message": "ScreenFellow：整页截图与设计反馈"
   },
   "appDescription": {
-    "message": "自动滚动截取完整网页，使用专业工具进行标注，并导出为 PNG 或 PDF。"
+    "message": "截图、标注并以互动指南形式分享，支持自定义预设与智能历史记录。专业级截图工具 #1！"
   },
   "captureVisible": {
     "message": "截取可见区域"
@@ -123,7 +123,7 @@
     "message": "解锁 ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "无限整页截图。添加自定义图片、水印和表情。PDF 导出，最多 500 张带标注截图及自定义预设。一次性付款，无需订阅！"
+    "message": "在几秒内创建无限全页截图和互动式 HTML 指南。借助图片/水印、表情符号和自定义预设，轻松管理多达 500 个快照。<br><br><strong>您的 Pro 特权：</strong>独享高级编辑工具，打造完美效果。<br><br><strong>最棒的是：</strong>一次付款，永久使用。告别订阅烦恼！"
   },
   "upgradePrice": {
     "message": "€15 — 一次性付款"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "是的，全部删除"
+  },
+  "shiftStraightLine": {
+    "message": "绘制时按住 ⇧ Shift 可画直线"
+  },
+  "addTag": {
+    "message": "＋ 添加标签"
+  },
+  "deleteTag": {
+    "message": "删除标签"
+  },
+  "changeTag": {
+    "message": "更改标签"
+  },
+  "fullPageBadge": {
+    "message": "全页截图"
+  },
+  "showInImage": {
+    "message": "在图像中显示"
+  },
+  "copyUrl": {
+    "message": "复制链接"
+  },
+  "openUrl": {
+    "message": "在新标签页中打开"
+  },
+  "selectionHint": {
+    "message": "绘制选区 — ESC 取消"
+  },
+  "clearSearch": {
+    "message": "清除搜索"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "此操作无法撤销。"
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "删除 {n} 张截图？"
+  },
+  "ofpRotation": {
+    "message": "旋转"
+  },
+  "tagNewPlaceholder": {
+    "message": "新标签名称…"
+  },
+  "toolCropReset": {
+    "message": "重置"
+  },
+  "toolSliceApply": {
+    "message": "删除区域"
+  },
+  "toolSliceTitle": {
+    "message": "删除区域"
   }
 }

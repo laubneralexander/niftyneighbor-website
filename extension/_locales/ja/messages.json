@@ -3,7 +3,7 @@
     "message": "ScreenFellow：フルページスクリーンショット＆デザインフィードバック"
   },
   "appDescription": {
-    "message": "自動スクロールでウェブページ全体をキャプチャし、プロのツールで注釈を付け、PNG または PDF として書き出します。"
+    "message": "スクショを撮影・注釈・インタラクティブガイドとして共有。カスタムプリセット＆スマート履歴搭載。プロ向けNo.1ツール！"
   },
   "captureVisible": {
     "message": "表示エリアをキャプチャ"
@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro を解放"
   },
   "upgradeBody": {
-    "message": "フルページキャプチャが無制限に。カスタム画像・透かし・絵文字を追加。PDF書き出し、最大500枚の注釈付きスクリーンショット、カスタムプリセット。一度きりの少額支払い、サブスクなし！"
+    "message": "数秒でフルページスクリーンショットとインタラクティブなHTMLガイドを無制限に作成。画像・透かし・絵文字・カスタムプリセットで最大500枚のスナップショットを簡単管理。<br><br><strong>Proの特典：</strong>プレミアム編集ツールへの独占アクセスで完璧な仕上がりを実現。<br><br><strong>最大のメリット：</strong>一度きりの支払い、永久に使用可能。サブスクのストレス不要！"
   },
   "upgradePrice": {
     "message": "€15 — 買い切り"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "はい、すべて削除"
+  },
+  "shiftStraightLine": {
+    "message": "⇧ Shiftを押しながら描くと直線になります"
+  },
+  "addTag": {
+    "message": "＋ タグを追加"
+  },
+  "deleteTag": {
+    "message": "タグを削除"
+  },
+  "changeTag": {
+    "message": "タグを変更"
+  },
+  "fullPageBadge": {
+    "message": "全ページスクリーンショット"
+  },
+  "showInImage": {
+    "message": "画像で表示"
+  },
+  "copyUrl": {
+    "message": "URLをコピー"
+  },
+  "openUrl": {
+    "message": "新しいタブで開く"
+  },
+  "selectionHint": {
+    "message": "範囲を選択 — キャンセルはESC"
+  },
+  "clearSearch": {
+    "message": "検索をクリア"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "この操作は元に戻せません。"
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "{n}枚のスクリーンショットを削除しますか？"
+  },
+  "ofpRotation": {
+    "message": "回転"
+  },
+  "tagNewPlaceholder": {
+    "message": "新しいタグ名…"
+  },
+  "toolCropReset": {
+    "message": "リセット"
+  },
+  "toolSliceApply": {
+    "message": "セクションを削除"
+  },
+  "toolSliceTitle": {
+    "message": "セクションを削除"
   }
 }

@@ -826,7 +826,6 @@ function buildBadgePresetPanel() {
 
   const modeGroup = document.createElement('div');
   modeGroup.className = 'ofp-btn-group';
-  modeGroup.style.marginTop = '4px';
 
   const btnNum   = document.createElement('button');
   const btnAlpha = document.createElement('button');
@@ -931,7 +930,7 @@ function buildHighlightFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 80; opRange.value = Math.round((obj.opacity ?? 0.42) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -945,7 +944,7 @@ function buildHighlightFormatControls(body, obj) {
   const rxRR = document.createElement('div'); rxRR.className = 'ofp-range-row';
   const rxRange = document.createElement('input'); rxRange.type = 'range'; rxRange.className = 'ofp-range';
   rxRange.min = 0; rxRange.max = 30; rxRange.value = obj.rx || 0;
-  const rxVal = document.createElement('span'); rxVal.className = 'ofp-range-val'; rxVal.textContent = rxRange.value;
+  const rxVal = makeEditableVal(rxRange, '');
   rxRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); rxVal.textContent = v;
     obj.set({ rx: v, ry: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -954,6 +953,7 @@ function buildHighlightFormatControls(body, obj) {
   rxRR.appendChild(rxRange); rxRR.appendChild(rxVal);
   rxRow.appendChild(rxRR); body.appendChild(rxRow);
 
+  buildRotationControls(body, obj);
   appendPresetSaveBtn(body, 'highlight', () => capturePresetFromObj(obj));
 }
 
@@ -997,7 +997,7 @@ function buildFreehandPresetPanel() {
   // Info block (occupies the second row where presets 4-6 would be)
   const info = document.createElement('div');
   info.style.cssText = 'margin-top:8px;padding:7px 9px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:6px;font-size:10px;line-height:1.5;color:rgba(255,255,255,0.55)';
-  info.innerHTML = '<span style="opacity:0.8;font-size:11px">⇧ Shift</span> beim Zeichnen gedrückt halten für eine gerade Linie';
+  info.textContent = t('shiftStraightLine');
   body.appendChild(info);
 }
 
@@ -1070,7 +1070,7 @@ function buildFreehandFormatControls(body, obj) {
   const pwRR = document.createElement('div'); pwRR.className = 'ofp-range-row';
   const pwRange = document.createElement('input'); pwRange.type = 'range'; pwRange.className = 'ofp-range';
   pwRange.min = 1; pwRange.max = 30; pwRange.value = obj.strokeWidth || obj._freehandWidth || 3;
-  const pwVal = document.createElement('span'); pwVal.className = 'ofp-range-val'; pwVal.textContent = pwRange.value;
+  const pwVal = makeEditableVal(pwRange, '');
   pwRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); pwVal.textContent = v;
     obj._freehandWidth = v; obj.set({ strokeWidth: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1110,7 +1110,7 @@ function buildFreehandFormatControls(body, obj) {
   const bwRR = document.createElement('div'); bwRR.className = 'ofp-range-row';
   const bwRange = document.createElement('input'); bwRange.type = 'range'; bwRange.className = 'ofp-range';
   bwRange.min = 0; bwRange.max = 6; bwRange.value = obj._freehandBorderWidth || 0;
-  const bwVal = document.createElement('span'); bwVal.className = 'ofp-range-val'; bwVal.textContent = bwRange.value;
+  const bwVal = makeEditableVal(bwRange, '');
   bwRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); bwVal.textContent = v;
     obj._freehandBorderWidth = v;
@@ -1128,7 +1128,7 @@ function buildFreehandFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1310,12 +1310,10 @@ function _thumbArrow(ctx, x1, y1, x2, y2, type, color, w, hs, angle, perp, dx, d
 }
 
 function buildArrowFormatControls(body, obj, skipType = false) {
-  const selStyle = 'width:100%;background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 6px;font-size:11px;margin-top:4px;cursor:pointer';
-
   // Type (hidden for freehand-shift lines)
   if (!skipType) {
     const typeRow = makeRow(t('ofpArrowType'));
-    const typeSel = document.createElement('select'); typeSel.style.cssText = selStyle;
+    const typeSel = document.createElement('select'); typeSel.className = 'ofp-select';
     [['design', t('arrowTypeDesign')],['design-gradient', t('arrowTypeDesignGradient')],['simple', t('arrowTypeSimple')],
      ['double', t('arrowTypeDouble')],['line', t('arrowTypeLine')],['line-dot', t('arrowTypeLineDot')],['line-two-dots', t('arrowTypeLineTwoDots')]]
     .forEach(([val, lbl]) => {
@@ -1348,7 +1346,7 @@ function buildArrowFormatControls(body, obj, skipType = false) {
   const awRR = document.createElement('div'); awRR.className = 'ofp-range-row';
   const awRange = document.createElement('input'); awRange.type = 'range'; awRange.className = 'ofp-range';
   awRange.min = 1; awRange.max = 20; awRange.value = obj.arrowWidth || 4;
-  const awVal = document.createElement('span'); awVal.className = 'ofp-range-val'; awVal.textContent = awRange.value;
+  const awVal = makeEditableVal(awRange, '');
   awRange.addEventListener('input', e => { const v = parseInt(e.target.value); awVal.textContent = v; obj.arrowWidth = v; obj.canvas?.renderAll(); scheduleAnnotationSave(); });
   awRange.addEventListener('change', () => saveUndo());
   awRR.appendChild(awRange); awRR.appendChild(awVal);
@@ -1375,7 +1373,7 @@ function buildArrowFormatControls(body, obj, skipType = false) {
   const bwRR = document.createElement('div'); bwRR.className = 'ofp-range-row';
   const bwRange = document.createElement('input'); bwRange.type = 'range'; bwRange.className = 'ofp-range';
   bwRange.min = 0; bwRange.max = 8; bwRange.value = obj.borderWidth || 0;
-  const bwVal = document.createElement('span'); bwVal.className = 'ofp-range-val'; bwVal.textContent = bwRange.value;
+  const bwVal = makeEditableVal(bwRange, '');
   bwRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); bwVal.textContent = v; obj.borderWidth = v;
     if (v > 0 && !obj.borderColor) { obj.borderColor = '#000000'; bcSwatch.style.background = '#000000'; bcInput.value = '#000000'; bcHex.value = '#000000'; }
@@ -1390,7 +1388,7 @@ function buildArrowFormatControls(body, obj, skipType = false) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => { const v = parseInt(e.target.value); opVal.textContent = v + '%'; obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave(); });
   opRange.addEventListener('change', () => saveUndo());
   opRR.appendChild(opRange); opRR.appendChild(opVal);
@@ -1615,6 +1613,7 @@ function buildFormatPanelBody(obj) {
     hint.textContent = t('ofpFormatFuture');
     body.appendChild(hint);
   }
+
 }
 
 function buildBlurFormatControls(body, obj) {
@@ -1623,7 +1622,7 @@ function buildBlurFormatControls(body, obj) {
   const rr = document.createElement('div'); rr.className = 'ofp-range-row';
   const range = document.createElement('input'); range.type = 'range'; range.className = 'ofp-range';
   range.min = 1; range.max = 40; range.value = obj._blurStrength ?? 14;
-  const val = document.createElement('span'); val.className = 'ofp-range-val'; val.textContent = range.value + 'px';
+  const val = makeEditableVal(range, 'px');
   range.addEventListener('input', e => {
     val.textContent = e.target.value + 'px';
     reapplyBlur(obj, parseInt(e.target.value));
@@ -1638,7 +1637,7 @@ function buildBlurFormatControls(body, obj) {
   const rxRR = document.createElement('div'); rxRR.className = 'ofp-range-row';
   const rxRange = document.createElement('input'); rxRange.type = 'range'; rxRange.className = 'ofp-range';
   rxRange.min = 0; rxRange.max = 40; rxRange.value = obj._blurCornerRadius ?? 0;
-  const rxVal = document.createElement('span'); rxVal.className = 'ofp-range-val'; rxVal.textContent = rxRange.value;
+  const rxVal = makeEditableVal(rxRange, '');
   rxRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); rxVal.textContent = v;
     obj._blurCornerRadius = v;
@@ -1656,7 +1655,7 @@ function buildImageFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 5; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1665,6 +1664,7 @@ function buildImageFormatControls(body, obj) {
   opRR.appendChild(opRange); opRR.appendChild(opVal);
   opRow.appendChild(opRR); body.appendChild(opRow);
 
+  buildRotationControls(body, obj);
   appendPresetSaveBtn(body, 'image', () => {
     const dataUrl = obj._imageDataUrl || '';
     if (!dataUrl) return null;
@@ -1692,7 +1692,7 @@ function buildEmojiFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1770,7 +1770,6 @@ function buildTextFormatControls(body, obj) {
   // B / I / U
   const styleRow = makeRow(t('ofpStyle'));
   const styleGroup = document.createElement('div'); styleGroup.className = 'ofp-btn-group';
-  styleGroup.style.marginTop = '4px';
   const btnB = document.createElement('button'); btnB.innerHTML = '<b>B</b>';
   const btnI = document.createElement('button'); btnI.innerHTML = '<i>I</i>';
   const btnU = document.createElement('button'); btnU.innerHTML = '<u>U</u>';
@@ -1800,7 +1799,6 @@ function buildTextFormatControls(body, obj) {
   // Alignment
   const alignRow = makeRow(t('ofpAlignment'));
   const alignGroup = document.createElement('div'); alignGroup.className = 'ofp-btn-group';
-  alignGroup.style.marginTop = '4px';
   [['left', '←'], ['center', '↔'], ['right', '→']].forEach(([align, icon]) => {
     const btn = document.createElement('button');
     btn.textContent = icon; btn.title = align;
@@ -1818,7 +1816,7 @@ function buildTextFormatControls(body, obj) {
   // Font
   const fontRow = makeRow(t('ofpFont'));
   const fontSel = document.createElement('select');
-  fontSel.style.cssText = 'width:100%;background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 6px;font-size:11px;margin-top:4px;cursor:pointer';
+  fontSel.className = 'ofp-select';
   [['Arial, sans-serif', 'Arial'], ['Georgia, serif', 'Georgia'], ['Courier New, monospace', 'Courier New'], ['Verdana, sans-serif', 'Verdana'], ['Impact, sans-serif', 'Impact']].forEach(([val, lbl]) => {
     const opt = document.createElement('option');
     opt.value = val; opt.textContent = lbl;
@@ -1856,8 +1854,8 @@ function buildTextFormatControls(body, obj) {
   const fsRow = makeRow(t('ofpFontSize'));
   const fsRR = document.createElement('div'); fsRR.className = 'ofp-range-row';
   const fsRange = document.createElement('input'); fsRange.type = 'range'; fsRange.className = 'ofp-range';
-  fsRange.min = 8; fsRange.max = 120; fsRange.value = obj.fontSize || 48;
-  const fsVal = document.createElement('span'); fsVal.className = 'ofp-range-val'; fsVal.textContent = fsRange.value + 'px';
+  fsRange.min = 8; fsRange.max = 150; fsRange.value = obj.fontSize || 48;
+  const fsVal = makeEditableVal(fsRange, 'px');
   fsRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); fsVal.textContent = v + 'px';
     obj.set({ fontSize: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1871,7 +1869,7 @@ function buildTextFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -1906,7 +1904,7 @@ function buildTextFormatControls(body, obj) {
   const bwRR = document.createElement('div'); bwRR.className = 'ofp-range-row';
   const bwRange = document.createElement('input'); bwRange.type = 'range'; bwRange.className = 'ofp-range';
   bwRange.min = 0; bwRange.max = 10; bwRange.value = obj.strokeWidth || 0;
-  const bwVal = document.createElement('span'); bwVal.className = 'ofp-range-val'; bwVal.textContent = bwRange.value;
+  const bwVal = makeEditableVal(bwRange, '');
   bwRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); bwVal.textContent = v;
     const update = { strokeWidth: v };
@@ -1934,6 +1932,7 @@ function buildTextFormatControls(body, obj) {
   shadowRow.appendChild(shadowCb); shadowRow.appendChild(shadowLabel);
   body.appendChild(shadowRow);
 
+  buildRotationControls(body, obj);
   appendPresetSaveBtn(body, 'text', () => capturePresetFromObj(obj));
 }
 
@@ -1967,23 +1966,24 @@ function buildBadgeFormatControls(body, obj) {
 
   // Position setter
   const contRow = makeRow(t('ofpSequence'));
+  const stepperWrap = document.createElement('div');
+  stepperWrap.className = 'ofp-stepper';
+  const btnDec = document.createElement('button'); btnDec.type = 'button'; btnDec.textContent = '−';
   const posInput = document.createElement('input');
-  posInput.type = 'number';
-  posInput.min = '1';
-  posInput.value = String(obj._badgeValue ?? 1);
-  posInput.style.cssText = 'width:100%;margin-top:4px;padding:4px 8px;font-size:12px;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);border-radius:4px;color:rgba(255,255,255,0.85);font-family:inherit;outline:none;appearance:textfield;-moz-appearance:textfield';
-  posInput.addEventListener('change', () => {
-    const newVal = parseInt(posInput.value);
+  posInput.type = 'number'; posInput.min = '1'; posInput.value = String(obj._badgeValue ?? 1);
+  const btnInc = document.createElement('button'); btnInc.type = 'button'; btnInc.textContent = '+';
+  const applyBadgeVal = (newVal) => {
     if (!isNaN(newVal) && newVal >= 1) {
       const applied = setBadgePosition(obj, newVal);
       posInput.value = String(applied);
-      saveUndo();
-      scheduleAnnotationSave();
-    } else {
-      posInput.value = String(obj._badgeValue ?? 1);
-    }
-  });
-  contRow.appendChild(posInput);
+      saveUndo(); scheduleAnnotationSave();
+    } else { posInput.value = String(obj._badgeValue ?? 1); }
+  };
+  posInput.addEventListener('change', () => applyBadgeVal(parseInt(posInput.value)));
+  btnDec.addEventListener('click', () => applyBadgeVal(Math.max(1, parseInt(posInput.value || 1) - 1)));
+  btnInc.addEventListener('click', () => applyBadgeVal(parseInt(posInput.value || 1) + 1));
+  stepperWrap.appendChild(btnDec); stepperWrap.appendChild(posInput); stepperWrap.appendChild(btnInc);
+  contRow.appendChild(stepperWrap);
   body.appendChild(contRow);
 
   // Fill color
@@ -2015,7 +2015,6 @@ function buildBadgeFormatControls(body, obj) {
   // Style: filled / outline
   const styleRow = makeRow(t('ofpStyle'));
   const styleGroup = document.createElement('div'); styleGroup.className = 'ofp-btn-group';
-  styleGroup.style.marginTop = '4px';
   const isOutline = obj._shapeRef?.fill === 'transparent';
   const btnFilled  = document.createElement('button'); btnFilled.textContent  = t('ofpFilled');
   const btnOutline = document.createElement('button'); btnOutline.textContent = t('ofpOutline');
@@ -2065,7 +2064,7 @@ function buildBadgeFormatControls(body, obj) {
   // Font
   const fontRow = makeRow(t('ofpFont'));
   const fontSel = document.createElement('select');
-  fontSel.style.cssText = 'width:100%;background:#1a1a2e;color:#fff;border:1px solid rgba(255,255,255,0.12);border-radius:4px;padding:4px 6px;font-size:11px;margin-top:4px;cursor:pointer';
+  fontSel.className = 'ofp-select';
   [['Arial, sans-serif','Arial'], ['Georgia, serif','Georgia'], ['Courier New, monospace','Courier New'], ['Verdana, sans-serif','Verdana'], ['Impact, sans-serif','Impact']].forEach(([val, lbl]) => {
     const opt = document.createElement('option');
     opt.value = val; opt.textContent = lbl;
@@ -2083,7 +2082,7 @@ function buildBadgeFormatControls(body, obj) {
   const opRR = document.createElement('div'); opRR.className = 'ofp-range-row';
   const opRange = document.createElement('input'); opRange.type = 'range'; opRange.className = 'ofp-range';
   opRange.min = 10; opRange.max = 100; opRange.value = Math.round((obj.opacity ?? 1) * 100);
-  const opVal = document.createElement('span'); opVal.className = 'ofp-range-val'; opVal.textContent = opRange.value + '%';
+  const opVal = makeEditableVal(opRange, '%');
   opRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); opVal.textContent = v + '%';
     obj.set({ opacity: v / 100 }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -2122,6 +2121,7 @@ function buildBadgeFormatControls(body, obj) {
   descRow.appendChild(descArea);
   body.appendChild(descRow);
 
+  buildRotationControls(body, obj);
   appendPresetSaveBtn(body, 'badge', () => capturePresetFromObj(obj));
 }
 
@@ -2161,7 +2161,7 @@ function buildRectFormatControls(body, obj) {
   const strokeRange = document.createElement('input');
   strokeRange.type = 'range'; strokeRange.className = 'ofp-range';
   strokeRange.min = 0; strokeRange.max = 20; strokeRange.value = obj.strokeWidth || 0;
-  const strokeVal = document.createElement('span'); strokeVal.className = 'ofp-range-val'; strokeVal.textContent = strokeRange.value;
+  const strokeVal = makeEditableVal(strokeRange, '');
   strokeRange.addEventListener('input', (e) => {
     const v = parseInt(e.target.value); strokeVal.textContent = v;
     obj.set({ strokeWidth: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -2194,7 +2194,7 @@ function buildRectFormatControls(body, obj) {
   const rxRange = document.createElement('input');
   rxRange.type = 'range'; rxRange.className = 'ofp-range';
   rxRange.min = 0; rxRange.max = 40; rxRange.value = obj.rx || 0;
-  const rxVal = document.createElement('span'); rxVal.className = 'ofp-range-val'; rxVal.textContent = rxRange.value;
+  const rxVal = makeEditableVal(rxRange, '');
   rxRange.addEventListener('input', (e) => {
     const v = parseInt(e.target.value); rxVal.textContent = v;
     obj.set({ rx: v, ry: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -2202,6 +2202,8 @@ function buildRectFormatControls(body, obj) {
   rxRange.addEventListener('change', () => saveUndo());
   rxRR.appendChild(rxRange); rxRR.appendChild(rxVal);
   rxRow.appendChild(rxRR); body.appendChild(rxRow);
+
+  buildRotationControls(body, obj);
 
   // Blur outside
   const blurRow = document.createElement('label'); blurRow.className = 'ofp-checkbox-row';
@@ -2211,7 +2213,7 @@ function buildRectFormatControls(body, obj) {
   const blurAmountLabel = document.createElement('span'); blurAmountLabel.className = 'ofp-label'; blurAmountLabel.textContent = t('ofpBlurAmount');
   const blurAmountRR = document.createElement('div'); blurAmountRR.className = 'ofp-range-row';
   const blurAmountRange = document.createElement('input'); blurAmountRange.type = 'range'; blurAmountRange.min = 2; blurAmountRange.max = 40; blurAmountRange.step = 1; blurAmountRange.value = obj.blurAmount ?? 14; blurAmountRange.className = 'ofp-range';
-  const blurAmountVal = document.createElement('span'); blurAmountVal.className = 'ofp-range-val'; blurAmountVal.textContent = blurAmountRange.value;
+  const blurAmountVal = makeEditableVal(blurAmountRange, '');
   blurAmountRange.addEventListener('input', () => {
     blurAmountVal.textContent = blurAmountRange.value;
     obj.blurAmount = Number(blurAmountRange.value);
@@ -2267,7 +2269,7 @@ function buildEllipseFormatControls(body, obj) {
   const strokeRR = document.createElement('div'); strokeRR.className = 'ofp-range-row';
   const strokeRange = document.createElement('input'); strokeRange.type = 'range'; strokeRange.className = 'ofp-range';
   strokeRange.min = 0; strokeRange.max = 20; strokeRange.value = obj.strokeWidth || 0;
-  const strokeVal = document.createElement('span'); strokeVal.className = 'ofp-range-val'; strokeVal.textContent = strokeRange.value;
+  const strokeVal = makeEditableVal(strokeRange, '');
   strokeRange.addEventListener('input', e => {
     const v = parseInt(e.target.value); strokeVal.textContent = v;
     obj.set({ strokeWidth: v }); obj.canvas?.renderAll(); scheduleAnnotationSave();
@@ -2294,6 +2296,8 @@ function buildEllipseFormatControls(body, obj) {
   });
   btRow.appendChild(btGroup); body.appendChild(btRow);
 
+  buildRotationControls(body, obj);
+
   // Blur outside
   const blurRow = document.createElement('label'); blurRow.className = 'ofp-checkbox-row';
   const blurCb = document.createElement('input'); blurCb.type = 'checkbox'; blurCb.checked = !!obj.blurOutside;
@@ -2302,7 +2306,7 @@ function buildEllipseFormatControls(body, obj) {
   const blurAmountLabel = document.createElement('span'); blurAmountLabel.className = 'ofp-label'; blurAmountLabel.textContent = t('ofpBlurAmount');
   const blurAmountRR = document.createElement('div'); blurAmountRR.className = 'ofp-range-row';
   const blurAmountRange = document.createElement('input'); blurAmountRange.type = 'range'; blurAmountRange.min = 2; blurAmountRange.max = 40; blurAmountRange.step = 1; blurAmountRange.value = obj.blurAmount ?? 14; blurAmountRange.className = 'ofp-range';
-  const blurAmountVal = document.createElement('span'); blurAmountVal.className = 'ofp-range-val'; blurAmountVal.textContent = blurAmountRange.value;
+  const blurAmountVal = makeEditableVal(blurAmountRange, '');
   blurAmountRange.addEventListener('input', () => {
     blurAmountVal.textContent = blurAmountRange.value;
     obj.blurAmount = Number(blurAmountRange.value);
@@ -2461,6 +2465,82 @@ function scheduleBlurUpdate(obj) {
   if (!obj?.blurOutside) return;
   clearTimeout(blurUpdateTimer);
   blurUpdateTimer = setTimeout(rebuildGlobalBlurOverlay, 30);
+}
+
+function buildRotationControls(body, obj) {
+  const divider = document.createElement('div');
+  divider.style.cssText = 'height:1px;background:rgba(255,255,255,0.07);margin:8px 0 6px';
+  body.appendChild(divider);
+
+  const row = makeRow(t('ofpRotation'));
+
+  const rr = document.createElement('div'); rr.className = 'ofp-range-row';
+  const range = document.createElement('input'); range.type = 'range'; range.className = 'ofp-range';
+  range.min = 0; range.max = 359; range.step = 1;
+  range.setAttribute('list', 'rotation-ticks');
+
+  // Datalist for tick marks at 0, 90, 180, 270
+  let dl = document.getElementById('rotation-ticks');
+  if (!dl) {
+    dl = document.createElement('datalist'); dl.id = 'rotation-ticks';
+    [0, 90, 180, 270].forEach(v => { const o = document.createElement('option'); o.value = v; dl.appendChild(o); });
+    document.body.appendChild(dl);
+  }
+
+  const currentAngle = Math.round(((obj.angle % 360) + 360) % 360);
+  range.value = currentAngle;
+
+  const valInput = document.createElement('input');
+  valInput.type = 'text'; valInput.className = 'ofp-range-val';
+  valInput.value = currentAngle + '°';
+
+  const apply = (v) => {
+    v = Math.min(359, Math.max(0, Math.round(v)));
+    range.value = v; valInput.value = v + '°';
+    const center = obj.getCenterPoint();
+    obj.set({ angle: v });
+    obj.setPositionByOrigin(center, 'center', 'center');
+    obj.setCoords(); obj.canvas?.renderAll();
+    scheduleAnnotationSave();
+  };
+
+  range.addEventListener('input', () => apply(parseInt(range.value)));
+  range.addEventListener('change', () => saveUndo());
+
+  valInput.addEventListener('focus', () => { valInput.value = range.value; valInput.select(); });
+  valInput.addEventListener('blur', () => {
+    let v = parseInt(valInput.value, 10);
+    apply(isNaN(v) ? parseInt(range.value) : v);
+  });
+  valInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); valInput.blur(); }
+    if (e.key === 'Escape') { valInput.value = range.value + '°'; valInput.blur(); }
+  });
+
+  rr.append(range, valInput);
+  row.appendChild(rr);
+  body.appendChild(row);
+}
+
+function makeEditableVal(rangeEl, suffix = '') {
+  const el = document.createElement('input');
+  el.type = 'text'; el.className = 'ofp-range-val';
+  el.value = rangeEl.value + suffix;
+  rangeEl.addEventListener('input', () => { el.value = rangeEl.value + suffix; });
+  el.addEventListener('focus', () => { el.value = rangeEl.value; el.select(); });
+  el.addEventListener('blur', () => {
+    let v = parseFloat(el.value);
+    if (isNaN(v)) v = parseFloat(rangeEl.value);
+    v = Math.min(parseFloat(rangeEl.max), Math.max(parseFloat(rangeEl.min), Math.round(v)));
+    rangeEl.value = v;
+    rangeEl.dispatchEvent(new Event('input', { bubbles: true }));
+    el.value = v + suffix;
+  });
+  el.addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); el.blur(); }
+    if (e.key === 'Escape') { el.value = rangeEl.value + suffix; el.blur(); }
+  });
+  return el;
 }
 
 function makeRow(labelText) {
@@ -2668,6 +2748,8 @@ function showTagDropdown(anchorEl, historyId, currentTag) {
   const rebuildList = () => {
     dropdown.innerHTML = '';
     if (allTags.length) {
+      const list = document.createElement('div');
+      list.className = 'tag-dropdown-list';
       allTags.forEach(tag => {
         const row = document.createElement('div');
         row.className = 'tag-dropdown-item' + (tag === currentTag ? ' selected' : '');
@@ -2676,7 +2758,7 @@ function showTagDropdown(anchorEl, historyId, currentTag) {
         const name = document.createElement('span'); name.className = 'tag-dropdown-name';
         name.textContent = tag;
         const del = document.createElement('span'); del.className = 'tag-dropdown-del';
-        del.textContent = '×'; del.title = 'Tag löschen';
+        del.textContent = '×'; del.title = t('deleteTag');
         del.addEventListener('click', async (e) => {
           e.stopPropagation();
           await deleteGlobalTag(tag);
@@ -2688,14 +2770,15 @@ function showTagDropdown(anchorEl, historyId, currentTag) {
           await setScreenshotTag(historyId, newTag);
           dropdown.remove(); activeTagDropdown = null;
         });
-        dropdown.appendChild(row);
+        list.appendChild(row);
       });
+      dropdown.appendChild(list);
       const divider = document.createElement('div'); divider.className = 'tag-dropdown-divider';
       dropdown.appendChild(divider);
     }
     const input = document.createElement('input');
     input.type = 'text'; input.className = 'tag-dropdown-input';
-    input.placeholder = t('tagNewPlaceholder'); input.maxLength = 22;
+    input.placeholder = t('tagNewPlaceholder'); input.maxLength = 12;
     input.addEventListener('keydown', async (e) => {
       if (e.key === 'Enter') {
         e.preventDefault();
@@ -2834,12 +2917,11 @@ async function renderHistory(items) {
       const currentTag = (item.tags || [])[0] || null;
 
       if (currentTag) {
-        const chip = document.createElement('span');
+        const chip = document.createElement('button');
         chip.className = 'history-tag-chip';
-        chip.title = 'Tag ändern';
-        const label = document.createElement('span');
-        label.textContent = currentTag;
-        const x = document.createElement('button');
+        chip.title = t('changeTag');
+        chip.appendChild(document.createTextNode(currentTag));
+        const x = document.createElement('span');
         x.className = 'tag-chip-x';
         x.textContent = '✕';
         x.addEventListener('click', async (e) => { e.stopPropagation(); await setScreenshotTag(item.id, null); });
@@ -2849,12 +2931,12 @@ async function renderHistory(items) {
           if (!isPremium) { showUpgradeModal(); return; }
           showTagDropdown(chip, item.id, currentTag);
         });
-        chip.append(label, x);
+        chip.appendChild(x);
         tagsArea.appendChild(chip);
       } else {
         const addTagBtn = document.createElement('button');
         addTagBtn.className = 'history-tag-add-btn';
-        addTagBtn.textContent = '＋ Tag hinzufügen';
+        addTagBtn.textContent = t('addTag');
         addTagBtn.addEventListener('click', (e) => {
           e.stopPropagation();
           if (!isPremium) { showUpgradeModal(); return; }
@@ -2880,7 +2962,7 @@ async function renderHistory(items) {
     if (item.isFullPage) {
       const badge = document.createElement('div');
       badge.className = 'history-fullpage-badge';
-      badge.title = 'Full-page screenshot';
+      badge.title = t('fullPageBadge');
       badge.innerHTML = `<svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="1" width="9" height="14" rx="1.5"/><line x1="6" y1="4.5" x2="10" y2="4.5"/><line x1="6" y1="7" x2="10" y2="7"/><line x1="6" y1="9.5" x2="10" y2="9.5"/><line x1="6" y1="12" x2="8.5" y2="12"/></svg>`;
       wrapper.appendChild(badge);
     }
@@ -3205,7 +3287,7 @@ function generateGuideHTML(pngDataUrl, badges, beaconHint, stepWord, frameSettin
     <div class="step-item">
       <div class="step-badge" style="background:${b.bg};color:${b.fg}">${escHtml(b.label)}</div>
       <div class="step-text">${escHtml(b.desc)}</div>
-      <button class="step-goto" data-badge="${b.type}_${escHtml(b.label)}" title="Show in image">↑</button>
+      <button class="step-goto" data-badge="${b.type}_${escHtml(b.label)}" title="${t('showInImage')}">↑</button>
     </div>`).join('');
 
   const singleTitle = numericSteps.length > 0 ? '1 · 2 · 3' : 'A · B · C';
@@ -3836,11 +3918,46 @@ function buildUrlFramePanel() {
 
   const urlLbl = document.createElement('div');
   urlLbl.className = 'tool-options-label';
-  urlLbl.style.cssText = 'margin-top:6px;margin-bottom:2px';
-  urlLbl.textContent = 'URL';
-  const urlEl = document.createElement('div');
-  urlEl.style.cssText = 'font-size:10px;color:rgba(255,255,255,0.3);padding:2px 0 0;word-break:break-all;line-height:1.4';
-  urlEl.textContent = currentPageUrl || t('noUrlCaptured');
+  urlLbl.style.cssText = 'margin-top:6px;margin-bottom:2px;display:flex;align-items:center;justify-content:space-between';
+  const urlLblText = document.createElement('span');
+  urlLblText.textContent = 'URL';
+  const urlActions = document.createElement('div');
+  urlActions.style.cssText = 'display:flex;gap:4px';
+
+  if (currentPageUrl) {
+    const copyBtn = document.createElement('button');
+    copyBtn.title = t('copyUrl') || 'URL kopieren';
+    copyBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);padding:0 2px;display:flex;align-items:center;transition:color 0.15s';
+    copyBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="5" width="9" height="9" rx="1.5"/><path d="M3 11H2.5A1.5 1.5 0 0 1 1 9.5v-7A1.5 1.5 0 0 1 2.5 1h7A1.5 1.5 0 0 1 11 2.5V3"/></svg>`;
+    copyBtn.addEventListener('mouseenter', () => copyBtn.style.color = 'rgba(255,255,255,0.8)');
+    copyBtn.addEventListener('mouseleave', () => copyBtn.style.color = 'rgba(255,255,255,0.35)');
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(currentPageUrl).then(() => {
+        copyBtn.style.color = '#5B5BD6';
+        setTimeout(() => copyBtn.style.color = 'rgba(255,255,255,0.35)', 1200);
+      });
+    });
+
+    const openBtn = document.createElement('button');
+    openBtn.title = t('openUrl') || 'In neuem Tab öffnen';
+    openBtn.style.cssText = 'background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.35);padding:0 2px;display:flex;align-items:center;transition:color 0.15s';
+    openBtn.innerHTML = `<svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M7 3H3a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h9a1 1 0 0 0 1-1V9"/><path d="M10 1h5v5"/><line x1="15" y1="1" x2="8" y2="8"/></svg>`;
+    openBtn.addEventListener('mouseenter', () => openBtn.style.color = 'rgba(255,255,255,0.8)');
+    openBtn.addEventListener('mouseleave', () => openBtn.style.color = 'rgba(255,255,255,0.35)');
+    openBtn.addEventListener('click', () => chrome.tabs.create({ url: currentPageUrl }));
+
+    urlActions.append(copyBtn, openBtn);
+  }
+
+  urlLbl.append(urlLblText, urlActions);
+
+  const urlEl = document.createElement('textarea');
+  urlEl.className = 'badge-desc-textarea';
+  urlEl.readOnly = true;
+  urlEl.rows = 3;
+  urlEl.style.cursor = 'default';
+  urlEl.value = currentPageUrl || '';
+  urlEl.placeholder = t('noUrlCaptured');
 
   [lbl1, sel1, lbl2, sel2, urlLbl, urlEl].forEach(el => body.appendChild(el));
 
@@ -4107,8 +4224,19 @@ function bindUIEvents() {
 
   // History search
   const searchInput = $('history-search');
+  const searchClearBtn = $('btn-search-clear');
   if (searchInput) {
     searchInput.addEventListener('input', async () => {
+      if (searchClearBtn) searchClearBtn.style.display = searchInput.value ? '' : 'none';
+      const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
+      await renderHistory(screenshot_history);
+    });
+  }
+  if (searchClearBtn) {
+    searchClearBtn.addEventListener('click', async () => {
+      searchInput.value = '';
+      searchClearBtn.style.display = 'none';
+      searchInput.focus();
       const { screenshot_history = [] } = await chrome.storage.local.get(['screenshot_history']);
       await renderHistory(screenshot_history);
     });
@@ -4208,6 +4336,46 @@ function bindUIEvents() {
     currentZoom = newZoom;
     syncZoomSelect();
   }, { passive: false });
+
+  // Pan by dragging on the canvas background (outside any object)
+  let _bgPanStart = null;
+  let _savedToolCursor = 'default';
+  fabricCanvas.on('mouse:down', (e) => {
+    if (fabricCanvas.isDrawingMode) return;
+    if (cropState !== null || sliceState !== null) return;
+    if (e.target) return;
+    // Only pan when clicking outside the screenshot bounds
+    const ptr = fabricCanvas.getPointer(e.e);
+    if (ptr.x >= 0 && ptr.x <= origW && ptr.y >= 0 && ptr.y <= origH) return;
+    _bgPanStart = { x: e.e.clientX, y: e.e.clientY, vpt: [...fabricCanvas.viewportTransform] };
+    fabricCanvas.defaultCursor = 'grabbing';
+    fabricCanvas.selection = false;
+  });
+  document.addEventListener('mousemove', (e) => {
+    if (!_bgPanStart) return;
+    const vpt = [..._bgPanStart.vpt];
+    vpt[4] += e.clientX - _bgPanStart.x;
+    vpt[5] += e.clientY - _bgPanStart.y;
+    fabricCanvas.setViewportTransform(vpt);
+  });
+  document.addEventListener('mouseup', () => {
+    if (!_bgPanStart) return;
+    _bgPanStart = null;
+    fabricCanvas.defaultCursor = 'grab';
+    fabricCanvas.selection = true;
+  });
+  fabricCanvas.on('mouse:move', (e) => {
+    if (_bgPanStart) return;
+    if (fabricCanvas.isDrawingMode || cropState !== null || sliceState !== null) return;
+    const ptr = fabricCanvas.getPointer(e.e);
+    const outside = ptr.x < 0 || ptr.x > origW || ptr.y < 0 || ptr.y > origH;
+    if (outside && !e.target) {
+      _savedToolCursor = fabricCanvas.defaultCursor === 'grab' ? _savedToolCursor : fabricCanvas.defaultCursor;
+      fabricCanvas.defaultCursor = 'grab';
+    } else if (!outside || e.target) {
+      if (fabricCanvas.defaultCursor === 'grab') fabricCanvas.defaultCursor = _savedToolCursor;
+    }
+  });
 
   // Resize canvas when canvas-area changes size (window resize, panel toggle, etc.)
   new ResizeObserver(() => {
@@ -4312,6 +4480,7 @@ function bindUIEvents() {
       undoStack = []; undoIndex = -1; updateUndoRedoButtons();
     }
     selectedHistoryIds.clear();
+    updateSelectionUI();
     await renderHistory(filtered);
     if (!filtered.length) showLibraryHint();
   });
@@ -4397,6 +4566,18 @@ function bindUIEvents() {
   });
 
   // Delete key removes selected object
+  fabricCanvas.on('mouse:move', (e) => {
+    if (fabricCanvas._currentTransform?.action === 'rotate') {
+      const snap = !!e.e?.shiftKey;
+      fabricCanvas.snapAngle = snap ? 15 : 0;
+      fabricCanvas.snapThreshold = snap ? 10 : 0;
+    }
+  });
+  fabricCanvas.on('mouse:up', () => {
+    fabricCanvas.snapAngle = 0;
+    fabricCanvas.snapThreshold = 0;
+  });
+
   document.addEventListener('keydown', (e) => {
     const ae = document.activeElement;
     // Allow Delete from range/checkbox/color inputs (format panel controls) but block text inputs
@@ -4462,7 +4643,7 @@ function bindKeyboardShortcuts() {
     if (e.ctrlKey || e.metaKey) {
       if (e.key === 'z') { e.preventDefault(); undo(); return; }
       if (e.key === 'y' || (e.shiftKey && e.key === 'Z')) { e.preventDefault(); redo(); return; }
-      if (e.key === 's' && !e.shiftKey) { e.preventDefault(); setExportName(currentScreenshotName); exportPNG(fabricCanvas).then(() => { if (confettiEnabled) launchConfetti(); }); return; }
+      if (e.key === 's' && !e.shiftKey) { e.preventDefault(); const _pngBtn = $('btn-save-png'); if (_pngBtn && !_pngBtn.disabled && _pngBtn.offsetParent !== null) _pngBtn.click(); return; }
       if (e.key === 'S' && e.shiftKey) {
         e.preventDefault();
         if (!isPremium) { showUpgradeModal(); return; }
@@ -4548,22 +4729,26 @@ function closeUpgradeModal() { $('upgrade-modal').classList.add('hidden'); }
 function showLicenseModal()  { $('license-modal').classList.remove('hidden'); $('license-key-input').focus(); }
 function closeLicenseModal() { $('license-modal').classList.add('hidden'); }
 
+let _suppressReloadForConfetti = false;
+
 async function activateLicense() {
   const key = $('license-key-input').value.trim();
   if (!key) return;
   $('btn-activate').textContent = t('licenseActivating');
   $('btn-activate').disabled = true;
   const { activateLicense: doActivate } = await import('../lib/license.js');
+  // Suppress the storage-change reload listener so confetti can play first
+  _suppressReloadForConfetti = true;
   const result = await doActivate(key);
   $('btn-activate').textContent = t('activateLicense');
   $('btn-activate').disabled = false;
   const msg = $('license-msg');
   msg.classList.remove('hidden', 'success', 'error');
   if (result.success) {
-    msg.classList.add('success');
-    msg.textContent = t('licenseActivatedReload');
-    setTimeout(() => location.reload(), 1500);
+    fireConfetti();
+    setTimeout(() => location.reload(), 2800);
   } else {
+    _suppressReloadForConfetti = false;
     msg.classList.add('error');
     msg.textContent = result.error || t('licenseError');
   }
@@ -4571,60 +4756,79 @@ async function activateLicense() {
 
 // ─── Confetti ─────────────────────────────────────────────────────────────────
 
-function fireConfetti(originEl) {
-  const COLORS = ['#F59E0B','#EF6C00','#FCD34D','#A5B4FC','#ffffff','#6EE7B7'];
-  const COUNT  = 48;
-  const DURATION = 1400;
+function fireConfetti() {
+  const COLORS = ['#5B5BD6','#8B5CF6','#F59E0B','#FBBF24','#EF4444','#F472B6','#10B981','#60A5FA','#ffffff','#FCD34D','#A78BFA','#34D399'];
+  const DURATION = 2600;
+
+  // Render inside the modal box, not across the whole screen
+  const host = document.querySelector('#license-modal .modal') || document.body;
+  const W = host.offsetWidth;
+  const H = host.offsetHeight;
+  const prevPos = window.getComputedStyle(host).position;
+  if (prevPos === 'static') host.style.position = 'relative';
 
   const cvs = document.createElement('canvas');
-  cvs.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:9999';
-  cvs.width  = window.innerWidth;
-  cvs.height = window.innerHeight;
-  document.body.appendChild(cvs);
+  cvs.style.cssText = 'position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999;border-radius:inherit';
+  cvs.width = W; cvs.height = H;
+  host.appendChild(cvs);
   const ctx = cvs.getContext('2d');
 
-  const r = originEl.getBoundingClientRect();
-  const ox = r.left + r.width / 2;
-  const oy = r.top;
+  function makeCannon(ox, oy, count, aMin, aMax) {
+    return Array.from({ length: count }, () => {
+      const a   = (aMin + Math.random() * (aMax - aMin)) * Math.PI / 180;
+      const spd = 4 + Math.random() * 9;
+      const slim = Math.random() < 0.3;
+      return {
+        x: ox + (Math.random() - 0.5) * 10, y: oy,
+        vx: Math.cos(a) * spd, vy: Math.sin(a) * spd,
+        w: slim ? 2 + Math.random() * 2 : 5 + Math.random() * 8,
+        h: slim ? 10 + Math.random() * 16 : 4 + Math.random() * 5,
+        rot: Math.random() * 360, rotV: (Math.random() - 0.5) * 14,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        shape: Math.random() < 0.6 ? 'rect' : 'ellipse',
+        alpha: 1,
+      };
+    });
+  }
 
-  const particles = Array.from({ length: COUNT }, () => {
-    const angle = (Math.random() * 160 - 130) * (Math.PI / 180); // upward arc
-    const speed = 4 + Math.random() * 6;
-    return {
-      x: ox, y: oy,
-      vx: Math.cos(angle) * speed,
-      vy: Math.sin(angle) * speed,
-      w: 6 + Math.random() * 5,
-      h: 3 + Math.random() * 3,
-      rot: Math.random() * 360,
-      rotV: (Math.random() - 0.5) * 8,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      alpha: 1,
-    };
-  });
+  // Two corner cannons angled toward the center of the modal
+  // Angles use canvas coords (y-down): negative = upward, cos/sin determine direction
+  // Left cannon: -95°→-15° sweeps from near-vertical to upper-right
+  // Right cannon: -165°→-85° sweeps from upper-left to near-vertical
+  const particles = [
+    ...makeCannon(W * 0.04, H + 4, 55, -95, -15),
+    ...makeCannon(W * 0.96, H + 4, 55, -165, -85),
+  ];
 
   const start = performance.now();
 
   function frame(now) {
     const elapsed = now - start;
-    const progress = elapsed / DURATION;
-    if (progress >= 1) { cvs.remove(); return; }
-
-    ctx.clearRect(0, 0, cvs.width, cvs.height);
+    if (elapsed > DURATION) {
+      cvs.remove();
+      if (prevPos === 'static') host.style.position = '';
+      return;
+    }
+    ctx.clearRect(0, 0, W, H);
     particles.forEach(p => {
-      p.x  += p.vx;
-      p.y  += p.vy;
-      p.vy += 0.25;          // gravity
-      p.vx *= 0.99;
-      p.rot += p.rotV;
-      p.alpha = Math.max(0, 1 - progress * 1.4);
-
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.32; p.vx *= 0.986;
+      p.rot += p.rotV; p.rotV *= 0.993;
+      const lifeT = elapsed / DURATION;
+      p.alpha = lifeT < 0.6 ? 1 : 1 - (lifeT - 0.6) / 0.4;
+      if (p.alpha <= 0) return;
       ctx.save();
       ctx.globalAlpha = p.alpha;
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot * Math.PI / 180);
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      if (p.shape === 'ellipse') {
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.w / 2, p.h / 3, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      }
       ctx.restore();
     });
     requestAnimationFrame(frame);
@@ -4633,9 +4837,10 @@ function fireConfetti(originEl) {
 }
 
 // Reload when license or language changes externally (e.g. activated/released/switched in popup)
+// Suppressed during in-editor activation so confetti can play first.
 chrome.storage.onChanged.addListener((changes, area) => {
   if (area === 'local' && (changes.license_status || changes.ui_language)) {
-    location.reload();
+    if (!_suppressReloadForConfetti) location.reload();
   }
 });
 

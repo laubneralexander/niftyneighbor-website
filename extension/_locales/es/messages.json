@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Captura de Página Completa y Feedback de Diseño"
   },
   "appDescription": {
-    "message": "Captura páginas web completas con desplazamiento automático, anótalas con herramientas profesionales y exporta como PNG o PDF."
+    "message": "Captura, anota y comparte screenshots como guías interactivas con presets propios e historial inteligente. ¡Herramienta pro #1!"
   },
   "captureVisible": {
     "message": "Capturar área visible"
@@ -123,7 +123,7 @@
     "message": "Desbloquear ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Capturas de página completa ilimitadas. Añade imágenes, marcas de agua y emojis. Exportación PDF, hasta 500 capturas anotadas y presets propios. ¡Un solo pago pequeño, sin suscripción!"
+    "message": "Crea capturas de pantalla completas ilimitadas y guías HTML interactivas en segundos. Con imágenes/marcas de agua, emojis y presets personalizados, gestionas hasta 500 capturas sin esfuerzo.<br><br><strong>Tu ventaja Pro:</strong> Accede en exclusiva a nuestras herramientas de edición premium para un resultado perfecto.<br><br><strong>Lo mejor:</strong> Paga una vez, úsalo para siempre. ¡Sin estrés por suscripciones!"
   },
   "upgradePrice": {
     "message": "€15 — pago único"
@@ -398,6 +398,9 @@
   "ofpBlurStrength": {
     "message": "Intensidad del desenfoque"
   },
+  "ofpRotation": {
+    "message": "Rotación"
+  },
   "ofpStyle": {
     "message": "Estilo"
   },
@@ -595,5 +598,35 @@
   },
   "bulkDeleteConfirmBody": {
     "message": "Esto no se puede deshacer."
+  },
+  "shiftStraightLine": {
+    "message": "Mantén ⇧ Shift mientras dibujas para una línea recta"
+  },
+  "addTag": {
+    "message": "＋ Añadir etiqueta"
+  },
+  "deleteTag": {
+    "message": "Eliminar etiqueta"
+  },
+  "changeTag": {
+    "message": "Cambiar etiqueta"
+  },
+  "fullPageBadge": {
+    "message": "Captura de página completa"
+  },
+  "showInImage": {
+    "message": "Mostrar en imagen"
+  },
+  "copyUrl": {
+    "message": "Copiar URL"
+  },
+  "openUrl": {
+    "message": "Abrir en nueva pestaña"
+  },
+  "selectionHint": {
+    "message": "Dibuja una selección — ESC para cancelar"
+  },
+  "clearSearch": {
+    "message": "Borrar búsqueda"
   }
 }

@@ -171,10 +171,10 @@ function _arrowEndpointCtrl(which) {
     x: 0, y: 0,
     cursorStyle: 'crosshair',
     positionHandler(dim, finalMatrix, obj) {
-      return fabric.util.transformPoint(
-        { x: which === 1 ? obj.x1 : obj.x2, y: which === 1 ? obj.y1 : obj.y2 },
-        finalMatrix
-      );
+      const vpt = obj.canvas.viewportTransform;
+      const canvasX = obj.left + (which === 1 ? obj.x1 : obj.x2);
+      const canvasY = obj.top  + (which === 1 ? obj.y1 : obj.y2);
+      return fabric.util.transformPoint({ x: canvasX, y: canvasY }, vpt);
     },
     actionHandler(eventData, transform) {
       const obj = transform.target;
@@ -967,24 +967,17 @@ function getNextBadgeNum() {
   }
   let max = 0;
   canvas.getObjects().forEach(obj => {
-    if (obj.type !== 'group') return;
-    if (obj._isBadge && obj._badgeValue != null) {
-      const sameType = badgeMode === 'alpha' ? obj._badgeType === 'alpha' : obj._badgeType !== 'alpha';
-      if (sameType) max = Math.max(max, obj._badgeValue);
-    } else if (!obj._isBadge) {
-      obj.getObjects().forEach(child => {
-        if (child.type === 'text' || child.type === 'i-text') {
-          const n = parseInt(child.text);
-          if (!isNaN(n) && n > max) max = n;
-        }
-      });
-    }
+    if (!obj._isBadge || obj._badgeValue == null) return;
+    const sameType = badgeMode === 'alpha' ? obj._badgeType === 'alpha' : obj._badgeType !== 'alpha';
+    if (sameType) max = Math.max(max, obj._badgeValue);
   });
   return max + 1;
 }
 
 function placeBadge(e) {
   const pt = getCanvasPoint(e);
+  const origW = canvas._origW, origH = canvas._origH;
+  if (origW && (pt.x < 0 || pt.x > origW || pt.y < 0 || pt.y > origH)) return;
   const preset = selectedBadgePreset;
   const size = 18;
   const num = getNextBadgeNum();

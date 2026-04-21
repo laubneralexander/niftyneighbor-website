@@ -1,9 +1,8 @@
 (async () => {
-  // Guard: prevent double-injection
   if (window.__stitchSnapCaptureActive) return;
   window.__stitchSnapCaptureActive = true;
 
-  const SCROLL_PAUSE = 600; // ms to wait after each scroll for content to settle
+  const SCROLL_PAUSE = 600;
 
   chrome.runtime.onMessage.addListener((msg, _sender, sendResponse) => {
     if (msg.action === 'startFullPageCapture') {
@@ -16,127 +15,128 @@
     const { fullpage_pixel_limit = 50000 } = await chrome.storage.local.get(['fullpage_pixel_limit']);
     const MAX_HEIGHT = fullpage_pixel_limit;
 
-    const originalScrollX = window.scrollX;
-    const originalScrollY = window.scrollY;
+    const originalScrollY = window.scrollY || document.documentElement.scrollTop || 0;
 
-    // Hide scrollbars during capture (visual only, scroll still works)
+    // Hide scrollbars during capture
     const scrollStyle = document.createElement('style');
     scrollStyle.id = '__screenfellow-noscroll';
     scrollStyle.textContent = '::-webkit-scrollbar{width:0!important;height:0!important}*{scrollbar-width:none!important}';
     document.head.appendChild(scrollStyle);
 
+    // Force instant scroll BEFORE any probe — defeats CSS scroll-behavior:smooth and Lenis
+    const instantScrollStyle = document.createElement('style');
+    instantScrollStyle.id = '__sf-instant-scroll';
+    // Also force overflow-y:auto + height:auto — Lenis/Locomotive set overflow:hidden + height:100%
+    // on <html>/<body> to create a fixed viewport; overriding these lets window.scrollTop work.
+    instantScrollStyle.textContent = 'html,body{scroll-behavior:auto!important;overflow-y:auto!important;height:auto!important}';
+    document.head.appendChild(instantScrollStyle);
+    document.documentElement.style.setProperty('scroll-behavior', 'auto', 'important');
+    document.documentElement.style.setProperty('overflow-y', 'auto', 'important');
+    document.documentElement.style.setProperty('height', 'auto', 'important');
+    document.body.style.setProperty('scroll-behavior', 'auto', 'important');
+    document.body.style.setProperty('overflow-y', 'auto', 'important');
+    document.body.style.setProperty('height', 'auto', 'important');
+
+    // Kill smooth-scroll libraries before we probe
+    killSmoothScrollLibraries();
+    await chrome.runtime.sendMessage({ action: 'killLenisMainWorld' });
+    await pause(120); // let killed libs finish their current RAF frame
+
+    // Suppress requestAnimationFrame to stop smooth-scroll library animation loops.
+    const _origRAF = window.requestAnimationFrame;
+    window.requestAnimationFrame = (_cb) => _origRAF(() => {});
+
     const { height: headerHeight, elements: headerEls } = detectStickyHeader();
 
-    window.scrollTo(0, 0);
-    await pause(200);
+    nativeScrollTo(0);
+    await pause(250);
 
-    const viewportWidth = window.innerWidth;
-    const viewportHeight = window.innerHeight;
+    // Detect whether window scrolls or a custom container is used
+    const scrollEl = detectScrollContainer();
+    const doScrollTo  = (y) => { if (scrollEl) scrollEl.scrollTop = y; else nativeScrollTo(y); };
+    const getScrollY  = ()  => scrollEl ? scrollEl.scrollTop : getNativeScrollY();
+    const getDocH     = ()  => scrollEl ? scrollEl.scrollHeight : getDocumentHeight();
+
+    const viewportWidth  = window.innerWidth;
+    const viewportHeight = scrollEl ? scrollEl.clientHeight : window.innerHeight;
     const devicePixelRatio = window.devicePixelRatio || 1;
 
-    // Pre-scroll pass: trigger lazy-loaded images without capturing.
-    // Uses the initial doc height as ceiling so infinite-scroll is never triggered.
     chrome.storage.local.set({ _sfProgress: { stage: 'analyzing', pct: 5 } });
-    const initialDocHeight = Math.min(getDocumentHeight(), MAX_HEIGHT);
-    await preScrollForLazyLoad(initialDocHeight);
-    window.scrollTo(0, 0);
-    // Wait for any lazy-loaded content to finish expanding before we lock in the document height
-    await waitForDocumentStable();
+    const initialDocHeight = Math.min(getDocH(), MAX_HEIGHT);
+    await preScrollForLazyLoad(initialDocHeight, doScrollTo, viewportHeight);
+    doScrollTo(0);
+    await waitForDocumentStable(getDocH);
     await pause(200);
 
-    // Freeze JS scroll animations (GSAP, Lenis, etc.) and CSS transitions
     freezeScrollAnimations();
 
-    // Hide non-header fixed/sticky elements so they don't appear in every stitched frame.
-    // The sticky header itself is already handled via headerHeight cropping.
     const hiddenElements = hideNonHeaderFixedElements(headerEls);
     const parallaxElements = fixParallaxBackgrounds();
 
     const screenshots = [];
     let totalCapturedHeight = 0;
     let wasTruncated = false;
-    let lastDocumentHeight = getDocumentHeight();
+    let lastDocumentHeight = getDocH();
     const estimatedFrames = Math.max(1, Math.ceil(Math.min(lastDocumentHeight, MAX_HEIGHT) / viewportHeight));
     chrome.storage.local.set({ _sfProgress: { stage: 'capturing', pct: 25 } });
 
-    // Track the scroll position at the time of the previous capture so we know exactly
-    // how many pixels were actually scrolled — critical for the last frame where the browser
-    // can't scroll as far as requested (clamped at documentHeight - viewportHeight).
+    // Install scrollTop interceptor in the page's main world and lock at 0.
+    // This blocks smooth-scroll libraries (Lenis etc.) from resetting scroll
+    // during capture — even when the instance is in a module-scoped closure.
+    await chrome.runtime.sendMessage({ action: 'setupScrollLock' });
+    await chrome.runtime.sendMessage({ action: 'scrollToLocked', y: 0 });
+    await pause(200);
+
     let prevCaptureScrollTop = 0;
 
     while (true) {
-      const scrollTop = window.scrollY;
+      const scrollTop = getScrollY();
 
-      // Re-hide anything that just became position:fixed due to JS scroll animations
-      // (e.g. GSAP ScrollTrigger pins elements as you scroll to their trigger point)
       const newlyFixed = hideNewlyPinnedElements(hiddenElements, headerEls);
       hiddenElements.push(...newlyFixed);
 
-      // Capture current viewport
       const response = await chrome.runtime.sendMessage({ action: 'captureVisibleForStitch' });
       if (!response || !response.dataUrl) break;
 
       const isFirstFrame = screenshots.length === 0;
-
       let frameHeaderHeight, newContentHeight;
       if (isFirstFrame) {
         frameHeaderHeight = 0;
         newContentHeight = Math.min(viewportHeight, lastDocumentHeight);
       } else {
-        // Use the ACTUAL scroll distance, not the intended step.
-        // On the last frame the browser clamps scrollY to (docHeight - viewport), so
-        // actualScrolled can be much less than (viewportHeight - headerHeight).
-        // Using the assumed step instead would re-copy already-captured content.
         const actualScrolled = scrollTop - prevCaptureScrollTop;
-        // Start reading the screenshot from the bottom of the already-captured region.
-        // Always skip at least the persistent sticky header.
         frameHeaderHeight = Math.max(headerHeight, viewportHeight - actualScrolled);
         newContentHeight = Math.max(0, viewportHeight - frameHeaderHeight);
       }
       prevCaptureScrollTop = scrollTop;
 
-      if (newContentHeight <= 0) break; // nothing new to add
+      if (newContentHeight <= 0) break;
 
-      screenshots.push({
-        dataUrl: response.dataUrl,
-        scrollTop,
-        viewportHeight,
-        captureHeight: newContentHeight,
-        headerHeight: frameHeaderHeight,
-        devicePixelRatio
-      });
-
+      screenshots.push({ dataUrl: response.dataUrl, scrollTop, viewportHeight, captureHeight: newContentHeight, headerHeight: frameHeaderHeight, devicePixelRatio });
       totalCapturedHeight += newContentHeight;
+
       const capturePct = Math.min(85, Math.round(25 + (screenshots.length / estimatedFrames) * 60));
       chrome.storage.local.set({ _sfProgress: { stage: 'capturing', pct: capturePct } });
 
-      if (totalCapturedHeight >= MAX_HEIGHT) {
-        wasTruncated = true;
-        break;
-      }
-
-      // Check if we've reached the bottom
+      if (totalCapturedHeight >= MAX_HEIGHT) { wasTruncated = true; break; }
       if (scrollTop + viewportHeight >= lastDocumentHeight) break;
 
-      // Scroll down by one viewport minus the sticky header
       const nextScroll = scrollTop + viewportHeight - headerHeight;
-      window.scrollTo(0, nextScroll);
+      await chrome.runtime.sendMessage({ action: 'scrollToLocked', y: nextScroll });
       await pause(SCROLL_PAUSE);
 
-      // Guard: if scroll didn't move (clamped at bottom), stop
-      if (window.scrollY === scrollTop) break;
+      const afterScrollY = getScrollY();
+      console.log('[SF capture] scrollTop was', scrollTop, '→ requested', nextScroll, '→ now', afterScrollY);
 
-      // Infinite-scroll guard: distinguish lazy-loaded content (one-time growth) from
-      // true infinite scroll (keeps growing on every step).
-      // After the initial SCROLL_PAUSE, lazy content may still be loading — so if the
-      // document grew we wait another beat and check again. Only bail if it's STILL
-      // growing (second check also shows increase), which means a feed is appending.
-      let newDocHeight = getDocumentHeight();
+      // Guard: scroll didn't advance — true page bottom (browser clamped)
+      if (afterScrollY <= scrollTop + 1) { console.log('[SF capture] GUARD FIRED — scroll did not advance'); break; }
+
+      let newDocHeight = getDocH();
       if (newDocHeight > lastDocumentHeight + 300) {
         await pause(600);
-        const confirmedHeight = getDocumentHeight();
+        const confirmedHeight = getDocH();
         if (confirmedHeight > newDocHeight + 200) {
-          console.warn('ScreenFellow: infinite scroll detected, stopping capture.');
+          console.warn('ScreenFellow: infinite scroll detected, stopping.');
           break;
         }
         newDocHeight = confirmedHeight;
@@ -144,14 +144,23 @@
       lastDocumentHeight = newDocHeight;
     }
 
-    // Restore everything
+    window.requestAnimationFrame = _origRAF;
+    await chrome.runtime.sendMessage({ action: 'teardownScrollLock' });
+    chrome.runtime.sendMessage({ action: 'restoreLenisMainWorld' });
     restoreHiddenElements(hiddenElements);
     restoreParallaxBackgrounds(parallaxElements);
     restoreScrollAnimations();
     document.getElementById('__screenfellow-noscroll')?.remove();
-    window.scrollTo(originalScrollX, originalScrollY);
+    document.getElementById('__sf-instant-scroll')?.remove();
+    // Remove the forced overflow/height/scroll-behavior inline styles
+    ['overflow-y', 'height', 'scroll-behavior'].forEach(p => {
+      document.documentElement.style.removeProperty(p);
+      document.body.style.removeProperty(p);
+    });
 
-    // Stitch and send result to background
+    if (scrollEl) scrollEl.scrollTop = originalScrollY;
+    else nativeScrollTo(originalScrollY);
+
     chrome.storage.local.set({ _sfProgress: { stage: 'stitching', pct: 90 } });
     const stitchedDataUrl = await stitchScreenshots(screenshots, viewportWidth * devicePixelRatio, devicePixelRatio, MAX_HEIGHT);
 
@@ -166,30 +175,104 @@
     });
   }
 
-  function freezeScrollAnimations() {
-    // Pause CSS animations and transitions so nothing moves during capture
-    const style = document.createElement('style');
-    style.id = '__sf-anim-freeze';
-    style.textContent = '*,*::before,*::after{animation-play-state:paused!important;transition-duration:0s!important;transition-delay:0s!important}';
-    document.head.appendChild(style);
+  // ── Scroll helpers ──────────────────────────────────────────────────────────
 
-    // Kill GSAP ScrollTrigger instances (covers both global and gsap-namespaced access)
+  function nativeScrollTo(y) {
+    // Use behavior:'instant' to bypass CSS scroll-behavior:smooth
+    try { window.scrollTo({ top: y, left: 0, behavior: 'instant' }); } catch (_) {}
+    // Fallback: direct property assignment also bypasses smooth scroll
+    try { document.documentElement.scrollTop = y; } catch (_) {}
+    try { document.body.scrollTop = y; } catch (_) {}
+  }
+
+  function getNativeScrollY() {
+    return window.scrollY
+      || document.documentElement.scrollTop
+      || document.body.scrollTop
+      || 0;
+  }
+
+  // Probe whether window scrolls natively. If not, find the real scroll container.
+  function detectScrollContainer() {
+    // Already scrolled → window works
+    if (getNativeScrollY() > 0) return null;
+
+    // Probe with instant scroll (avoids false-negative from smooth-scroll animations)
+    nativeScrollTo(2);
+    const moved = getNativeScrollY() >= 1;
+    nativeScrollTo(0);
+    if (moved) return null;
+
+    // Window doesn't scroll — check html/body first, then all descendants
+    const candidates = [
+      document.documentElement,
+      document.body,
+      ...Array.from(document.querySelectorAll('body *')),
+    ];
+    let best = null;
+    for (const el of candidates) {
+      if (el.scrollHeight <= el.clientHeight + 50) continue;
+      const oy = window.getComputedStyle(el).overflowY;
+      if (oy !== 'auto' && oy !== 'scroll') continue;
+      if (!best || el.scrollHeight > best.scrollHeight) best = el;
+    }
+    return best;
+  }
+
+  // ── Smooth-scroll library killers ───────────────────────────────────────────
+
+  function killSmoothScrollLibraries() {
+    // Named references
+    ['lenis', '__lenis', 'lenisScroll', 'locomotive', 'locoScroll', 'smoothScroll'].forEach(k => {
+      try { if (window[k]?.stop) window[k].stop(); } catch (_) {}
+      try { if (window[k]?.destroy) window[k].destroy(); } catch (_) {}
+    });
+
+    // Scan window for Lenis-like objects (has stop() + scroll-related state)
+    try {
+      for (const key of Object.getOwnPropertyNames(window)) {
+        if (key.length < 2) continue;
+        const v = window[key];
+        if (!v || typeof v !== 'object' || Array.isArray(v)) continue;
+        if (typeof v.stop !== 'function') continue;
+        if ('targetScroll' in v || 'animatedScroll' in v || 'velocity' in v || 'lerp' in v) {
+          try { v.stop(); } catch (_) {}
+          try { v.destroy(); } catch (_) {}
+        }
+      }
+    } catch (_) {}
+
+    // GSAP ScrollTrigger
     try {
       const ST = window.ScrollTrigger || window.gsap?.ScrollTrigger;
       if (ST) ST.getAll().forEach(t => t.kill());
       window.gsap?.globalTimeline?.pause();
     } catch (_) {}
+  }
 
-    // Stop Lenis smooth-scroll
-    try { window.lenis?.stop(); } catch (_) {}
+  // ── Animation freeze / restore ──────────────────────────────────────────────
 
-    // Stop Locomotive Scroll
-    try { window.locomotive?.stop(); } catch (_) {}
+  function freezeScrollAnimations() {
+    const style = document.createElement('style');
+    style.id = '__sf-anim-freeze';
+    style.textContent = [
+      '*,*::before,*::after{',
+      '  animation-play-state:paused!important;',
+      '  transition-duration:0s!important;',
+      '  transition-delay:0s!important;',
+      '  scroll-behavior:auto!important;',
+      '}',
+    ].join('');
+    document.head.appendChild(style);
+
+    killSmoothScrollLibraries();
   }
 
   function restoreScrollAnimations() {
     document.getElementById('__sf-anim-freeze')?.remove();
   }
+
+  // ── Fixed/sticky element handling ───────────────────────────────────────────
 
   function fixParallaxBackgrounds() {
     const restored = [];
@@ -205,7 +288,6 @@
     restored.forEach(({ el, attachment }) => { el.style.backgroundAttachment = attachment; });
   }
 
-  // Only hide fixed/sticky elements that are NOT part of the real header recorded at scrollY=0.
   function hideNonHeaderFixedElements(headerEls) {
     const hidden = [];
     document.querySelectorAll('*').forEach(el => {
@@ -222,15 +304,11 @@
     hidden.forEach(({ el, vis }) => { el.style.visibility = vis; });
   }
 
-  // Re-check after each scroll step: hide anything newly pinned that is not the real header.
-  // Using the recorded headerEls set avoids false-positives where a content section becomes
-  // sticky at top:0 mid-scroll (same position as the nav bar) and gets mistaken for a header.
   function hideNewlyPinnedElements(alreadyHidden, headerEls) {
     const known = new Set(alreadyHidden.map(h => h.el));
     const newlyHidden = [];
     document.querySelectorAll('*').forEach(el => {
-      if (known.has(el)) return;
-      if (headerEls.has(el)) return;
+      if (known.has(el) || headerEls.has(el)) return;
       const pos = window.getComputedStyle(el).position;
       if (pos !== 'fixed' && pos !== 'sticky') return;
       newlyHidden.push({ el, vis: el.style.visibility });
@@ -239,40 +317,36 @@
     return newlyHidden;
   }
 
-  async function preScrollForLazyLoad(maxHeight) {
-    const viewH = window.innerHeight;
+  async function preScrollForLazyLoad(maxHeight, doScrollTo, viewH) {
     let pos = viewH;
     while (pos < maxHeight) {
-      window.scrollTo(0, pos);
+      doScrollTo(pos);
       await pause(150);
       pos += viewH;
     }
   }
 
-  // Poll until document height stops changing, so lazy-loaded content settles before capture.
-  async function waitForDocumentStable(maxWaitMs = 2000, pollMs = 200) {
+  async function waitForDocumentStable(getHeight, maxWaitMs = 2000, pollMs = 200) {
     const deadline = Date.now() + maxWaitMs;
-    let prev = getDocumentHeight();
+    let prev = getHeight();
     while (Date.now() < deadline) {
       await pause(pollMs);
-      const h = getDocumentHeight();
+      const h = getHeight();
       if (h === prev) return;
       prev = h;
     }
   }
 
-  // Called once at scrollY=0 to record which elements ARE the real persistent header.
-  // Returns both the header crop height and the exact element set, so later checks
-  // can use identity rather than positional heuristics — preventing content sections
-  // that become sticky at top:0 mid-scroll from being mistaken for the nav header.
   function detectStickyHeader() {
     const elements = new Set();
     let maxHeight = 0;
+    const viewH = window.innerHeight;
     for (const el of document.querySelectorAll('*')) {
       const pos = window.getComputedStyle(el).position;
       if (pos !== 'fixed' && pos !== 'sticky') continue;
       const rect = el.getBoundingClientRect();
-      if (rect.top <= 5 && rect.height > 0 && rect.width > window.innerWidth * 0.3) {
+      // Ignore elements taller than half the viewport — those are content sections or overlays, not headers
+      if (rect.top <= 5 && rect.height > 0 && rect.height < viewH * 0.5 && rect.width > window.innerWidth * 0.3) {
         maxHeight = Math.max(maxHeight, rect.bottom);
         elements.add(el);
       }
@@ -280,76 +354,51 @@
     return { height: Math.ceil(maxHeight), elements };
   }
 
+  // ── Stitching ───────────────────────────────────────────────────────────────
+
   async function stitchScreenshots(shots, pxWidth, dpr, maxHeight = 50000) {
     if (shots.length === 0) return null;
     if (shots.length === 1) return shots[0].dataUrl;
 
-    // Load all images
     const images = await Promise.all(shots.map(s => loadImage(s.dataUrl)));
-
-    // Each shot.captureHeight is already the new-content height (header excluded)
     let totalPxHeight = 0;
-    const segmentHeights = shots.map(s => {
-      const srcY = s.headerHeight * dpr;   // where to start reading in the screenshot
-      const h = s.captureHeight * dpr;     // how many device pixels to copy
+    const segs = shots.map(s => {
+      const srcY = s.headerHeight * dpr;
+      const h    = s.captureHeight * dpr;
       totalPxHeight += h;
       return { srcY, h };
     });
 
-    // Cap to Chrome's canvas pixel limit (~268M px) and MAX_HEIGHT
-    const maxSafeHeight = Math.floor(250_000_000 / pxWidth);
-    totalPxHeight = Math.min(totalPxHeight, maxHeight * dpr, maxSafeHeight);
+    const maxSafeH = Math.floor(250_000_000 / pxWidth);
+    totalPxHeight = Math.min(totalPxHeight, maxHeight * dpr, maxSafeH);
 
-    const canvas = new OffscreenCanvas(pxWidth, totalPxHeight);
-    const ctx = canvas.getContext('2d');
-
-    let yOffset = 0;
+    const cvs = new OffscreenCanvas(pxWidth, totalPxHeight);
+    const ctx = cvs.getContext('2d');
+    let yOff = 0;
     for (let i = 0; i < images.length; i++) {
-      const { srcY, h } = segmentHeights[i];
-      const drawH = Math.min(h, totalPxHeight - yOffset);
+      const { srcY, h } = segs[i];
+      const drawH = Math.min(h, totalPxHeight - yOff);
       if (drawH <= 0) break;
-
-      ctx.drawImage(
-        images[i],
-        0, srcY,               // source: skip sticky header pixels
-        pxWidth, drawH,        // source width, height
-        0, yOffset,            // dest x, y
-        pxWidth, drawH         // dest width, height
-      );
-      yOffset += drawH;
+      ctx.drawImage(images[i], 0, srcY, pxWidth, drawH, 0, yOff, pxWidth, drawH);
+      yOff += drawH;
     }
-
-    const blob = await canvas.convertToBlob({ type: 'image/png' });
-    return blobToDataUrl(blob);
+    return blobToDataUrl(await cvs.convertToBlob({ type: 'image/png' }));
   }
 
   function loadImage(dataUrl) {
-    return new Promise((resolve, reject) => {
-      const img = new Image();
-      img.onload = () => resolve(img);
-      img.onerror = reject;
-      img.src = dataUrl;
-    });
+    return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = dataUrl; });
   }
 
   function blobToDataUrl(blob) {
-    return new Promise((resolve) => {
-      const reader = new FileReader();
-      reader.onloadend = () => resolve(reader.result);
-      reader.readAsDataURL(blob);
-    });
+    return new Promise(res => { const r = new FileReader(); r.onloadend = () => res(r.result); r.readAsDataURL(blob); });
   }
 
   function getDocumentHeight() {
     return Math.max(
-      document.body.scrollHeight,
-      document.documentElement.scrollHeight,
-      document.body.offsetHeight,
-      document.documentElement.offsetHeight
+      document.body.scrollHeight, document.documentElement.scrollHeight,
+      document.body.offsetHeight,  document.documentElement.offsetHeight
     );
   }
 
-  function pause(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
+  function pause(ms) { return new Promise(r => setTimeout(r, ms)); }
 })();

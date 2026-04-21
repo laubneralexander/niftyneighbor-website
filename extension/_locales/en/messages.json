@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Full Page Screenshot & Design Feedback"
   },
   "appDescription": {
-    "message": "Capture full-page screenshots with auto-scroll stitching, annotate them with professional tools, and export as PNG or PDF."
+    "message": "Capture, annotate & share screenshots as interactive guides with custom presets & smart history. #1 Pro-Level Tool!"
   },
   "captureVisible": {
     "message": "Capture Visible Area"
@@ -123,7 +123,7 @@
     "message": "Unlock ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Unlimited full-page screenshots. Add custom images, watermarks & emojis. PDF export, up to 500 annotated screenshots and custom presets. Just a small, one-time payment — no subscription!"
+    "message": "Create unlimited full-page screenshots and interactive HTML guides in seconds. With images/watermarks, emojis, and custom presets, you manage up to 500 snapshots effortlessly.<br><br><strong>Your Pro Advantage:</strong> Get exclusive access to our premium editing tools for the perfect finish.<br><br><strong>The Best Part:</strong> Pay once, use forever. No subscription stress!"
   },
   "upgradePrice": {
     "message": "€15 — one-time"
@@ -398,6 +398,9 @@
   "ofpBlurStrength": {
     "message": "Blur Strength"
   },
+  "ofpRotation": {
+    "message": "Rotation"
+  },
   "ofpStyle": {
     "message": "Style"
   },
@@ -595,5 +598,35 @@
   },
   "bulkDeleteConfirmBody": {
     "message": "This cannot be undone."
+  },
+  "shiftStraightLine": {
+    "message": "Hold ⇧ Shift while drawing for a straight line"
+  },
+  "addTag": {
+    "message": "＋ Add tag"
+  },
+  "deleteTag": {
+    "message": "Delete tag"
+  },
+  "changeTag": {
+    "message": "Change tag"
+  },
+  "fullPageBadge": {
+    "message": "Full-page screenshot"
+  },
+  "showInImage": {
+    "message": "Show in image"
+  },
+  "copyUrl": {
+    "message": "Copy URL"
+  },
+  "openUrl": {
+    "message": "Open in new tab"
+  },
+  "selectionHint": {
+    "message": "Draw a selection — ESC to cancel"
+  },
+  "clearSearch": {
+    "message": "Clear search"
   }
 }

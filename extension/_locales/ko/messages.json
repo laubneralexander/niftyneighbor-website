@@ -3,7 +3,7 @@
     "message": "ScreenFellow: 전체 페이지 스크린샷 및 디자인 피드백"
   },
   "appDescription": {
-    "message": "자동 스크롤로 전체 웹페이지를 캡처하고, 전문 도구로 주석을 달고, PNG 또는 PDF로 내보내세요."
+    "message": "스크린샷 캡처·주석·인터랙티브 가이드 공유. 커스텀 프리셋 & 스마트 기록 지원. 전문가용 #1 도구!"
   },
   "captureVisible": {
     "message": "보이는 영역 캡처"
@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro 잠금 해제"
   },
   "upgradeBody": {
-    "message": "무제한 전체 페이지 캡처. 커스텀 이미지, 워터마크 및 이모지 추가. PDF 내보내기, 최대 500개의 주석 스크린샷 및 커스텀 프리셋. 소액 일회성 결제, 구독 없음!"
+    "message": "초 만에 무제한 전체 페이지 스크린샷과 인터랙티브 HTML 가이드를 만드세요. 이미지/워터마크, 이모지, 커스텀 프리셋으로 최대 500개의 스냅샷을 손쉽게 관리하세요.<br><br><strong>나의 Pro 혜택:</strong> 완벽한 마무리를 위한 프리미엄 편집 도구에 독점 접근하세요.<br><br><strong>가장 좋은 점:</strong> 한 번 결제, 영원히 사용. 구독 스트레스 없음!"
   },
   "upgradePrice": {
     "message": "€15 — 일회성 결제"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "예, 모두 삭제"
+  },
+  "shiftStraightLine": {
+    "message": "직선을 그리려면 ⇧ Shift를 누른 올로 그리세요"
+  },
+  "addTag": {
+    "message": "＋ 태그 추가"
+  },
+  "deleteTag": {
+    "message": "태그 삭제"
+  },
+  "changeTag": {
+    "message": "태그 변경"
+  },
+  "fullPageBadge": {
+    "message": "전체 페이지 스크린샷"
+  },
+  "showInImage": {
+    "message": "이미지에서 보기"
+  },
+  "copyUrl": {
+    "message": "URL 복사"
+  },
+  "openUrl": {
+    "message": "새 탭에서 열기"
+  },
+  "selectionHint": {
+    "message": "선택 영역을 그리세요 — 취소: ESC"
+  },
+  "clearSearch": {
+    "message": "검색 지우기"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "이 작업은 취소할 수 없습니다."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "스크린샷 {n}개를 삭제하시겠습니까?"
+  },
+  "ofpRotation": {
+    "message": "회전"
+  },
+  "tagNewPlaceholder": {
+    "message": "새 태그 이름…"
+  },
+  "toolCropReset": {
+    "message": "초기화"
+  },
+  "toolSliceApply": {
+    "message": "섹션 제거"
+  },
+  "toolSliceTitle": {
+    "message": "섹션 제거"
   }
 }

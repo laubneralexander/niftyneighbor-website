@@ -55,7 +55,7 @@
       pointer-events: none;
       z-index: 2147483647;
     `;
-    hint.textContent = 'Draw a selection — ESC to cancel';
+    hint.textContent = chrome.i18n.getMessage('selectionHint') || 'Draw a selection — ESC to cancel';
     document.body.appendChild(hint);
     document.body.appendChild(overlay);
 

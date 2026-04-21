@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Captura de Página Completa e Feedback de Design"
   },
   "appDescription": {
-    "message": "Capture páginas web inteiras com rolagem automática, anote-as com ferramentas profissionais e exporte como PNG ou PDF."
+    "message": "Capture, anote e compartilhe screenshots como guias interativos com presets e histórico inteligente. A ferramenta pro #1!"
   },
   "captureVisible": {
     "message": "Capturar área visível"
@@ -123,7 +123,7 @@
     "message": "Desbloquear ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Capturas de página inteira ilimitadas. Adicione imagens, marcas d'água e emojis. Exportação PDF, até 500 capturas anotadas e presets personalizados. Pagamento único, sem assinatura!"
+    "message": "Crie capturas de tela completas ilimitadas e guias HTML interativos em segundos. Com imagens/marcas d'água, emojis e presets personalizados, gerencie até 500 capturas sem esforço.<br><br><strong>Sua vantagem Pro:</strong> Acesso exclusivo às nossas ferramentas de edição premium para o acabamento perfeito.<br><br><strong>O melhor:</strong> Pague uma vez, use para sempre. Sem stress com assinatura!"
   },
   "upgradePrice": {
     "message": "€15 — pagamento único"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Sim, excluir tudo"
+  },
+  "shiftStraightLine": {
+    "message": "Segure ⇧ Shift ao desenhar para uma linha reta"
+  },
+  "addTag": {
+    "message": "＋ Adicionar tag"
+  },
+  "deleteTag": {
+    "message": "Excluir tag"
+  },
+  "changeTag": {
+    "message": "Alterar tag"
+  },
+  "fullPageBadge": {
+    "message": "Captura de página inteira"
+  },
+  "showInImage": {
+    "message": "Mostrar na imagem"
+  },
+  "copyUrl": {
+    "message": "Copiar URL"
+  },
+  "openUrl": {
+    "message": "Abrir em nova aba"
+  },
+  "selectionHint": {
+    "message": "Desenhe uma seleção — ESC para cancelar"
+  },
+  "clearSearch": {
+    "message": "Limpar pesquisa"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Esta ação não pode ser desfeita."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "Excluir {n} capturas de tela?"
+  },
+  "ofpRotation": {
+    "message": "Rotação"
+  },
+  "tagNewPlaceholder": {
+    "message": "Novo nome de tag…"
+  },
+  "toolCropReset": {
+    "message": "Redefinir"
+  },
+  "toolSliceApply": {
+    "message": "Remover seção"
+  },
+  "toolSliceTitle": {
+    "message": "Remover seção"
   }
 }

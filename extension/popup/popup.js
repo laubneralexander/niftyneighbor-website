@@ -211,16 +211,81 @@ async function activateLicenseInline() {
   const msg = $('settings-license-msg');
   msg.classList.remove('hidden', 'success', 'error');
   if (result.success) {
-    msg.classList.add('success');
-    msg.textContent = t('licenseSuccess');
+    fireConfetti();
     setTimeout(async () => {
       await refreshLicenseUI();
       closeSettingsView();
-    }, 1500);
+    }, 2800);
   } else {
     msg.classList.add('error');
     msg.textContent = result.alreadyActive ? t('licenseAlreadyActive') : t('licenseError');
   }
+}
+
+function fireConfetti() {
+  const COLORS = ['#5B5BD6','#8B5CF6','#F59E0B','#FBBF24','#EF4444','#F472B6','#10B981','#60A5FA','#ffffff','#FCD34D','#A78BFA','#34D399'];
+  const DURATION = 2600;
+  const W = window.innerWidth, H = window.innerHeight;
+
+  const cvs = document.createElement('canvas');
+  cvs.style.cssText = 'position:fixed;inset:0;width:100%;height:100%;pointer-events:none;z-index:99999';
+  cvs.width = W; cvs.height = H;
+  document.body.appendChild(cvs);
+  const ctx = cvs.getContext('2d');
+
+  function makeCannon(ox, oy, count, aMin, aMax) {
+    return Array.from({ length: count }, () => {
+      const a   = (aMin + Math.random() * (aMax - aMin)) * Math.PI / 180;
+      const spd = 4 + Math.random() * 9;
+      const slim = Math.random() < 0.3;
+      return {
+        x: ox + (Math.random() - 0.5) * 10, y: oy,
+        vx: Math.cos(a) * spd, vy: Math.sin(a) * spd,
+        w: slim ? 2 + Math.random() * 2 : 5 + Math.random() * 8,
+        h: slim ? 10 + Math.random() * 16 : 4 + Math.random() * 5,
+        rot: Math.random() * 360, rotV: (Math.random() - 0.5) * 14,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        shape: Math.random() < 0.6 ? 'rect' : 'ellipse',
+        alpha: 1,
+      };
+    });
+  }
+
+  // Two corner cannons angled toward center
+  const particles = [
+    ...makeCannon(W * 0.04, H + 4, 55, -95, -15),
+    ...makeCannon(W * 0.96, H + 4, 55, -165, -85),
+  ];
+  const start = performance.now();
+
+  function frame(now) {
+    const elapsed = now - start;
+    if (elapsed > DURATION) { cvs.remove(); return; }
+    ctx.clearRect(0, 0, W, H);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.vy += 0.32; p.vx *= 0.986;
+      p.rot += p.rotV; p.rotV *= 0.993;
+      const lifeT = elapsed / DURATION;
+      p.alpha = lifeT < 0.6 ? 1 : 1 - (lifeT - 0.6) / 0.4;
+      if (p.alpha <= 0) return;
+      ctx.save();
+      ctx.globalAlpha = p.alpha;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      if (p.shape === 'ellipse') {
+        ctx.beginPath();
+        ctx.ellipse(0, 0, p.w / 2, p.h / 3, 0, 0, Math.PI * 2);
+        ctx.fill();
+      } else {
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+      }
+      ctx.restore();
+    });
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
 }
 
 async function deactivateLicense() {

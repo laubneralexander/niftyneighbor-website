@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Tam Sayfa Ekran Görüntüsü ve Tasarım Geri Bildirimi"
   },
   "appDescription": {
-    "message": "Otomatik kaydırmayla tam web sayfası ekran görüntüsü alın, profesyonel araçlarla açıklama ekleyin ve PNG veya PDF olarak dışa aktarın."
+    "message": "Ekran görüntüsü al, açıkla ve interaktif kılavuz olarak paylaş. Özel önayarlar & akıllı geçmiş. #1 Profesyonel Araç!"
   },
   "captureVisible": {
     "message": "Görünür alanı yakala"
@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro'yu Aç"
   },
   "upgradeBody": {
-    "message": "Sınırsız tam sayfa ekran görüntüsü. Özel resimler, filigranlar ve emoji ekleyin. PDF dışa aktarma, 500'e kadar açıklamalı ekran görüntüsü ve özel önayarlar. Küçük bir kerelik ödeme, abonelik yok!"
+    "message": "Saniyeler içinde sınırsız tam sayfa ekran görüntüsü ve etkileşimli HTML kılavuzları oluşturun. Resimler/filigranlar, emojiler ve özel ön ayarlarla 500'e kadar anlık görüntüyü zahmetsizce yönetin.<br><br><strong>Pro Avantajınız:</strong> Mükemmel sonuç için premium düzenleme araçlarımıza özel erişim kazanın.<br><br><strong>En İyisi:</strong> Bir kez ödeyin, sonsuza kadar kullanın. Abonelik stresi yok!"
   },
   "upgradePrice": {
     "message": "€15 — tek seferlik"
@@ -577,5 +577,56 @@
   },
   "clearAllConfirmBtn": {
     "message": "Evet, tümünü sil"
+  },
+  "shiftStraightLine": {
+    "message": "Düz çizgi için çizerken ⇧ Shift tuşunu basılı tutun"
+  },
+  "addTag": {
+    "message": "＋ Etiket ekle"
+  },
+  "deleteTag": {
+    "message": "Etiketi sil"
+  },
+  "changeTag": {
+    "message": "Etiketi değiştir"
+  },
+  "fullPageBadge": {
+    "message": "Tam sayfa ekran görüntüsü"
+  },
+  "showInImage": {
+    "message": "Görselde göster"
+  },
+  "copyUrl": {
+    "message": "URL'yi kopyala"
+  },
+  "openUrl": {
+    "message": "Yeni sekmede aç"
+  },
+  "selectionHint": {
+    "message": "Bir seçim çizin — iptal için ESC"
+  },
+  "clearSearch": {
+    "message": "Aramayı temizle"
+  },
+  "bulkDeleteConfirmBody": {
+    "message": "Bu işlem geri alınamaz."
+  },
+  "bulkDeleteConfirmTitle": {
+    "message": "{n} ekran görüntüsü silinsin mi?"
+  },
+  "ofpRotation": {
+    "message": "Döndürme"
+  },
+  "tagNewPlaceholder": {
+    "message": "Yeni etiket adı…"
+  },
+  "toolCropReset": {
+    "message": "Sıfırla"
+  },
+  "toolSliceApply": {
+    "message": "Bölümü kaldır"
+  },
+  "toolSliceTitle": {
+    "message": "Bölümü kaldır"
   }
 }

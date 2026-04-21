@@ -3,7 +3,7 @@
     "message": "ScreenFellow: Vollseiten-Screenshot & Design-Feedback"
   },
   "appDescription": {
-    "message": "Erstelle vollständige Webseiten-Screenshots mit Auto-Scroll-Stitching, beschrifte sie mit professionellen Werkzeugen und exportiere als PNG oder PDF."
+    "message": "Screenshots erfassen, annotieren & als interaktive Guides teilen mit eigenen Presets & smartem Verlauf. #1 Profi-Level Tool!"
   },
   "captureVisible": {
     "message": "Sichtbaren Bereich erfassen"
@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro freischalten"
   },
   "upgradeBody": {
-    "message": "Unbegrenzte Vollseiten-Screenshots. Eigene Bilder, Wasserzeichen & Emojis. PDF-Export, bis zu 500 annotierte Screenshots und eigene Presets. Nur eine kleine, einmalige Zahlung, kein Abo!"
+    "message": "Erstelle unbegrenzte Full-Page-Screenshots und interaktive HTML-Guides in Sekunden. Mit Bildern/Wasserzeichen, Emojis und eigenen Presets verwaltest du bis zu 500 Snapshots mühelos.<br><br><strong>Dein Pro-Vorteil:</strong> Erhalte exklusiven Zugriff auf unsere Premium-Bearbeitungstools für das perfekte Finish.<br><br><strong>Das Beste:</strong> Einmal zahlen, für immer nutzen. Kein Abo-Stress!"
   },
   "upgradePrice": {
     "message": "€15 — einmalig"
@@ -398,6 +398,9 @@
   "ofpBlurStrength": {
     "message": "Unschärfe-Stärke"
   },
+  "ofpRotation": {
+    "message": "Rotation"
+  },
   "ofpStyle": {
     "message": "Stil"
   },
@@ -595,5 +598,35 @@
   },
   "bulkDeleteConfirmBody": {
     "message": "Das kann nicht rückgängig gemacht werden."
+  },
+  "shiftStraightLine": {
+    "message": "⇧ Shift beim Zeichnen gedrückt halten für eine gerade Linie"
+  },
+  "addTag": {
+    "message": "＋ Tag hinzufügen"
+  },
+  "deleteTag": {
+    "message": "Tag löschen"
+  },
+  "changeTag": {
+    "message": "Tag ändern"
+  },
+  "fullPageBadge": {
+    "message": "Ganzseitiger Screenshot"
+  },
+  "showInImage": {
+    "message": "Im Bild anzeigen"
+  },
+  "copyUrl": {
+    "message": "URL kopieren"
+  },
+  "openUrl": {
+    "message": "In neuem Tab öffnen"
+  },
+  "selectionHint": {
+    "message": "Auswahl zeichnen — ESC zum Abbrechen"
+  },
+  "clearSearch": {
+    "message": "Suche löschen"
   }
 }
