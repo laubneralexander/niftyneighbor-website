@@ -123,7 +123,7 @@
     "message": "Débloquer ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Créez des captures pleine page illimitées et des guides HTML interactifs en quelques secondes. Avec images/filigranes, emojis et presets personnalisés, gérez jusqu'à 500 captures sans effort.<br><br><strong>Votre avantage Pro :</strong> Accédez en exclusivité à nos outils d'édition premium pour un résultat parfait.<br><br><strong>Le meilleur :</strong> Payez une fois, utilisez pour toujours. Zéro stress d'abonnement !"
+    "message": "Créez des captures pleine page illimitées et des guides HTML interactifs en quelques secondes. Avec images/filigranes, emojis et presets personnalisés, gérez jusqu'à 500 captures sans effort.<br><br><strong>Votre avantage Pro :</strong> Accédez en exclusivité à nos outils d'édition premium pour un résultat parfait.<br><br><strong>Le meilleur :</strong> Payez une fois, utilisez pour toujours. Zéro stress d'abonnement ! <a href=\"https://www.niftyneighbor.app\" target=\"_blank\" rel=\"noopener\">En savoir plus →</a>"
   },
   "upgradePrice": {
     "message": "15 € — paiement unique"

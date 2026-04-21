@@ -123,7 +123,7 @@
     "message": "解锁 ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "在几秒内创建无限全页截图和互动式 HTML 指南。借助图片/水印、表情符号和自定义预设，轻松管理多达 500 个快照。<br><br><strong>您的 Pro 特权：</strong>独享高级编辑工具，打造完美效果。<br><br><strong>最棒的是：</strong>一次付款，永久使用。告别订阅烦恼！"
+    "message": "在几秒内创建无限全页截图和互动式 HTML 指南。借助图片/水印、表情符号和自定义预设，轻松管理多达 500 个快照。<br><br><strong>您的 Pro 特权：</strong>独享高级编辑工具，打造完美效果。<br><br><strong>最棒的是：</strong>一次付款，永久使用。告别订阅烦恼！ <a href=\"https://www.niftyneighbor.app\" target=\"_blank\" rel=\"noopener\">了解更多 →</a>"
   },
   "upgradePrice": {
     "message": "€15 — 一次性付款"

@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro'yu Aç"
   },
   "upgradeBody": {
-    "message": "Saniyeler içinde sınırsız tam sayfa ekran görüntüsü ve etkileşimli HTML kılavuzları oluşturun. Resimler/filigranlar, emojiler ve özel ön ayarlarla 500'e kadar anlık görüntüyü zahmetsizce yönetin.<br><br><strong>Pro Avantajınız:</strong> Mükemmel sonuç için premium düzenleme araçlarımıza özel erişim kazanın.<br><br><strong>En İyisi:</strong> Bir kez ödeyin, sonsuza kadar kullanın. Abonelik stresi yok!"
+    "message": "Saniyeler içinde sınırsız tam sayfa ekran görüntüsü ve etkileşimli HTML kılavuzları oluşturun. Resimler/filigranlar, emojiler ve özel ön ayarlarla 500'e kadar anlık görüntüyü zahmetsizce yönetin.<br><br><strong>Pro Avantajınız:</strong> Mükemmel sonuç için premium düzenleme araçlarımıza özel erişim kazanın.<br><br><strong>En İyisi:</strong> Bir kez ödeyin, sonsuza kadar kullanın. Abonelik stresi yok! <a href=\"https://www.niftyneighbor.app\" target=\"_blank\" rel=\"noopener\">Daha fazla →</a>"
   },
   "upgradePrice": {
     "message": "€15 — tek seferlik"

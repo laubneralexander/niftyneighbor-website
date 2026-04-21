@@ -123,7 +123,7 @@
     "message": "Odblokuj ScreenFellow Pro"
   },
   "upgradeBody": {
-    "message": "Twórz nieograniczone zrzuty pełnych stron i interaktywne przewodniki HTML w kilka sekund. Dzięki obrazom/znakom wodnym, emoji i własnym presetom zarządzasz do 500 zrzutami bez wysiłku.<br><br><strong>Twoja przewaga Pro:</strong> Uzyskaj wyłączny dostęp do naszych narzędzi premium dla idealnego efektu.<br><br><strong>Najlepsze:</strong> Płać raz, korzystaj zawsze. Żadnego stresu z subskrypcją!"
+    "message": "Twórz nieograniczone zrzuty pełnych stron i interaktywne przewodniki HTML w kilka sekund. Dzięki obrazom/znakom wodnym, emoji i własnym presetom zarządzasz do 500 zrzutami bez wysiłku.<br><br><strong>Twoja przewaga Pro:</strong> Uzyskaj wyłączny dostęp do naszych narzędzi premium dla idealnego efektu.<br><br><strong>Najlepsze:</strong> Płać raz, korzystaj zawsze. Żadnego stresu z subskrypcją! <a href=\"https://www.niftyneighbor.app\" target=\"_blank\" rel=\"noopener\">Dowiedz się więcej →</a>"
   },
   "upgradePrice": {
     "message": "€15 — jednorazowo"

@@ -3378,7 +3378,7 @@ ${buildGuideFrameHTML(frameSettings?.style || 'none', pageUrl, formatDateTimeStr
 </div>
 ${buildGuideFrameClose(frameSettings?.style || 'none', pageUrl, formatDateTimeStr(frameSettings?.dateTime, timestamp))}
 ${stepsHTML}
-<div class="footer"><a href="https://www.google.com" target="_blank" rel="noopener">Created with ScreenFellow</a></div>
+<div class="footer"><a href="https://www.niftyneighbor.app" target="_blank" rel="noopener">Created with ScreenFellow</a></div>
 <script>
 (function(){
   function dismissBeacon(){
@@ -4639,6 +4639,23 @@ function bindKeyboardShortcuts() {
   document.addEventListener('keydown', (e) => {
     if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
     if (e.key === 'Escape') { document.getElementById('tool-pan')?.click(); return; }
+
+    // Arrow keys: move selected object(s) by 1px (10px with Shift)
+    if (['ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.key) && fabricCanvas) {
+      const active = fabricCanvas.getActiveObject();
+      if (active) {
+        e.preventDefault();
+        const step = e.shiftKey ? 10 : 1;
+        if (e.key === 'ArrowUp')    active.set('top',  active.top  - step);
+        if (e.key === 'ArrowDown')  active.set('top',  active.top  + step);
+        if (e.key === 'ArrowLeft')  active.set('left', active.left - step);
+        if (e.key === 'ArrowRight') active.set('left', active.left + step);
+        active.setCoords();
+        fabricCanvas.renderAll();
+        saveUndo();
+        return;
+      }
+    }
 
     if (e.ctrlKey || e.metaKey) {
       if (e.key === 'z') { e.preventDefault(); undo(); return; }

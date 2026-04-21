@@ -123,7 +123,7 @@
     "message": "ScreenFellow Pro 잠금 해제"
   },
   "upgradeBody": {
-    "message": "초 만에 무제한 전체 페이지 스크린샷과 인터랙티브 HTML 가이드를 만드세요. 이미지/워터마크, 이모지, 커스텀 프리셋으로 최대 500개의 스냅샷을 손쉽게 관리하세요.<br><br><strong>나의 Pro 혜택:</strong> 완벽한 마무리를 위한 프리미엄 편집 도구에 독점 접근하세요.<br><br><strong>가장 좋은 점:</strong> 한 번 결제, 영원히 사용. 구독 스트레스 없음!"
+    "message": "초 만에 무제한 전체 페이지 스크린샷과 인터랙티브 HTML 가이드를 만드세요. 이미지/워터마크, 이모지, 커스텀 프리셋으로 최대 500개의 스냅샷을 손쉽게 관리하세요.<br><br><strong>나의 Pro 혜택:</strong> 완벽한 마무리를 위한 프리미엄 편집 도구에 독점 접근하세요.<br><br><strong>가장 좋은 점:</strong> 한 번 결제, 영원히 사용. 구독 스트레스 없음! <a href=\"https://www.niftyneighbor.app\" target=\"_blank\" rel=\"noopener\">자세히 보기 →</a>"
   },
   "upgradePrice": {
     "message": "€15 — 일회성 결제"
