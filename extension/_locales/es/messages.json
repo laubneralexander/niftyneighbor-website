@@ -494,6 +494,15 @@
   "toolCropReset": {
     "message": "Restablecer"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Bloquear tamaño"
+  },
   "toolSliceTitle": {
     "message": "Eliminar sección"
   },

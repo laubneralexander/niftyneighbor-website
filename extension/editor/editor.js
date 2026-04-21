@@ -3573,17 +3573,61 @@ function renderCropOverlay() {
   if (existingBar) existingBar.remove();
   const bar = document.createElement('div');
   bar.id = 'crop-action-bar';
-  bar.innerHTML = `<button id="crop-cancel-btn">✕ ${t('cancel')}</button><button id="crop-reset-btn">↺ ${t('toolCropReset')}</button><button id="crop-apply-btn">✓ ${t('toolCropApply')}</button>`;
+  bar.innerHTML = `
+    <div class="crop-dim-row">
+      <label class="crop-dim-label">${t('toolCropWidth')}</label>
+      <input id="crop-input-w" class="crop-dim-input" type="number" min="1" max="${origW}" value="${Math.round(cropState.w)}">
+      <label class="crop-dim-label">${t('toolCropHeight')}</label>
+      <input id="crop-input-h" class="crop-dim-input" type="number" min="1" max="${origH}" value="${Math.round(cropState.h)}">
+      <button id="crop-lock-btn" class="crop-lock-btn" aria-label="${t('toolCropLockAria')}" title="${t('toolCropLockAria')}"></button>
+    </div>
+    <div class="crop-action-btns">
+      <button id="crop-cancel-btn">✕ ${t('cancel')}</button>
+      <button id="crop-reset-btn">↺ ${t('toolCropReset')}</button>
+      <button id="crop-apply-btn">✓ ${t('toolCropApply')}</button>
+    </div>`;
   document.querySelector('.canvas-area').appendChild(bar);
+
+  // Lock state
+  let cropLocked = false;
+  const lockBtn = document.getElementById('crop-lock-btn');
+  const inputW  = document.getElementById('crop-input-w');
+  const inputH  = document.getElementById('crop-input-h');
+
+  function setCropLock(locked) {
+    cropLocked = locked;
+    lockBtn.classList.toggle('locked', locked);
+    inputW.disabled = locked;
+    inputH.disabled = locked;
+    bar._cropLocked = locked;
+  }
+
+  lockBtn.addEventListener('click', () => setCropLock(!cropLocked));
+
+  function applyDimensionInput() {
+    if (cropLocked || !cropState) return;
+    let w = Math.max(1, Math.min(parseInt(inputW.value) || 1, origW));
+    let h = Math.max(1, Math.min(parseInt(inputH.value) || 1, origH));
+    let x = Math.min(cropState.x, origW - w);
+    let y = Math.min(cropState.y, origH - h);
+    cropState = { x: Math.max(0, x), y: Math.max(0, y), w, h };
+    inputW.value = Math.round(w);
+    inputH.value = Math.round(h);
+    updateCropShades();
+  }
+
+  inputW.addEventListener('input', applyDimensionInput);
+  inputH.addEventListener('input', applyDimensionInput);
 
   // Keep overlay in sync with zoom/pan
   _cropOverlaySyncHandler = () => { if (cropState) updateCropShades(); };
   fabricCanvas.on('after:render', _cropOverlaySyncHandler);
 
   updateCropShades();
-  initCropDrag();
+  initCropDrag(bar);
   document.getElementById('crop-apply-btn').addEventListener('click', applyCrop);
   document.getElementById('crop-reset-btn').addEventListener('click', () => {
+    setCropLock(false);
     fitToScreen(56);
     cropState = { x: 0, y: 0, w: origW, h: origH };
     updateCropShades();
@@ -3614,9 +3658,13 @@ function updateCropShades() {
   set('cs-r', `position:absolute;top:${sy}px;left:${sx + sw}px;right:0;height:${sh}px`);
   const cr = document.getElementById('crop-rect');
   if (cr) { cr.style.left = sx + 'px'; cr.style.top = sy + 'px'; cr.style.width = sw + 'px'; cr.style.height = sh + 'px'; }
+  const iw = document.getElementById('crop-input-w');
+  const ih = document.getElementById('crop-input-h');
+  if (iw && !iw.disabled) iw.value = Math.round(cropState.w);
+  if (ih && !ih.disabled) ih.value = Math.round(cropState.h);
 }
 
-function initCropDrag() {
+function initCropDrag(bar) {
   const cropRect = document.getElementById('crop-rect');
   const MIN = 20;
   let dragging = false, dragType = null, startX, startY, startCrop;
@@ -3642,6 +3690,7 @@ function initCropDrag() {
   });
   cropRect.querySelectorAll('.crop-handle').forEach(h => {
     h.addEventListener('mousedown', (e) => {
+      if (bar && bar._cropLocked) return;
       dragging = true;
       dragType = [...h.classList].find(c => c !== 'crop-handle');
       startX = e.clientX; startY = e.clientY; startCrop = { ...cropState };

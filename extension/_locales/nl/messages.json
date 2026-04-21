@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "Resetten"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Grootte vergrendelen"
+  },
   "toolSliceApply": {
     "message": "Sectie verwijderen"
   },

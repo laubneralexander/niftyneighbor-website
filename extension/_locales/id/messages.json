@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "Atur ulang"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Kunci ukuran"
+  },
   "toolSliceApply": {
     "message": "Hapus bagian"
   },

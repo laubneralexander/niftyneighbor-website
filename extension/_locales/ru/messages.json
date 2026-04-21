@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "Сбросить"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Зафиксировать размер"
+  },
   "toolSliceApply": {
     "message": "Удалить раздел"
   },

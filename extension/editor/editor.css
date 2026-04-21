@@ -749,11 +749,67 @@ input.ofp-range-val:focus {
   left: 50%;
   transform: translateX(-50%);
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 8px;
   pointer-events: all;
   z-index: 200;
   white-space: nowrap;
 }
+.crop-dim-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.crop-dim-label {
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(255,255,255,0.45);
+  user-select: none;
+}
+.crop-dim-input {
+  width: 62px;
+  padding: 5px 6px;
+  background: #1e1e2e;
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 12px;
+  font-family: inherit;
+  text-align: center;
+  outline: none;
+  transition: border-color 0.12s;
+}
+.crop-dim-input:focus {
+  border-color: rgba(255,255,255,0.4);
+}
+.crop-dim-input:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+.crop-dim-input::-webkit-inner-spin-button,
+.crop-dim-input::-webkit-outer-spin-button { -webkit-appearance: none; }
+.crop-lock-btn {
+  background-color: #2a2a3a;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V8a5 5 0 0 1 9.9-1'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center;
+  border: 1px solid rgba(255,255,255,0.22);
+  border-radius: 5px;
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  transition: background-color 0.15s, border-color 0.15s, box-shadow 0.15s;
+  flex-shrink: 0;
+}
+.crop-lock-btn:hover { border-color: rgba(255,255,255,0.4); }
+.crop-lock-btn.locked {
+  background-color: rgba(91,91,214,0.3);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%23a5a5f5' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Crect x='3' y='11' width='18' height='11' rx='2'/%3E%3Cpath d='M7 11V7a5 5 0 0 1 10 0v4'/%3E%3C/svg%3E");
+  border-color: #5B5BD6;
+  box-shadow: 0 0 8px rgba(91,91,214,0.45);
+}
+.crop-action-btns { display: flex; gap: 8px; }
 #crop-action-bar button {
   padding: 7px 16px;
   border-radius: 6px;

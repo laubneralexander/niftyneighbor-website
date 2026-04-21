@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "Sıfırla"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Boyutu kilitle"
+  },
   "toolSliceApply": {
     "message": "Bölümü kaldır"
   },

@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "Ripristina"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "Blocca dimensioni"
+  },
   "toolSliceApply": {
     "message": "Rimuovi sezione"
   },

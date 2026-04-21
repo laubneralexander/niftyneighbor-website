@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "リセット"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "サイズを固定"
+  },
   "toolSliceApply": {
     "message": "セクションを削除"
   },

@@ -623,6 +623,15 @@
   "toolCropReset": {
     "message": "초기화"
   },
+  "toolCropWidth": {
+    "message": "W"
+  },
+  "toolCropHeight": {
+    "message": "H"
+  },
+  "toolCropLockAria": {
+    "message": "크기 고정"
+  },
   "toolSliceApply": {
     "message": "섹션 제거"
   },
