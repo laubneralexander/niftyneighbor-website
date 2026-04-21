@@ -4,7 +4,7 @@ import { exportPNG, exportPDF, exportPDFFromDataUrl, getAnnotatedDataUrl, downlo
 import { initI18n, applyI18n, t } from '../lib/i18n.js';
 import { dbLoad, dbSave, dbSaveThumbnail, dbDelete, dbSaveAnnotations, dbLoadAnnotations, dbDeleteAnnotations, dbLoadThumbnail, dbDeleteThumbnail, dbDeleteMany, dbDeleteManyAnnotations, dbDeleteManyThumbnails } from '../lib/db.js';
 
-const CHECKOUT_URL = 'REPLACE_WITH_LEMON_SQUEEZY_CHECKOUT_URL';
+const CHECKOUT_URL = 'https://niftyneighbor.lemonsqueezy.com/checkout/buy/4f9f8aa2-08b7-49d7-bdcc-93f5330ff508';
 const MAX_UNDO = 50;
 const PADDING = 24; // canvas-area padding in px
 
