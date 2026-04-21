@@ -1606,6 +1606,32 @@ nav {
 .compare-table .note { font-size: 12px; font-weight: 600; color: var(--color-primary); background: rgba(91,91,214,0.1); border: 1px solid rgba(91,91,214,0.25); border-radius: 100px; padding: 2px 10px; }
 .compare-table .note-yes { font-size: 12px; font-weight: 600; color: #F59E0B; background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); border-radius: 100px; padding: 2px 10px; }
 
+@media (max-width: 720px) {
+  .compare-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+  .compare-table {
+    min-width: 480px;
+  }
+  .compare-table th:first-child,
+  .compare-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--bg-surface);
+  }
+  .compare-table thead th:first-child {
+    background: var(--bg-elevated);
+  }
+  .compare-table tbody tr:not(.row-shared) td:first-child {
+    background: color-mix(in srgb, var(--bg-surface) 92%, #F59E0B 8%);
+  }
+  .compare-table tbody tr:hover td:first-child {
+    background: color-mix(in srgb, var(--bg-surface) 97%, white 3%);
+  }
+}
+
 /* ── FAQ ─────────────────────────────────────── */
 
 #faq {
