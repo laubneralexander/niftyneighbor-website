@@ -1137,36 +1137,8 @@
         <a href="#" data-modal="contact" data-i18n="footer_contact">Contact</a>
       </div>
       <span class="footer-copy">© 2026 NiftyNeighbor</span>
-      <span id="sf-visitor-count" style="color:var(--bg-base);font-size:11px;user-select:none" aria-hidden="true"></span>
     </div>
   </footer>
-
-  <script>
-  (function() {
-    const KEY = 'sf-last-counted';
-    const now = Date.now();
-    const oneDay = 24 * 60 * 60 * 1000;
-    const last = parseInt(localStorage.getItem(KEY) || '0');
-    if (now - last > oneDay) {
-      fetch('https://api.counterapi.dev/v1/screenfellow/visitors/up')
-        .then(r => r.json())
-        .then(d => {
-          localStorage.setItem(KEY, now);
-          const el = document.getElementById('sf-visitor-count');
-          if (el) el.textContent = 'v:' + (d.count ?? d.value ?? '');
-        })
-        .catch(() => {});
-    } else {
-      fetch('https://api.counterapi.dev/v1/screenfellow/visitors')
-        .then(r => r.json())
-        .then(d => {
-          const el = document.getElementById('sf-visitor-count');
-          if (el) el.textContent = 'v:' + (d.count ?? d.value ?? '');
-        })
-        .catch(() => {});
-    }
-  })();
-  </script>
 
   <!-- ── Impressum Modal ────────────────────────── -->
   <div class="legal-modal" id="modal-impressum" role="dialog" aria-modal="true" aria-label="Impressum">
