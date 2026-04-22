@@ -5,19 +5,8 @@ const API_BASE = 'https://api.lemonsqueezy.com/v1/licenses';
 const INSTANCE_NAME = 'ScreenFellow-Browser';
 const CACHE_TTL_MS = 48 * 60 * 60 * 1000; // 48 hours
 const API_TIMEOUT_MS = 5000;
-const DEV_KEY = 'SCREENFELLOW-DEV-2026';
 
 export async function activateLicense(key) {
-  if (key.trim().toUpperCase() === DEV_KEY) {
-    await chrome.storage.local.set({
-      license_key: key.trim().toUpperCase(),
-      license_instance_id: 'dev',
-      license_status: 'active',
-      license_last_validated: Date.now()
-    });
-    return { success: true };
-  }
-
   try {
     const resp = await fetchWithTimeout(`${API_BASE}/activate`, {
       method: 'POST',
@@ -55,10 +44,6 @@ export async function validateLicense() {
 
   if (!stored.license_key) {
     return { isPremium: false };
-  }
-
-  if (stored.license_key === DEV_KEY) {
-    return { isPremium: true };
   }
 
   // Try live validation
