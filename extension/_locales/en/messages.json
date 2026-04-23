@@ -637,5 +637,8 @@
   },
   "clearSearch": {
     "message": "Clear search"
+  },
+  "zoomTop": {
+    "message": "Jump to top (100%)"
   }
 }

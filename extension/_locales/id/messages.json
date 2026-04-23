@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Hapus bagian"
+  },
+  "zoomTop": {
+    "message": "Lompat ke atas (100%)"
   }
 }

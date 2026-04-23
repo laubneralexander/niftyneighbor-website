@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "섹션 제거"
+  },
+  "zoomTop": {
+    "message": "맨 위로 이동 (100%)"
   }
 }

@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Supprimer la section"
+  },
+  "zoomTop": {
+    "message": "Aller en haut (100%)"
   }
 }

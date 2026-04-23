@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "セクションを削除"
+  },
+  "zoomTop": {
+    "message": "トップへ移動 (100%)"
   }
 }

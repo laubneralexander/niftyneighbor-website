@@ -637,5 +637,8 @@
   },
   "clearSearch": {
     "message": "Suche löschen"
+  },
+  "zoomTop": {
+    "message": "Nach oben springen (100%)"
   }
 }

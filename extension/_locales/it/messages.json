@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Rimuovi sezione"
+  },
+  "zoomTop": {
+    "message": "Vai in cima (100%)"
   }
 }

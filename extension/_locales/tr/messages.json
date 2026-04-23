@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Bölümü kaldır"
+  },
+  "zoomTop": {
+    "message": "Basa git (100%)"
   }
 }

@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Usuń sekcję"
+  },
+  "zoomTop": {
+    "message": "Skocz na gore (100%)"
   }
 }

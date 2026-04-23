@@ -215,6 +215,15 @@ function fitToScreen(bottomExtra = 0) {
   syncZoomSelect();
 }
 
+function zoomToTop() {
+  if (!origW || !fabricCanvas) return;
+  const area = document.querySelector('.canvas-area');
+  const tx = (area.clientWidth - origW) / 2;
+  fabricCanvas.setViewportTransform([1, 0, 0, 1, tx, PADDING]);
+  currentZoom = 1;
+  syncZoomSelect();
+}
+
 function applyZoom(zoom) {
   if (!fabricCanvas) return;
   zoom = Math.max(0.05, Math.min(5, zoom));
@@ -4432,6 +4441,7 @@ function bindUIEvents() {
   // Zoom controls
   $('zoom-select').addEventListener('change', (e) => applyZoom(parseInt(e.target.value) / 100));
   $('btn-zoom-100').addEventListener('click', () => applyZoom(1));
+  $('btn-zoom-top').addEventListener('click', zoomToTop);
   $('btn-zoom-fit').addEventListener('click', () => fitToScreen());
 
   // Wheel zoom: zoom-to-cursor using Fabric's zoomToPoint

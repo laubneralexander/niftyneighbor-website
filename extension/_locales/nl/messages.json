@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Sectie verwijderen"
+  },
+  "zoomTop": {
+    "message": "Spring naar boven (100%)"
   }
 }

@@ -51,6 +51,8 @@ body {
 }
 
 /* Zoom Dropdown */
+#zoom-select { margin: 0 10px; }
+
 .zoom-select {
   appearance: none;
   -webkit-appearance: none;

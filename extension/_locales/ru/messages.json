@@ -637,5 +637,8 @@
   },
   "toolSliceTitle": {
     "message": "Удалить раздел"
+  },
+  "zoomTop": {
+    "message": "Перейти наверх (100%)"
   }
 }
