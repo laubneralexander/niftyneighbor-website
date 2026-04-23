@@ -3000,7 +3000,7 @@ async function renderHistory(items) {
 
 function formatTime(ts) {
   const d = new Date(ts);
-  return d.toLocaleString([], { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+  return d.toLocaleString(chrome.i18n.getUILanguage(), { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
 async function saveScreenshotName(name) {
