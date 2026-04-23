@@ -4432,7 +4432,7 @@ function bindUIEvents() {
   // Zoom controls
   $('zoom-select').addEventListener('change', (e) => applyZoom(parseInt(e.target.value) / 100));
   $('btn-zoom-100').addEventListener('click', () => applyZoom(1));
-  $('btn-zoom-fit').addEventListener('click', fitToScreen);
+  $('btn-zoom-fit').addEventListener('click', () => fitToScreen());
 
   // Wheel zoom: zoom-to-cursor using Fabric's zoomToPoint
   const area = document.querySelector('.canvas-area');
