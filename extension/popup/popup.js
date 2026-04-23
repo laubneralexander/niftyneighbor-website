@@ -1,6 +1,6 @@
 import { initI18n, applyI18n, setLanguage, getCurrentLanguage, t } from '../lib/i18n.js';
 
-const CHECKOUT_URL = 'https://niftyneighbor.lemonsqueezy.com/checkout/buy/4f9f8aa2-08b7-49d7-bdcc-93f5330ff508';
+const CHECKOUT_URL = 'https://shop.niftyneighbor.app/checkout/buy/8a42affe-185f-4fd5-add6-e46cb2a1edcc?discount=0';
 
 const $ = id => document.getElementById(id);
 

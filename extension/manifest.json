@@ -40,6 +40,7 @@
 
   "host_permissions": [
     "https://api.lemonsqueezy.com/*",
+    "https://shop.niftyneighbor.app/*",
     "<all_urls>"
   ],
 
