@@ -117,7 +117,7 @@
     "message": "Kunci lisensi tidak valid. Periksa dan coba lagi."
   },
   "licenseAlreadyActive": {
-    "message": "Lisensi ini aktif di perangkat lain. Mengaktifkan di sini akan menonaktifkannya di sana."
+    "message": "Lisensi ini aktif di profil Chrome lain. Mengaktifkan di sini akan menonaktifkannya di sana."
   },
   "upgradeTitle": {
     "message": "Buka ScreenFellow Pro"
@@ -195,7 +195,7 @@
     "message": "Lisensi"
   },
   "licenseActivateHint": {
-    "message": "Masukkan kunci lisensi untuk membuka fitur Pro di perangkat ini."
+    "message": "Masukkan kunci lisensi untuk membuka fitur Pro di profil Chrome ini."
   },
   "licenseSettingsHint": {
     "message": "Semua fitur Pro akan dinonaktifkan. Lisensi dapat diaktifkan kembali kapan saja."
@@ -207,7 +207,7 @@
     "message": "Lepaskan Lisensi Pro?"
   },
   "releaseConfirmBody": {
-    "message": "Perangkat ini akan kehilangan semua fitur Pro. Riwayat screenshot akan dipangkas menjadi 10 terakhir — yang lebih lama akan dihapus. Lisensi tetap valid dan dapat diaktifkan kembali kapan saja."
+    "message": "Profil Chrome ini akan kehilangan semua fitur Pro. Riwayat akan dipangkas menjadi 10 tangkapan layar terakhir. Lisensi tetap valid dan dapat diaktifkan kembali kapan saja."
   },
   "releaseConfirmOk": {
     "message": "Ya, lepaskan"

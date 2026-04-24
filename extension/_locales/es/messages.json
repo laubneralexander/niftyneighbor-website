@@ -117,7 +117,7 @@
     "message": "Clave de licencia inválida. Por favor, verifica e inténtalo de nuevo."
   },
   "licenseAlreadyActive": {
-    "message": "Esta licencia está activa en otro dispositivo. Activarla aquí la desactivará allí."
+    "message": "Esta licencia está activa en otro perfil de Chrome. Activarla aquí la desactivará allí."
   },
   "upgradeTitle": {
     "message": "Desbloquear ScreenFellow Pro"
@@ -195,7 +195,7 @@
     "message": "Licencia"
   },
   "licenseActivateHint": {
-    "message": "Introduce tu clave de licencia para desbloquear las funciones Pro en este dispositivo."
+    "message": "Introduce tu clave de licencia para desbloquear las funciones Pro en este perfil de Chrome."
   },
   "licenseSettingsHint": {
     "message": "Todas las funciones Pro serán desactivadas. La licencia puede reactivarse en cualquier momento."
@@ -207,7 +207,7 @@
     "message": "¿Liberar licencia Pro?"
   },
   "releaseConfirmBody": {
-    "message": "Este dispositivo perderá todas las funciones Pro. El historial se reducirá a las últimas 10 capturas — las anteriores se eliminarán. La licencia sigue siendo válida y puede reactivarse en cualquier momento."
+    "message": "Este perfil de Chrome perderá todas las funciones Pro. Tu historial se reducirá a las últimas 10 capturas. La licencia sigue siendo válida y puede reactivarse en cualquier momento."
   },
   "releaseConfirmOk": {
     "message": "Sí, liberar"

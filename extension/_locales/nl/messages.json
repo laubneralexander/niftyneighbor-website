@@ -117,7 +117,7 @@
     "message": "Ongeldige licentiesleutel. Controleer en probeer opnieuw."
   },
   "licenseAlreadyActive": {
-    "message": "Deze licentie is actief op een ander apparaat. Activeren hier deactiveert het daar."
+    "message": "Deze licentie is actief op een ander Chrome-profiel. Activeren hier deactiveert het daar."
   },
   "upgradeTitle": {
     "message": "ScreenFellow Pro ontgrendelen"
@@ -195,7 +195,7 @@
     "message": "Licentie"
   },
   "licenseActivateHint": {
-    "message": "Voer je licentiesleutel in om Pro-functies op dit apparaat te ontgrendelen."
+    "message": "Voer je licentiesleutel in om Pro-functies op dit Chrome-profiel te ontgrendelen."
   },
   "licenseSettingsHint": {
     "message": "Alle Pro-functies worden gedeactiveerd. De licentie kan op elk moment opnieuw worden geactiveerd."
@@ -207,7 +207,7 @@
     "message": "Pro-licentie vrijgeven?"
   },
   "releaseConfirmBody": {
-    "message": "Dit apparaat verliest alle Pro-functies. Je screenshot-geschiedenis wordt ingekort tot de laatste 10 — oudere worden verwijderd. De licentie blijft geldig en kan op elk moment opnieuw worden geactiveerd."
+    "message": "Dit Chrome-profiel verliest alle Pro-functies. Je geschiedenis wordt ingekort tot de laatste 10 schermafbeeldingen. De licentie blijft geldig en kan op elk moment opnieuw worden geactiveerd."
   },
   "releaseConfirmOk": {
     "message": "Ja, vrijgeven"

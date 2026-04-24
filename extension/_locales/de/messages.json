@@ -117,7 +117,7 @@
     "message": "Ungültiger Lizenz-Key. Bitte überprüfen und erneut versuchen."
   },
   "licenseAlreadyActive": {
-    "message": "Diese Lizenz ist auf einem anderen Gerät aktiv. Aktivierung hier deaktiviert das andere Gerät."
+    "message": "Diese Lizenz ist in einem anderen Chrome-Profil aktiv. Aktivierung hier deaktiviert das andere Profil."
   },
   "upgradeTitle": {
     "message": "ScreenFellow Pro freischalten"
@@ -195,7 +195,7 @@
     "message": "Lizenz"
   },
   "licenseActivateHint": {
-    "message": "Gib deinen Lizenz-Key ein, um Pro-Funktionen auf diesem Gerät freizuschalten."
+    "message": "Gib deinen Lizenz-Key ein, um Pro-Funktionen in diesem Chrome-Profil freizuschalten."
   },
   "licenseSettingsHint": {
     "message": "Alle Pro-Features werden deaktiviert. Die Lizenz kann jederzeit neu aktiviert werden."
@@ -207,7 +207,7 @@
     "message": "Pro-Lizenz freigeben?"
   },
   "releaseConfirmBody": {
-    "message": "Dieses Gerät verliert alle Pro-Features. Dein Screenshot-Verlauf wird auf die letzten 10 gekürzt — ältere Aufnahmen werden gelöscht. Die Lizenz bleibt gültig und kann jederzeit neu aktiviert werden."
+    "message": "Dieses Chrome-Profil verliert alle Pro-Features. Dein Screenshot-Verlauf wird auf die letzten 10 gekürzt — ältere Aufnahmen werden gelöscht. Die Lizenz bleibt gültig und kann jederzeit neu aktiviert werden."
   },
   "releaseConfirmOk": {
     "message": "Ja, freigeben"

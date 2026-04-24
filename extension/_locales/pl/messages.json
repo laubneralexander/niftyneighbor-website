@@ -117,7 +117,7 @@
     "message": "Nieprawidłowy klucz licencyjny. Sprawdź i spróbuj ponownie."
   },
   "licenseAlreadyActive": {
-    "message": "Ta licencja jest aktywna na innym urządzeniu. Aktywacja tutaj ją tam dezaktywuje."
+    "message": "Ta licencja jest aktywna na innym profilu Chrome. Aktywacja tutaj dezaktywuje ją tam."
   },
   "upgradeTitle": {
     "message": "Odblokuj ScreenFellow Pro"
@@ -195,7 +195,7 @@
     "message": "Licencja"
   },
   "licenseActivateHint": {
-    "message": "Wpisz klucz licencyjny, aby odblokować funkcje Pro na tym urządzeniu."
+    "message": "Wprowadz klucz licencyjny, aby odblokowac funkcje Pro na tym profilu Chrome."
   },
   "licenseSettingsHint": {
     "message": "Wszystkie funkcje Pro zostaną dezaktywowane. Licencję można ponownie aktywować w dowolnym momencie."
@@ -207,7 +207,7 @@
     "message": "Zwolnić licencję Pro?"
   },
   "releaseConfirmBody": {
-    "message": "To urządzenie straci wszystkie funkcje Pro. Historia zostanie skrócona do ostatnich 10 zrzutów — starsze zostaną usunięte. Licencja pozostaje ważna i może być reaktywowana w każdej chwili."
+    "message": "Ten profil Chrome utraci wszystkie funkcje Pro. Historia zostanie skrocona do ostatnich 10 zrzutow. Licencja pozostaje wazna i moze byc aktywowana ponownie w dowolnym momencie."
   },
   "releaseConfirmOk": {
     "message": "Tak, zwolnij"

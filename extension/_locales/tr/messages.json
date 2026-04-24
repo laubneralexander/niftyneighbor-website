@@ -117,7 +117,7 @@
     "message": "Geçersiz lisans anahtarı. Lütfen kontrol edip tekrar deneyin."
   },
   "licenseAlreadyActive": {
-    "message": "Bu lisans başka bir cihazda etkin. Burada etkinleştirmek oradaki cihazı devre dışı bırakır."
+    "message": "Bu lisans baska bir Chrome profilinde aktif. Burada etkinlestirmek oradakini devre disi birakir."
   },
   "upgradeTitle": {
     "message": "ScreenFellow Pro'yu Aç"
@@ -195,7 +195,7 @@
     "message": "Lisans"
   },
   "licenseActivateHint": {
-    "message": "Bu cihazda Pro özellikleri açmak için lisans anahtarınızı girin."
+    "message": "Pro ozelliklerini bu Chrome profilinde etkinlestirmek icin lisans anahtarinizi girin."
   },
   "licenseSettingsHint": {
     "message": "Tüm Pro özellikler devre dışı bırakılacak. Lisans istediğiniz zaman yeniden etkinleştirilebilir."
@@ -207,7 +207,7 @@
     "message": "Pro Lisansını Serbest Bırak?"
   },
   "releaseConfirmBody": {
-    "message": "Bu cihaz tüm Pro özelliklerini kaybedecek. Ekran görüntüsü geçmişiniz son 10'a kısaltılacak — eski olanlar silinecek. Lisans geçerli kalır ve istediğiniz zaman yeniden etkinleştirilebilir."
+    "message": "Bu Chrome profili tum Pro ozelliklerini kaybedecek. Gecmisiniz son 10 ekran goruntusuyle sinirlandirilacak. Lisans gecerliligi devam eder ve istediginiz zaman yeniden etkinlestirilebilir."
   },
   "releaseConfirmOk": {
     "message": "Evet, serbest bırak"

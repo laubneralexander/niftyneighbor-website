@@ -117,7 +117,7 @@
     "message": "Invalid license key. Please check and try again."
   },
   "licenseAlreadyActive": {
-    "message": "This license is active on another device. Activating here will deactivate it there."
+    "message": "This license is active on another Chrome profile. Activating here will deactivate it there."
   },
   "upgradeTitle": {
     "message": "Unlock ScreenFellow Pro"
@@ -195,7 +195,7 @@
     "message": "License"
   },
   "licenseActivateHint": {
-    "message": "Enter your license key to unlock Pro features on this device."
+    "message": "Enter your license key to unlock Pro features on this Chrome profile."
   },
   "licenseSettingsHint": {
     "message": "All Pro features will be deactivated. The license can be reactivated at any time."
@@ -207,7 +207,7 @@
     "message": "Release Pro License?"
   },
   "releaseConfirmBody": {
-    "message": "This device will lose all Pro features. Your screenshot history will be trimmed to the last 10 — older screenshots will be deleted. The license remains valid and can be reactivated at any time."
+    "message": "This Chrome profile will lose all Pro features. Your screenshot history will be trimmed to the last 10 — older screenshots will be deleted. The license remains valid and can be reactivated at any time."
   },
   "releaseConfirmOk": {
     "message": "Yes, release"

@@ -117,7 +117,7 @@
     "message": "ライセンスキーが無効です。確認してもう一度お試しください。"
   },
   "licenseAlreadyActive": {
-    "message": "このライセンスは別のデバイスで有効です。ここで有効化するとそちらが無効になります。"
+    "message": "このライセンスは別のChromeプロファイルで有効です。ここで有効にすると、そちらが無効になります。"
   },
   "upgradeTitle": {
     "message": "ScreenFellow Pro を解放"
@@ -195,7 +195,7 @@
     "message": "ライセンス"
   },
   "licenseActivateHint": {
-    "message": "ライセンスキーを入力してこのデバイスで Pro 機能を解放します。"
+    "message": "このChromeプロファイルでPro機能を有効にするにはライセンスキーを入力してください。"
   },
   "licenseSettingsHint": {
     "message": "すべての Pro 機能が無効になります。ライセンスはいつでも再有効化できます。"
@@ -207,7 +207,7 @@
     "message": "Pro ライセンスを解放しますか？"
   },
   "releaseConfirmBody": {
-    "message": "このデバイスはすべての Pro 機能を失います。スクリーンショット履歴は最新10件に縮小され、古いものは削除されます。ライセンスは有効のまま残り、いつでも再有効化できます。"
+    "message": "このChromeプロファイルはすべてのPro機能を失います。履歴は最新10件に制限されます。ライセンスは有効なままで、いつでも再有効化できます。"
   },
   "releaseConfirmOk": {
     "message": "はい、解放する"
